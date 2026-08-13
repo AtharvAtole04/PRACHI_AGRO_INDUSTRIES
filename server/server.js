@@ -19,6 +19,15 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/prachi
 app.use(cors());
 app.use(express.json());
 
+// Request logger middleware for debugging
+app.use((req, res, next) => {
+  console.log(`[API REQUEST] ${req.method} ${req.url}`);
+  if (req.method === 'POST' || req.method === 'PUT') {
+    console.log('Payload:', JSON.stringify(req.body, null, 2));
+  }
+  next();
+});
+
 // Database Connection
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Successfully connected to MongoDB database.'))
