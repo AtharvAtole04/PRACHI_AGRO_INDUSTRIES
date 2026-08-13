@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Circular brown/green base -->
+  <circle cx="50" cy="50" r="45" fill="#fefaf0" stroke="#b45309" stroke-width="2"/>
+  <!-- Fertilizer bag -->
+  <path d="M35,30 L65,30 L70,40 L68,80 L32,80 L30,40 Z" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+  <rect x="40" y="44" width="20" height="24" fill="#ffffff" rx="1"/>
+  <!-- Sprout on bag label -->
+  <path d="M50,60 C46,56 46,50 50,46 C54,50 54,56 50,60 Z" fill="#16a34a"/>
+</svg>

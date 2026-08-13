@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="200" height="250" rx="15" fill="#f8fafc"/>
+  
+  <!-- Bag Shape -->
+  <path d="M50,45 L150,45 L165,70 L160,225 L40,225 L35,70 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2.5"/>
+  <path d="M48,42 L152,42 L152,47 L48,47 Z" fill="#64748b"/>
+  
+  <!-- Bag Stitch details -->
+  <line x1="50" y1="52" x2="150" y2="52" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+  <!-- Bag Wrinkle shadows -->
+  <path d="M35,70 C60,80 80,75 100,72 C120,68 140,73 165,70" stroke="#94a3b8" stroke-width="1" fill="none"/>
+  <path d="M40,130 C70,140 130,135 160,130" stroke="#94a3b8" stroke-width="1" fill="none"/>
+
+  <!-- Bag Label -->
+  <rect x="52" y="90" width="96" height="110" rx="4" fill="#005c2a"/>
+  <rect x="56" y="94" width="88" height="102" rx="2" fill="#ffffff"/>
+  
+  <!-- Brand logo -->
+  <text x="100" y="112" font-family="Arial" font-size="8" font-weight="black" fill="#096328" text-anchor="middle" letter-spacing="1">PRACHI</text>
+  
+  <!-- Name -->
+  <text x="100" y="142" font-family="Arial" font-size="20" font-weight="black" fill="#0284c7" text-anchor="middle" letter-spacing="0.5">SRPF</text>
+  
+  <!-- Subtitle -->
+  <text x="100" y="156" font-family="Arial" font-size="5.5" font-weight="bold" fill="#64748b" text-anchor="middle" letter-spacing="0.3">SILICON RAPID PROTECTION FORMULA</text>
+
+  <!-- Green crop plant design on bag -->
+  <path d="M100,194 C100,194 92,185 92,176 C100,178 100,194 100,194 Z" fill="#22c55e"/>
+  <path d="M100,194 C100,194 108,185 108,176 C100,178 100,194 100,194 Z" fill="#15803d"/>
+  <line x1="100" y1="194" x2="100" y2="168" stroke="#15803d" stroke-width="1.5"/>
+</svg>

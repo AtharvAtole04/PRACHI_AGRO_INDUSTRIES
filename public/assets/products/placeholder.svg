@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="200" height="250" rx="15" fill="#f1f5f9"/>
+  
+  <!-- Generic Bottle -->
+  <path d="M70,80 L70,55 L65,55 L65,45 L135,45 L135,55 L130,55 L130,80 C155,100 160,120 160,160 L160,210 C160,225 150,230 130,230 L70,230 C50,230 40,225 40,210 L40,160 C40,120 45,100 70,80 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="75" y="25" width="50" height="20" rx="3" fill="#64748b"/>
+  
+  <!-- Logo -->
+  <text x="100" y="125" font-family="Arial" font-size="7" font-weight="bold" fill="#94a3b8" text-anchor="middle">PRACHI AGRO</text>
+  
+  <!-- Leaf icon symbol -->
+  <path d="M100,175 C90,165 90,145 100,135 C110,145 110,165 100,175 Z" fill="#94a3b8"/>
+  <path d="M100,175 L100,135" stroke="#ffffff" stroke-width="1"/>
+  
+  <text x="100" y="200" font-family="Arial" font-size="8" font-weight="bold" fill="#64748b" text-anchor="middle">PRODUCT DEMO</text>
+</svg>
