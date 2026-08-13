@@ -3,366 +3,731 @@ const defaultProducts = [
     id: "bactrikiller",
     name: "BACTRIKILLER",
     category: "fungicides",
-    tagline: { mr: "SYSTEMIC FUNGICIDE", en: "SYSTEMIC FUNGICIDE" },
+    tagline: { mr: "सर्व प्रकारच्या बुरशीवर प्रभावी बुरशीनाशक", en: "Broad Spectrum Systemic Fungicide" },
     shortDescription: {
-      mr: "सर्व प्रकारच्या बुरशीवर प्रभावी आणि खात्रीशीर बुरशीनाशक.",
-      en: "Highly effective systemic fungicide for controlling all types of fungal diseases."
+      mr: "पिकांवरील करपा, भुरी आणि मूळकुज यांसारख्या गंभीर बुरशीजन्य रोगांचे जलद नियंत्रण.",
+      en: "Rapid control of leaf spots, blight, powdery mildew, and root rots in all crops."
     },
     description: {
-      mr: "बॅक्ट्रीकिलर हे एक प्रगत प्रणालीगत (Systemic) बुरशीनाशक आहे जे पिकांवरील विविध बुरशीजन्य रोगांना मुळापासून नष्ट करते. हे पिकांच्या अंतर्गत भागात पसरून दीर्घकाळ संरक्षण प्रदान करते.",
-      en: "BACTRIKILLER is an advanced systemic fungicide that targets and controls broad-spectrum fungal diseases in crops. It is absorbed rapidly by the plant tissues and offers long-lasting protection."
+      mr: "बॅक्ट्रीकिलर हे एक प्रगत सिस्टीमिक बुरशीनाशक आहे जे पिकाच्या आत शोषले जाते आणि रोगाचा नायनाट करते. हे पिकांना अंतर्गत प्रतिकारशक्ती देखील देते जेणेकरून नवीन बुरशीजन्य हल्ला रोखता येईल.",
+      en: "BACTRIKILLER is an advanced systemic and contact fungicide formulation designed to control leaf spots, anthracnose, blast, downy and powdery mildews."
     },
-    basePrice: 450,
-    originalPrice: 550,
+    basePrice: 320,
+    originalPrice: 420,
     packSizes: [
-      { size: "250 ml", price: 450 },
-      { size: "500 ml", price: 800 },
-      { size: "1 L", price: 1500 }
+      { size: "250 ml", price: 320 },
+      { size: "500 ml", price: 580 },
+      { size: "1 L", price: 1050 }
     ],
-    image: "/assets/products/bactrikiller.svg",
+    image: "/assets/products/nice_png.png",
     isPopular: true,
     isNew: false,
     rating: 4.8,
-    reviewsCount: 124,
+    reviewsCount: 142,
     crops: {
-      mr: "सोयाबीन, कापूस, मिरची, टोमॅटो, द्राक्षे, डाळिंब, कांदा आणि इतर फळभाज्या.",
-      en: "Soybean, Cotton, Chilli, Tomato, Grapes, Pomegranate, Onion and other vegetables."
+      mr: "टोमॅटो, मिरची, द्राक्षे, डाळिंब, ऊस, कापूस, सोयाबीन आणि भाजीपाला पिके.",
+      en: "Tomato, Chilli, Grapes, Pomegranate, Sugarcane, Cotton, Soybean and Vegetables."
     },
     benefits: {
       mr: [
-        "सर्व प्रकारच्या बुरशीजन्य रोगांवर (उदा. तांबेरा, करपा, भुरी) अत्यंत प्रभावी.",
-        "पिकामध्ये जलद गतीने शोषले जाते, ज्यामुळे पावसातही काम करते.",
-        "पिकाची रोगप्रतिकारक शक्ती वाढवून निरोगी वाढीस मदत करते."
+        "बुरशीच्या पेशींची वाढ रोखते आणि पुढील प्रसार तात्काळ थांबवते.",
+        "झाडांची नैसर्गिक रोगप्रतिकारक शक्ती मजबूत करून नवीन फुटवा निरोगी ठेवते."
       ],
       en: [
-        "Highly effective against downy mildew, powdery mildew, blight, and rust diseases.",
-        "Quick absorption rate ensures effectiveness even if it rains shortly after application.",
-        "Enhances overall plant immunity and promotes healthy green foliage."
+        "Stops spore germination and mycelial growth, preventing disease spread.",
+        "Improves greening effect and overall crop foliage health."
       ]
     },
     usage: {
-      mr: "१.५ ते २ मिली प्रति लिटर पाण्यात मिसळून पिकावर फवारणी करावी. (वापरण्यापूर्वी बाटली चांगली हलवावी)",
-      en: "Mix 1.5 to 2 ml per liter of water and spray thoroughly on the crop canopy. (Shake well before use)"
+      mr: "१.५ ते २ मिली प्रति लिटर पाण्यात मिसळून पानांवर व्यवस्थित फवारणी करावी.",
+      en: "Mix 1.5 to 2 ml per liter of water and spray thoroughly on the crop foliage."
     }
   },
   {
     id: "magic-gold",
     name: "MAGIC GOLD",
     category: "plant-growth",
-    tagline: { mr: "PLANT GROWTH PROMOTER", en: "PLANT GROWTH PROMOTER" },
+    tagline: { mr: "उत्कृष्ट वनस्पती वाढ प्रवर्तक", en: "Premium Plant Growth Promoter" },
     shortDescription: {
-      mr: "पिकांच्या निरोगी वाढीसाठी आणि अधिक उत्पादनासाठी सर्वोत्तम वाढ प्रवर्तक.",
-      en: "Premium plant growth promoter for robust growth, flowering, and high yield."
+      mr: "पिकांची शाकीय वाढ जोमदार करण्यासाठी आणि फुलांची गळती रोखण्यासाठी विशेष टॉनिक.",
+      en: "Advanced liquid promoter for vegetative growth, flowering, and fruit setting."
     },
     description: {
-      mr: "मॅजिक गोल्ड हे पिकांच्या चयापचय क्रियेला गती देणारे एक प्रगत वनस्पती वाढ प्रवर्तक आहे. हे झाडांची मुळे मजबूत करते, फांद्यांची संख्या वाढवते आणि फुलांचे फळात रूपांतर करण्यास मदत करते.",
-      en: "MAGIC GOLD is a high-potency plant growth promoter containing essential growth hormones and amino acids. It stimulates cell division, enhances root establishment, and increases flowering and fruit retention."
+      mr: "मॅजिक गोल्ड हे नैसर्गिक वनस्पती संप्रेरक आणि अमिनो ऍसिडचे विशेष मिश्रण आहे. हे झाडाच्या चयापचय क्रियेला उत्तेजन देते, ज्यामुळे फुलधारणा व फळधारणा उत्कृष्ट होते.",
+      en: "MAGIC GOLD is a high-potency bio-stimulant based on naturally derived amino acids, vitamins, and trace enzymes. It balances crop hormone activity to yield superior branch splitting and flower retention."
     },
-    basePrice: 350,
-    originalPrice: 420,
+    basePrice: 280,
+    originalPrice: 350,
     packSizes: [
-      { size: "250 ml", price: 350 },
-      { size: "500 ml", price: 620 },
-      { size: "1 L", price: 1150 }
+      { size: "250 ml", price: 280 },
+      { size: "500 ml", price: 500 },
+      { size: "1 L", price: 900 }
     ],
-    image: "/assets/products/magic_gold.svg",
+    image: "/assets/products/magic_gold_500.png",
     isPopular: true,
     isNew: true,
     rating: 4.9,
     reviewsCount: 198,
     crops: {
-      mr: "कापूस, मिरची, टोमॅटो, वांगी, वेलवर्गीय पिके, डाळिंब आणि सर्व फळझाडे.",
-      en: "Cotton, Chilli, Tomato, Brinjal, Cucurbits, Pomegranate, and all horticultural crops."
+      mr: "कापूस, मिरची, टोमॅटो, हरभरा, सोयाबीन, वांगी, फळबागा आणि सर्व भाजीपाला.",
+      en: "Cotton, Chilli, Tomato, Gram, Soybean, Brinjal, Orchards and all Vegetables."
     },
     benefits: {
       mr: [
-        "पिकांच्या फांद्या आणि पानांची संख्या वाढवून झाड टवटवीत ठेवते.",
-        "फूलगळ आणि फळगळ रोखण्यासाठी अत्यंत फायदेशीर.",
-        "फळांचा आकार, रंग आणि गुणवत्ता सुधारते, ज्यामुळे बाजारात चांगला दर मिळतो."
+        "फुलांची संख्या वाढवते आणि कळ्यांची गळती लक्षणीयरीत्या कमी करते.",
+        "फळांचा आकार, रंग आणि चमक सुधारून बाजारात उत्तम भाव मिळवून देते."
       ],
       en: [
-        "Stimulates shoot elongation and increases number of active branches.",
-        "Significantly reduces flower drop and immature fruit shedding.",
-        "Improves fruit size, color, shine, and shelf life, fetching higher market rates."
+        "Stimulates heavy flower budding and controls premature flower/bud dropping.",
+        "Enhances size, weight, and shelf-life of fruits and vegetables."
       ]
     },
     usage: {
-      mr: "२ मिली प्रति लिटर पाण्यात मिसळून सकाळी किंवा संध्याकाळी फवारणी करावी.",
-      en: "Mix 2 ml per liter of water and spray during early morning or late evening hours."
+      mr: "२ मिली प्रति लिटर पाणी या प्रमाणात पिकाच्या फूल येण्याच्या आणि फळ धारणेच्या काळात फवारणी करावी.",
+      en: "Mix 2 ml per liter of water and spray during vegetative growth and pre-flowering stages."
     }
   },
   {
     id: "mycrodifence",
     name: "MYCRODIFENCE",
     category: "micronutrients",
-    tagline: { mr: "MICRONUTRIENT", en: "MICRONUTRIENT" },
+    tagline: { mr: "सर्व सूक्ष्म अन्नद्रव्यांचे संतुलित कॉम्बिनेशन", en: "Chelated Multi-Micronutrient Fertilizer" },
     shortDescription: {
-      mr: "सर्व महत्त्वाच्या सूक्ष्म अन्नद्रव्यांचे (मायक्रो-न्यूट्रिएंट्स) संतुलित मिश्रण.",
-      en: "A comprehensive and balanced combination of all essential micronutrients."
+      mr: "पिकांमधील अन्नद्रव्यांची कमतरता दूर करून पिका पिवळे पडण्यापासून वाचवते.",
+      en: "Supplies essential chelated trace minerals (Zinc, Iron, Boron, Manganese) for high yields."
     },
     description: {
-      mr: "मायक्रोडिफेन्स हे पिकांमधील अन्नद्रव्यांची कमतरता भरून काढण्यासाठी तयार केलेले विशेष मिश्रण आहे. यामध्ये लोह, जस्त, तांबे, मॅंगनीज, बोरॉन आणि मॉलिब्डेनम योग्य प्रमाणात उपलब्ध आहेत.",
-      en: "MYCRODIFENCE is a scientifically formulated micronutrient mixture that prevents and cures nutrient deficiencies in crops. It delivers highly bioavailable chelated metals including Zinc, Iron, Manganese, Copper, Boron, and Molybdenum."
+      mr: "मायक्रोडिफेन्स हे चिलेटेड स्वरूपातील सूक्ष्म अन्नद्रव्यांचे मिश्रण आहे. हे पाण्यात पूर्णपणे विरघळते आणि पिकाला झिंक, फेरस, बोरॉन, कॉपर आणि मॅंगनीज या घटकांचा तात्काळ पुरवठा करते.",
+      en: "MYCRODIFENCE contains EDTA-chelated trace elements. It targets hidden nutrient deficiencies, ensuring efficient absorption through leaves, resulting in balanced nutrition and stronger crop metabolism."
     },
-    basePrice: 280,
-    originalPrice: 350,
+    basePrice: 220,
+    originalPrice: 290,
     packSizes: [
-      { size: "500 gm", price: 280 },
-      { size: "1 kg", price: 500 },
-      { size: "5 kg", price: 2300 }
+      { size: "250 gm", price: 220 },
+      { size: "500 gm", price: 390 },
+      { size: "1 kg", price: 700 }
     ],
-    image: "/assets/products/mycrodifence.svg",
+    image: "/assets/products/microdefence-front.jpg",
     isPopular: true,
     isNew: false,
     rating: 4.7,
-    reviewsCount: 86,
+    reviewsCount: 95,
     crops: {
-      mr: "ऊस, हळद, केळी, सोयाबीन, कापूस, मिरची, लिंबूवर्गीय फळे आणि भाजीपाला पिके.",
-      en: "Sugarcane, Turmeric, Banana, Soybean, Cotton, Chilli, Citrus fruits, and vegetable crops."
+      mr: "ऊस, हळद, केळी, द्राक्षे, डाळिंब, लिंबूवर्गीय फळे आणि भाजीपाला पिके.",
+      en: "Sugarcane, Turmeric, Banana, Grapes, Pomegranate, Citrus and Vegetables."
     },
     benefits: {
       mr: [
-        "पिकांवरील पिवळेपणा दूर करून पाने गर्द हिरवी बनवते.",
-        "प्रकाशसंश्लेषण क्रिया सुधारून पिकाची अन्न तयार करण्याची क्षमता वाढवते.",
-        "कमतरतेमुळे होणारी झाडांची खुंटलेली वाढ त्वरित पुनरुज्जीवित करते."
+        "पिकांमधील पिवळेपणा दूर करतो आणि प्रकाश संश्लेषण क्रिया वेगवान करतो.",
+        "पिकांना थंडी, दुष्काळ आणि रोगांशी लढण्याची अतिरिक्त ताकद देते."
       ],
       en: [
-        "Prevents leaf chlorosis (yellowing) and gives crops a deep green, healthy appearance.",
-        "Enhances chlorophyll synthesis and accelerates photosynthesis rate.",
-        "Corrects developmental stagnation caused by zinc or iron deficiencies."
+        "Prevents leaf chlorosis (yellowing) and boosts overall photosynthesis efficiency.",
+        "Ensures firm root penetration and robust plant skeletal strength."
       ]
     },
     usage: {
-      mr: "१.५ ते २ ग्रॅम प्रति लिटर पाणी या प्रमाणात पिकांवर फवारणी करावी किंवा ड्रिपद्वारे द्यावे.",
-      en: "Apply 1.5 to 2 grams per liter of water as foliar spray or fertigate through drip irrigation."
+      mr: "१ ते १.५ ग्रॅम प्रति लिटर पाणी या प्रमाणात पानांवर फवारणी करावी किंवा ठिबक सिंचनाद्वारे द्यावे.",
+      en: "Mix 1 to 1.5 gm per liter of water for foliar spray, or apply via drip irrigation."
     }
   },
   {
     id: "srpf",
     name: "SRPF",
     category: "silicon-based",
-    tagline: { mr: "SILICON RAPID PROTECTION FORMULA", en: "SILICON RAPID PROTECTION FORMULA" },
+    tagline: { mr: "सिलिकॉन आधारित पीक संरक्षण शक्ती", en: "Silicon-Based Protective Shield" },
     shortDescription: {
-      mr: "सिलिकॉन आधारित विशेष संरक्षण सूत्र जे पिकांना देईल नैसर्गिक ताकद.",
-      en: "Silicon-based rapid protection formula that provides structural strength and immunity."
+      mr: "पिकाची बाह्य त्वचा मजबूत करून कीड आणि रोगांना नैसर्गिकरीत्या रोखणारे विशेष उत्पादन.",
+      en: "Strengthens cell walls to naturally repel insects and fungal penetrations."
     },
     description: {
-      mr: "एसआरपीएफ (SRPF) हे सिलिकॉन आधारित एक नाविन्यपूर्ण उत्पादन आहे. हे पिकांच्या बाह्य थराला मजबूत करते, ज्यामुळे पिकांचे उष्णता, थंडी, दुष्काळ आणि कीड-रोगांपासून नैसर्गिकरित्या संरक्षण होते.",
-      en: "SRPF (Silicon Rapid Protection Formula) is a premium silicon formulation. It builds a protective silica layer under the cuticle of plant leaves, improving mechanical resistance to pests, pathogens, and environmental stress."
+      mr: "एसआरपीएफ हे ऑर्थो-सिलिसिक ऍसिडवर आधारित उत्पादन आहे. हे झाडाच्या पानांमध्ये साठून एक कडक बाह्य कवच तयार करते, ज्यामुळे रस शोषणाऱ्या किडी आणि बुरशी पिकाला इजा करू शकत नाहीत.",
+      en: "SRPF is a concentrated bio-available silicon formulation. It deposits a micro-silica layer on leaves, increasing structural resistance against sap-sucking pests and heat-stress transpiration."
     },
-    basePrice: 500,
-    originalPrice: 650,
+    basePrice: 350,
+    originalPrice: 450,
     packSizes: [
-      { size: "1 kg", price: 500 },
-      { size: "5 kg", price: 2200 }
+      { size: "250 ml", price: 350 },
+      { size: "500 ml", price: 650 }
     ],
-    image: "/assets/products/srpf.svg",
-    isPopular: true,
+    image: "/assets/products/srpf.png",
+    isPopular: false,
     isNew: true,
-    rating: 4.8,
-    reviewsCount: 112,
+    rating: 4.6,
+    reviewsCount: 78,
     crops: {
-      mr: "भात, ऊस, कापूस, मिरची, टोमॅटो, द्राक्षे, टरबूज आणि इतर भाजीपाला पिके.",
-      en: "Paddy, Sugarcane, Cotton, Chilli, Tomato, Grapes, Watermelon and vegetable crops."
+      mr: "भात (धान), ऊस, मिरची, टोमॅटो, द्राक्षे, भाजीपाला आणि फुलझाडे.",
+      en: "Paddy, Sugarcane, Chilli, Tomato, Grapes, Vegetables and Floriculture."
     },
     benefits: {
       mr: [
-        "पिकांची पाने आणि खोड टणक बनवून रसशोषक किडींचा प्रादुर्भाव कमी करते.",
-        "अति उष्णता आणि दुष्काळाच्या परिस्थितीत पाण्याचे बाष्पीभवन रोखते.",
-        "झाडांची फांदी सरळ ठेवते, ज्यामुळे सूर्यप्रकाश पानांवर चांगल्या प्रकारे पडतो."
+        "पानांवर कडक संरक्षक थर बनवून रस शोषक किडींचा प्रादुर्भाव कमी करतो.",
+        "पिकांची पाणी धरून ठेवण्याची क्षमता वाढवतो, ज्यामुळे पाण्याचा ताण सहन होतो."
       ],
       en: [
-        "Strengthens plant cell walls, rendering leaves tough against sucking pests.",
-        "Reduces transpiration rate under high temperatures, saving water during dry spells.",
-        "Keeps stems erect, ensuring maximum light interception and photosynthesis."
+        "Forms a protective silica layer to naturally lower thrips, mite and aphid feeding.",
+        "Reduces crop lodging (bending) in high winds and improves drought tolerance."
       ]
     },
     usage: {
-      mr: "२ ते ३ ग्रॅम प्रति लिटर पाण्यात मिसळून पानांवर फवारणी करावी किंवा खतातून द्यावे.",
-      en: "Mix 2 to 3 grams per liter of water and apply as foliar spray, or apply via soil application."
+      mr: "१ ते १.५ मिली प्रति लिटर पाण्यात मिसळून फवारणी करावी (इतर औषधांसोबत देता येते).",
+      en: "Mix 1 to 1.5 ml per liter of water and spray. Compatible with major bio-pesticides."
+    }
+  },
+  {
+    id: "nutri-grow",
+    name: "NUTRI GROW-50",
+    category: "micronutrients",
+    tagline: { mr: "पीक पोषणासाठी उत्कृष्ट वॉटर सोल्यूबल खत", en: "Premium Water Soluble Crop Nutrient" },
+    shortDescription: {
+      mr: "नत्र, स्फुरद, पालाश आणि सूक्ष्म अन्नद्रव्यांचे संतुलित मिश्रण.",
+      en: "Balanced formulation for drip irrigation and foliar application."
+    },
+    description: {
+      mr: "नुट्री ग्रो-५० हे पिकांची पांढरी मुळी वेगाने वाढवण्यासाठी आणि पानांच्या संतुलित विकासासाठी डिझाइन केलेले आहे.",
+      en: "NUTRI GROW-50 is a fast-acting water soluble nutrient mix designed for rapid vegetative development and quality yields."
+    },
+    basePrice: 240,
+    originalPrice: 300,
+    packSizes: [
+      { size: "500 gm", price: 240 },
+      { size: "1 kg", price: 450 }
+    ],
+    image: "/assets/products/nutri_grow.png",
+    isPopular: true,
+    isNew: false,
+    rating: 4.8,
+    reviewsCount: 110,
+    crops: {
+      mr: "डाळिंब, हळद, भाजीपाला, फळबागा आणि सर्व पिके.",
+      en: "Pomegranate, Turmeric, Vegetables, Orchards and all cash crops."
+    },
+    benefits: {
+      mr: ["मुळांचा आणि पांढऱ्या मुळीचा वेगवान विकास.", "फळांचे वजन आणि बाजारातील गुणवत्ता सुधारते."],
+      en: ["Stimulates fast feeder root system development.", "Improves fruit weight, size, and shelf-life."]
+    },
+    usage: {
+      mr: "३ ते ५ ग्रॅम प्रति लिटर पाणी किंवा ठिबकद्वारे ३-५ किलो प्रति एकर.",
+      en: "3 to 5 gm per liter for foliar spray, or 3-5 kg per acre via drip."
+    }
+  },
+  {
+    id: "bhooratna",
+    name: "BHOORATNA",
+    category: "plant-growth",
+    tagline: { mr: "जमिनीची सुपीकता वाढवणारे सेंद्रिय खत", en: "Soil Enriching Organic Granules" },
+    shortDescription: {
+      mr: "मातीमधील जिवाणू वाढवून सेंद्रिय कर्ब सुधारण्यासाठी उपयुक्त दाणेदार खत.",
+      en: "Rich humic and organic soil conditioner granules for strong root hold."
+    },
+    description: {
+      mr: "भूरत्न हे दाणेदार स्वरूपातील सेंद्रिय खत आहे जे पिकांना दीर्घकाळ अन्नद्रव्यांचा पुरवठा करते आणि जमिनीचा पोत सुधारते.",
+      en: "BHOORATNA granules enrich the soil with humic substances, amino acids, and trace elements to maintain crop strength."
+    },
+    basePrice: 480,
+    originalPrice: 600,
+    packSizes: [
+      { size: "10 kg", price: 480 },
+      { size: "20 kg", price: 900 }
+    ],
+    image: "/assets/products/bhooratna_mockup.png",
+    isPopular: true,
+    isNew: false,
+    rating: 4.9,
+    reviewsCount: 165,
+    crops: {
+      mr: "ऊस, कापूस, सोयाबीन, भाजीपाला, फळबागा.",
+      en: "Sugarcane, Cotton, Soybean, Vegetables, Fruit Orchards."
+    },
+    benefits: {
+      mr: ["जमिनीची जलधारण क्षमता वाढते.", "सेंद्रिय कर्बाचे प्रमाण वाढवून पांढऱ्या मुळीची वाढ निरोगी होते."],
+      en: ["Improves soil water-retention capacity.", "Increases organic carbon and beneficial soil microbes."]
+    },
+    usage: {
+      mr: "१० ते २० किलो प्रति एकर बेसल डोस म्हणून द्यावे.",
+      en: "Apply 10 to 20 kg per acre as basal dose during sowing or weeding."
+    }
+  },
+  {
+    id: "bhusavardhan",
+    name: "BHUSAVARDHAN",
+    category: "plant-growth",
+    tagline: { mr: "माती सुधारक आणि मुळांची वाढ करणारे टॉनिक", en: "Soil Conditioner & Root Developer" },
+    shortDescription: {
+      mr: "माती भुसभुशीत करून मुळांना हवा आणि पाणी खेळती ठेवते.",
+      en: "Maintains optimal soil aeration and accelerates crop root development."
+    },
+    description: {
+      mr: "भूसंवर्धन मुळांच्या कार्यक्षमतेत वाढ करून खतांचा अपव्यय टाळते आणि पिकांची शाश्वत वाढ घडवून आणते.",
+      en: "BHUSAVARDHAN enhances nutrient uptake from the soil, preventing wastage of NPK and promoting balanced crop growth."
+    },
+    basePrice: 380,
+    originalPrice: 480,
+    packSizes: [
+      { size: "1 L", price: 380 },
+      { size: "5 L", price: 1750 }
+    ],
+    image: "/assets/products/bhusavardhan_(2).png",
+    isPopular: false,
+    isNew: false,
+    rating: 4.8,
+    reviewsCount: 112,
+    crops: {
+      mr: "द्राक्षे, डाळिंब, ऊस, आले, हळद आणि भाजीपाला पिके.",
+      en: "Grapes, Pomegranate, Sugarcane, Ginger, Turmeric and Vegetables."
+    },
+    benefits: {
+      mr: ["मुळांच्या जवळ हवा खेळती ठेवून माती भुसभुशीत करते.", "पिकाची अन्न शोषण्याची क्षमता वाढते."],
+      en: ["Aerates the soil around root zone.", "Improves overall fertilizer absorption efficiency."]
+    },
+    usage: {
+      mr: "१ ते २ लिटर प्रति एकर ठिबकद्वारे किंवा आळवणीद्वारे द्यावे.",
+      en: "Apply 1 to 2 liters per acre through drip irrigation or drenching."
+    }
+  },
+  {
+    id: "cotton-special",
+    name: "COTTON SPECIAL",
+    category: "plant-growth",
+    tagline: { mr: "कापूस पिकासाठी विशेष वाढ संप्रेरक", en: "Special Growth Promoter for Cotton" },
+    shortDescription: {
+      mr: "कापसाचे पाते गळणे थांबवून बोंडांची संख्या आणि आकार वाढवणारे टॉनिक.",
+      en: "Special formulation to prevent flower drop and increase cotton boll weight."
+    },
+    description: {
+      mr: "कापूस पिकाच्या गरजेनुसार तयार केलेले हे टॉनिक कापसाची वाढ निरोगी ठेवते आणि कापसाचा दर्जा सुधारते.",
+      en: "COTTON SPECIAL provides vital micro-elements and vegetative growth enhancers customized for high-yield cotton farming."
+    },
+    basePrice: 340,
+    originalPrice: 420,
+    packSizes: [
+      { size: "250 ml", price: 340 },
+      { size: "500 ml", price: 620 }
+    ],
+    image: "/assets/products/cotton.png",
+    isPopular: true,
+    isNew: false,
+    rating: 4.9,
+    reviewsCount: 220,
+    crops: {
+      mr: "कापूस (Cotton).",
+      en: "Cotton crop."
+    },
+    benefits: {
+      mr: ["पातेगळ रोखते आणि बोंडांचा आकार वाढवते.", "कापसाच्या धाग्याची लांबी आणि चमक सुधारते."],
+      en: ["Controls square and boll dropping.", "Improves fiber length, strength, and brightness."]
+    },
+    usage: {
+      mr: "१.५ ते २ मिली प्रति लिटर पाण्यात मिसळून फवारणी करावी.",
+      en: "Mix 1.5 to 2 ml per liter of water and spray during flowering and boll formation."
+    }
+  },
+  {
+    id: "corn-special",
+    name: "CORN SPECIAL",
+    category: "plant-growth",
+    tagline: { mr: "मका पिकासाठी विशेष अन्नद्रव्य टॉनिक", en: "Special Nutrient Tonic for Maize/Corn" },
+    shortDescription: {
+      mr: "मक्याच्या कणसाचा दाणेदार भरवदारपणा आणि वजन वाढवण्यासाठी उपयुक्त.",
+      en: "Improves grain filling, cob size, and chlorophyll content in maize."
+    },
+    description: {
+      mr: "मका पिकासाठी विशेष रीतीने तयार केलेले हे टॉनिक पानांचा हिरवेगारपणा राखते आणि कणसाचा आकार वाढवते.",
+      en: "CORN SPECIAL delivers targeted micronutrients to prevent yellowing and ensure complete grain filling in cobs."
+    },
+    basePrice: 320,
+    originalPrice: 400,
+    packSizes: [
+      { size: "250 ml", price: 320 },
+      { size: "500 ml", price: 580 }
+    ],
+    image: "/assets/products/corn.png",
+    isPopular: false,
+    isNew: false,
+    rating: 4.7,
+    reviewsCount: 88,
+    crops: {
+      mr: "मका, बाजरी, ज्वारी आणि तृणधान्ये.",
+      en: "Maize, Pearl Millet, Sorghum and Cereal Crops."
+    },
+    benefits: {
+      mr: ["कणसामध्ये दाणे शेवटपर्यंत पूर्णपणे भरतात.", "पानांमध्ये हरितद्रव्याची वाढ होऊन मका जोमदार वाढतो."],
+      en: ["Ensures complete grain filling till the cob tip.", "Boosts chlorophyll content for healthier vegetative yield."]
+    },
+    usage: {
+      mr: "२ मिली प्रति लिटर पाण्यात मिसळून ३० ते ४५ दिवसांच्या पिकावर फवारणी करावी.",
+      en: "Mix 2 ml per liter of water and spray on 30-45 days old crop."
     }
   },
   {
     id: "fast-result",
     name: "FAST RESULT",
     category: "plant-growth",
-    tagline: { mr: "FOR GROWTH & BUDS DEVELOPMENT", en: "FOR GROWTH & BUDS DEVELOPMENT" },
+    tagline: { mr: "जलद वनस्पती वाढ आणि फुलांची संख्या वाढवणारे टॉनिक", en: "Instant Plant Growth & Bloom Stimulator" },
     shortDescription: {
-      mr: "झटपट वाढ आणि फुलांची संख्या दुप्पट करण्यासाठी विशेष फॉर्म्युला.",
-      en: "Specialized formulation for rapid vegetative growth and double the flower buds."
+      mr: "फवारणीनंतर अवघ्या ४८ तासांत पिकांवर हिरवेगारपणा आणि फुटवे आणते.",
+      en: "Shows visible greening and vegetative shooting within 48 hours."
     },
     description: {
-      mr: "फास्ट रिझल्ट हे अत्यंत सक्रिय पोषक घटकांचे मिश्रण आहे जे पिकांच्या शाकीय वाढीच्या टप्प्यात विशेष कार्य करते. हे त्वरित कार्य सुरू करते आणि कमी कालावधीत जास्त कळ्या आणि फुले आणते.",
-      en: "FAST RESULT is a fast-acting vegetative and bloom booster. Rich in bio-active organic complexes, it triggers rapid response in plants to produce maximum buds, reducing the vegetative cycle time."
+      mr: "फास्ट रिझल्ट हे अत्यंत जलद गतीने काम करणारे ग्रोथ टॉनिक आहे जे पिकाचे पोषण चक्र गतिमान करते.",
+      en: "FAST RESULT triggers rapid cell division and shoot extension, making it ideal for recovery after stress."
     },
-    basePrice: 390,
-    originalPrice: 480,
+    basePrice: 650,
+    originalPrice: 800,
     packSizes: [
-      { size: "250 ml", price: 390 },
-      { size: "500 ml", price: 720 },
-      { size: "1 L", price: 1350 }
+      { size: "1 L", price: 650 },
+      { size: "5 L", price: 2900 }
     ],
-    image: "/assets/products/fast_result.svg",
+    image: "/assets/products/fast_5ltr.png",
     isPopular: true,
-    isNew: false,
+    isNew: true,
     rating: 4.9,
-    reviewsCount: 145,
+    reviewsCount: 310,
     crops: {
-      mr: "मिरची, टोमॅटो, झेंडू, कापूस, सोयाबीन, वांगी, भाजीपाला आणि फुलशेती.",
-      en: "Chilli, Tomato, Marigold, Cotton, Soybean, Brinjal, Leafy Vegetables, and Floriculture."
+      mr: "सोयाबीन, कापूस, हरभरा, ऊस, भाजीपाला आणि फळबागा.",
+      en: "Soybean, Cotton, Gram, Sugarcane, Vegetables and Horticulture."
     },
     benefits: {
-      mr: [
-        "पिकांमध्ये जलद वाढ घडवून आणते आणि हिरवेगारपणा वाढवते.",
-        "फुलांची संख्या वाढवते आणि कळ्या गळण्यापासून रोखते.",
-        "अत्यंत कमी दिवसात दृश्य परिणाम दाखवते."
-      ],
-      en: [
-        "Triggers immediate cellular growth and enhances leaf greenness within days.",
-        "Increases flower bud density and prevents early drop of flowers.",
-        "Provides fast and visible development results under challenging climates."
-      ]
+      mr: ["पानांची प्रकाशसंश्लेषण क्रिया अत्यंत जलद गतीने वाढते.", "नवीन फुटवे आणि फांद्यांची संख्या झपाट्याने वाढते."],
+      en: ["Visible greening effect and photosynthetic boost.", "Stimulates multiple branching and vegetative nodes."]
     },
     usage: {
-      mr: "२ मिली प्रति लिटर पाण्यात मिसळून फुलोऱ्याच्या आधी आणि फुलोऱ्याच्या काळात फवारावे.",
-      en: "Mix 2 ml per liter of water and spray before flowering and during the blooming period."
+      mr: "२ ते २.५ मिली प्रति लिटर पाण्यात मिसळून फवारणी करावी.",
+      en: "Mix 2 to 2.5 ml per liter of water and spray thoroughly."
     }
   },
   {
-    id: "nutri-grow-50",
-    name: "NUTRI GROW-50",
-    category: "fertilizers",
-    tagline: { mr: "BIOTIC GROWTH PROMOTER", en: "BIOTIC GROWTH PROMOTER" },
+    id: "krushi-kranti",
+    name: "KRUSHI KRANTI",
+    category: "plant-growth",
+    tagline: { mr: "पिकांच्या निरोगी वाढीसाठी सेंद्रिय टॉनिक", en: "Organic Crop Vigor Tonic" },
     shortDescription: {
-      mr: "सर्व पिकांसाठी सुरक्षित आणि नैसर्गिक सेंद्रिय जैविक वाढ प्रवर्तक.",
-      en: "Organic biotic growth promoter suitable for comprehensive nutrition of all crops."
+      mr: "उत्कृष्ट फूल धारणा आणि फळ पोषणासाठी सेंद्रिय संजीवकांचे संतुलित मिश्रण.",
+      en: "Multi-nutrient bio-stimulant for complete vegetative protection."
     },
     description: {
-      mr: "न्यूट्रि ग्रो-५० हे ५०% सेंद्रिय घटकांसह बनवलेले नैसर्गिक पोषक उत्पादन आहे. हे जमिनीत असलेल्या जिवाणूंची क्रिया वाढवते आणि झाडांना पोषक घटक सहज शोषून घेण्यास मदत करते.",
-      en: "NUTRI GROW-50 is a high-grade biotic supplement formulated with organic plant extracts. It enriches soil microbiology and stimulates nutrient absorption pathways in roots for structural crop vigor."
+      mr: "कृषी क्रांती पिकांना पोषक घटकांचा पुरवठा करून विविध हवामान बदलांमध्ये तग धरण्याची ताकद देते.",
+      en: "KRUSHI KRANTI increases crop stamina to withstand temperature swings while maintaining fruit size."
     },
-    basePrice: 320,
-    originalPrice: 400,
+    basePrice: 290,
+    originalPrice: 380,
     packSizes: [
-      { size: "250 ml", price: 320 },
-      { size: "500 ml", price: 580 },
-      { size: "1 L", price: 1050 }
+      { size: "250 ml", price: 290 },
+      { size: "500 ml", price: 520 }
     ],
-    image: "/assets/products/nutri_grow_50.svg",
-    isPopular: true,
-    isNew: true,
-    rating: 4.6,
-    reviewsCount: 73,
+    image: "/assets/products/krushi_kranti_moc.png",
+    isPopular: false,
+    isNew: false,
+    rating: 4.8,
+    reviewsCount: 125,
     crops: {
-      mr: "ऊस, हळद, आल्याची शेती, बटाटा, डाळिंब, लिंबू, संत्री आणि मोसंबी.",
-      en: "Sugarcane, Turmeric, Ginger, Potato, Pomegranate, Citrus, Orange and Sweet Lime."
+      mr: "मिरची, टोमॅटो, द्राक्षे, कांदा, बटाटा, ऊस आणि कडधान्ये.",
+      en: "Chilli, Tomato, Grapes, Onion, Potato, Sugarcane and Pulses."
     },
     benefits: {
-      mr: [
-        "१००% नैसर्गिक आणि सेंद्रिय उत्पादन, पिकांवर किंवा पर्यावरणावर कोणताही दुष्परिणाम नाही.",
-        "पांढऱ्या मुळांची वाढ वेगाने वाढवते, ज्यामुळे अन्नद्रव्यांचे शोषण वाढते.",
-        "पिकाची गुणवत्ता, चमक आणि चव सुधारून वजन वाढवते."
-      ],
-      en: [
-        "100% organic formulation with zero residues, safe for soil structure.",
-        "Drastically accelerates white feeder root growth, improving water uptake.",
-        "Improves crop yield size, luster, flavor, and crop weight."
-      ]
+      mr: ["फुलांचे फळांत रूपांतर करण्याची क्षमता सुधारते.", "झाडांना नैसर्गिक चकाकी आणि अन्न पुरवठा प्रदान करते."],
+      en: ["Improves flower retention and conversion to fruits.", "Supplies organic trace elements to keep the crop robust."]
     },
     usage: {
-      mr: "२.५ मिली प्रति लिटर पाण्यात मिसळून फवारावे किंवा ५०० मिली प्रति एकर ठिबक सिंचनाद्वारे द्यावे.",
-      en: "Mix 2.5 ml per liter of water for foliar spray, or apply 500 ml per acre through drip irrigation."
+      mr: "१.५ ते २ मिली प्रति लिटर पाणी पानांवर फवारणी.",
+      en: "Mix 1.5 to 2 ml per liter of water for foliar application."
+    }
+  },
+  {
+    id: "krushivardan",
+    name: "KRUSHI VARDHAN",
+    category: "plant-growth",
+    tagline: { mr: "पिकांची प्रतिकारशक्ती वाढवणारे टॉनिक", en: "Crop Immunity & Growth Booster" },
+    shortDescription: {
+      mr: "रोग आणि किडींविरुद्ध पिकाची नैसर्गिक संरक्षण यंत्रणा कार्यरत करते.",
+      en: "Strengthens cellular defense systems against common pathogens."
+    },
+    description: {
+      mr: "कृषीवर्धन पिकाला आतून बळकट करते, ज्यामुळे कीड व रोगाचा प्रादुर्भाव कमी होतो आणि झाडे निरोगी राहतात.",
+      en: "KRUSHI VARDHAN stimulates structural defense responses in host plants, preventing pathogen colonization."
+    },
+    basePrice: 310,
+    originalPrice: 400,
+    packSizes: [
+      { size: "250 ml", price: 310 },
+      { size: "500 ml", price: 560 }
+    ],
+    image: "/assets/products/krushivardan.png",
+    isPopular: false,
+    isNew: false,
+    rating: 4.7,
+    reviewsCount: 94,
+    crops: {
+      mr: "कापूस, मिरची, टोमॅटो, फळे and भाजीपाला पिके.",
+      en: "Cotton, Chilli, Tomato, Fruits and all vegetable varieties."
+    },
+    benefits: {
+      mr: ["झाडांची अंतर्गत प्रतिकारशक्ती प्रचंड वाढते.", "पानांचा आकार आणि खोडाची मजबुती सुधारते."],
+      en: ["Boosts internal plant defense mechanism.", "Improves leaf span and stem mechanical strength."]
+    },
+    usage: {
+      mr: "२ मिली प्रति लिटर पाण्यात मिसळून फवारणी करावी.",
+      en: "Mix 2 ml per liter of water and spray thoroughly."
     }
   },
   {
     id: "neem-shakti",
     name: "NEEM SHAKTI",
-    category: "insecticides",
-    tagline: { mr: "ORGANIC INSECTICIDE", en: "ORGANIC INSECTICIDE" },
+    category: "plant-growth",
+    tagline: { mr: "नैसर्गिक कडुनिंब आधारित पीक संरक्षक", en: "Natural Neem-Based Crop Protector" },
     shortDescription: {
-      mr: "रसशोषक किडींवर प्रभावी नियंत्रणासाठी नैसर्गिक कडुनिंब अर्क युक्त कीटकनाशक.",
-      en: "Neem-based organic insecticide for controlling sucking pests naturally."
+      mr: "रस शोषणाऱ्या किडी आणि अळ्यांना अंडी घालण्यापासून रोखणारे जैविक कडुनिंब औषध.",
+      en: "Organic pest repellent containing highly active Azadirachtin compound."
     },
     description: {
-      mr: "नीम शक्ती हे उच्च दर्जाचे सेंद्रिय कीटकनाशक आहे ज्यामध्ये अझाडिराक्टिन (Azadirachtin) मुबलक प्रमाणात आहे. हे किडींची अंडी उबवण्याची क्षमता रोखते आणि त्यांना पिकापासून दूर ठेवते.",
-      en: "NEEM SHAKTI is a biological insecticide derived from pure neem seeds. Standardized with active Azadirachtin, it disrupts insect feeding, mating, and reproduction cycles safely."
+      mr: "नीम शक्ती हे नैसर्गिक लिंबोळी अर्क आणि कडुनिंब तेलापासून बनवलेले सेंद्रिय कीटकनाशक आहे जे सुरक्षित शेतीसाठी पूरक आहे.",
+      en: "NEEM SHAKTI repels chewing and sucking pests by disrupting their feeding and reproductive cycle."
     },
-    basePrice: 220,
-    originalPrice: 280,
+    basePrice: 260,
+    originalPrice: 340,
     packSizes: [
-      { size: "250 ml", price: 220 },
-      { size: "500 ml", price: 400 },
-      { size: "1 L", price: 750 }
+      { size: "250 ml", price: 260 },
+      { size: "500 ml", price: 480 },
+      { size: "1 L", price: 850 }
     ],
-    image: "/assets/products/placeholder.svg",
+    image: "/assets/products/neem_new.png",
     isPopular: false,
     isNew: true,
-    rating: 4.5,
-    reviewsCount: 52,
+    rating: 4.8,
+    reviewsCount: 140,
     crops: {
-      mr: "मिरची, भाजीपाला पिके, कापूस, सोयाबीन, हरभरा आणि फळझाडे.",
-      en: "Chilli, Leafy Vegetables, Cotton, Soybean, Chickpea and Fruits."
+      mr: "सर्व फळझाडे, भाजीपाला, फुलझाडे, कापूस आणि ऊस.",
+      en: "All fruit crops, vegetables, flowers, cotton and sugarcane."
     },
     benefits: {
-      mr: [
-        "नैसर्गिक व सेंद्रिय असल्याने मित्रकिडींना आणि मधमाश्यांना धोका नाही.",
-        "रसशोषक किडी जसे की मावा, तुडतुडे, फुलकिडे (Thrips) आणि पांढरी माशी यांवर नियंत्रण.",
-        "किडींमध्ये प्रतिकारशक्ती तयार होऊ देत नाही."
-      ],
-      en: [
-        "Eco-friendly formula that is safe for beneficial predators and pollinators.",
-        "Effectively repels sucking pests like aphids, jassids, thrips, and whiteflies.",
-        "Does not allow target insects to build chemical resistance over time."
-      ]
+      mr: ["रस शोषणाऱ्या किडींवर अत्यंत प्रभावी प्रतिबंधक.", "पूर्णपणे सेंद्रिय असल्यामुळे मानवाला आणि मित्रकिडींना सुरक्षित."],
+      en: ["Effective repeller against aphids, whiteflies, and thrips.", "Eco-friendly, safe for beneficial insects and predators."]
     },
     usage: {
-      mr: "३ ते ५ मिली प्रति लिटर पाण्यात मिसळून संध्याकाळी फवारणी करावी.",
-      en: "Mix 3 to 5 ml per liter of water and spray thoroughly during evening hours."
+      mr: "२ ते ३ मिली प्रति लिटर पाणी या प्रमाणात सुरुवातीपासून दर १५ दिवसांनी फवारणी करावी.",
+      en: "Mix 2 to 3 ml per liter of water and spray every 15 days preventively."
     }
   },
   {
-    id: "root-booster",
-    name: "ROOT BOOSTER",
-    category: "bio-products",
-    tagline: { mr: "BIO MYCORRHIZAL FERTILIZER", en: "BIO MYCORRHIZAL FERTILIZER" },
+    id: "kanda-special",
+    name: "KANDA SPECIAL",
+    category: "plant-growth",
+    tagline: { mr: "कांदा पिकाचा आकार आणि गुणवत्ता वाढवणारे विशेष टॉनिक", en: "Onion Bulb Size & Quality Enhancer" },
     shortDescription: {
-      mr: "पिकांच्या मुळांच्या जोमदार वाढीसाठी उत्कृष्ट मायकोरायझल जैविक खत.",
-      en: "High-grade mycorrhizal formulation for extensive root growth and soil health."
+      mr: "कांद्याची पात हिरवीगार ठेवून कांद्याची फुगवण व वजन वाढवण्यासाठी सर्वोत्तम.",
+      en: "Optimizes bulb sizing and improves onion leaf structure strength."
     },
     description: {
-      mr: "रूट बूस्टर हे जैविक घटकांवर आधारित उत्पादन आहे जे मुळांभोवती उपयुक्त बुरशीचे जाळे तयार करते. हे जमिनीतील विरघळणारे फॉस्फरस आणि इतर घटक मुळांपर्यंत पोहोचवण्यास मदत करते.",
-      en: "ROOT BOOSTER is a bio-fertilizer containing endo and ecto mycorrhizae. It establishes a symbiotic relationship with plant roots, effectively increasing the root absorption surface area for minerals."
+      mr: "कांदा स्पेशल कांद्याची फुगवण क्षमता वाढवून त्याला आकर्षक रंग आणि चमकदार त्वचा प्रदान करते.",
+      en: "KANDA SPECIAL contains potassium-rich and sulfur-friendly micronutrients to maximize onion bulb weight."
     },
-    basePrice: 180,
-    originalPrice: 240,
+    basePrice: 330,
+    originalPrice: 420,
     packSizes: [
-      { size: "500 gm", price: 180 },
-      { size: "1 kg", price: 320 }
+      { size: "250 ml", price: 330 },
+      { size: "500 ml", price: 600 }
     ],
-    image: "/assets/products/placeholder.svg",
+    image: "/assets/products/pnd_kanda.png",
+    isPopular: true,
+    isNew: false,
+    rating: 4.9,
+    reviewsCount: 185,
+    crops: {
+      mr: "कांदा, लसूण, बटाटा आणि इतर कंदपिके.",
+      en: "Onion, Garlic, Potato and other tuber crops."
+    },
+    benefits: {
+      mr: ["कांद्याचा आकार आणि वजन वाढवते.", "कांद्याची साठवणूक क्षमता (टिकवण) सुधारते."],
+      en: ["Increases bulb circumference and density.", "Enhances storage shelf-life of harvested onions."]
+    },
+    usage: {
+      mr: "२ मिली प्रति लिटर पाण्यात मिसळून ३५ व्या आणि ५५ व्या दिवशी फवारणी करावी.",
+      en: "Mix 2 ml per liter of water and spray at 35 and 55 days of crop age."
+    }
+  },
+  {
+    id: "kuber",
+    name: "KUBER",
+    category: "plant-growth",
+    tagline: { mr: "भरघोस उत्पन्नासाठी समृद्ध वनस्पती टॉनिक", en: "Wealth Yielding Organic Stimulator" },
+    shortDescription: {
+      mr: "उत्पादनात भरघोस वाढ घडवून आणणारे विशेष सेंद्रिय संजीवक.",
+      en: "Organic yield booster formulation for high grade cash crops."
+    },
+    description: {
+      mr: "कुबेर वनस्पतींच्या पेशींना उत्तेजित करून पानांची आणि फांद्यांची संतुलित शाकीय वाढ घडवून आणते.",
+      en: "KUBER stimulates biological pathways to optimize carbohydrate and protein synthesis inside crops."
+    },
+    basePrice: 420,
+    originalPrice: 550,
+    packSizes: [
+      { size: "250 ml", price: 420 },
+      { size: "500 ml", price: 780 }
+    ],
+    image: "/assets/products/png_kuber.png",
+    isPopular: false,
+    isNew: false,
+    rating: 4.8,
+    reviewsCount: 104,
+    crops: {
+      mr: "ऊस, कापूस, मिरची, हळद, केळी, द्राक्षे आणि भाजीपाला.",
+      en: "Sugarcane, Cotton, Chilli, Turmeric, Banana, Grapes and Vegetables."
+    },
+    benefits: {
+      mr: ["पिकांची वाढ निरोगी आणि सुदृढ होते.", "फळांची फुगवण आणि प्रत उत्तम सुधारते."],
+      en: ["Promotes deep green and disease-resistant vocabulary.", "Enhances crop sizing, uniformity, and premium weight."]
+    },
+    usage: {
+      mr: "१.५ ते २ मिली प्रति लिटर पाण्यात मिसळून फवारणी करावी.",
+      en: "Mix 1.5 to 2 ml per liter of water and spray."
+    }
+  },
+  {
+    id: "agri-sulf",
+    name: "AGRI SULF",
+    category: "micronutrients",
+    tagline: { mr: "पिकांसाठी सल्फरयुक्त सूक्ष्म अन्नद्रव्य खत", en: "Sulphur Nutrient Crop Fertilizer" },
+    shortDescription: {
+      mr: "पिकांमध्ये तेल व प्रथिनांचे प्रमाण वाढवून जमिनीत ओलावा टिकवून ठेवते.",
+      en: "Delivers essential Sulphur to boost oil and protein content."
+    },
+    description: {
+      mr: "ॲग्री सल्फर हे पिकांसाठी एक आवश्यक पोषण घटक आहे जे जमिनीचा पीएच (pH) संतुलित करण्यास मदत करते.",
+      en: "AGRI SULF supplies highly absorbable sulphur to correct nutrient blockages and improve oil content in oilseeds."
+    },
+    basePrice: 190,
+    originalPrice: 250,
+    packSizes: [
+      { size: "500 gm", price: 190 },
+      { size: "1 kg", price: 350 }
+    ],
+    image: "/assets/products/agri_salf.png",
     isPopular: false,
     isNew: false,
     rating: 4.7,
-    reviewsCount: 65,
+    reviewsCount: 76,
     crops: {
-      mr: "ऊस, हळद, केळी, पपई, मिरची, टोमॅटो, फळझाडे आणि रोपवाटिका (Nursery).",
-      en: "Sugarcane, Turmeric, Banana, Papaya, Chilli, Tomato, Orchards and Nursery beds."
+      mr: "सोयाबीन, भुईमूग, मोहरी, कांदा, लसूण आणि कडधान्ये.",
+      en: "Soybean, Groundnut, Mustard, Onion, Garlic and oilseed crops."
     },
     benefits: {
-      mr: [
-        "मुळांची लांबी आणि संख्या वाढवून झाडाची जमिनीवर मजबूत पकड निर्माण करते.",
-        "जमिनीतील फॉस्फरस, पालाश आणि सूक्ष्म अन्नद्रव्यांचे शोषण वाढवते.",
-        "पाण्याचा ताण सहन करण्याची वनस्पतीची क्षमता वाढवते."
-      ],
-      en: [
-        "Drastically expands lateral root length and branching for firm soil grip.",
-        "Improves assimilation of insoluble soil phosphorus, potassium, and trace minerals.",
-        "Enhances crop drought resistance by retaining water moisture in the root zone."
-      ]
+      mr: ["तेलबिया पिकांमध्ये तेलाचे प्रमाण लक्षणीय वाढते.", "कांदा व लसूण पिकात तिखटपणा आणि रंग चांगला येतो."],
+      en: ["Significantly increases oil yield in peanuts and soybeans.", "Improves typical pungency and skin color of onions."]
     },
     usage: {
-      mr: "१ ते २ किलो प्रति एकर या प्रमाणात शेणखतामध्ये किंवा रासायनिक खतासोबत जमिनीत मिसळावे.",
-      en: "Mix 1 to 2 kg per acre with farmyard manure or chemical fertilizers and apply in soil."
+      mr: "३ ते ५ ग्रॅम प्रति लिटर पाण्यात मिसळून फवारणी करावी.",
+      en: "Mix 3 to 5 gm per liter of water and spray."
+    }
+  },
+  {
+    id: "balram",
+    name: "BALRAM",
+    category: "plant-growth",
+    tagline: { mr: "केळी आणि इतर पिकांच्या शाकीय वाढीसाठी सर्वोत्तम", en: "Banana & Vegetative Growth Specialist" },
+    shortDescription: {
+      mr: "खोडाची जाडी आणि पानांची रुंदी वाढवणारे विशेष केळी स्पेशल टॉनिक.",
+      en: "Promotes thick pseudostems and broad leaves in banana fields."
+    },
+    description: {
+      mr: "बलराम केळी पिकाच्या वाढीच्या विविध टप्प्यांवर पोषण पुरवून पानांमधील अन्न निर्मितीचा वेग वाढवते.",
+      en: "BALRAM provides high-grade natural enzymes and organic minerals to stimulate solid pseudostems in banana."
+    },
+    basePrice: 360,
+    originalPrice: 450,
+    packSizes: [
+      { size: "250 ml", price: 360 },
+      { size: "500 ml", price: 680 }
+    ],
+    image: "/assets/products/balram-mock_(1).png",
+    isPopular: false,
+    isNew: false,
+    rating: 4.9,
+    reviewsCount: 115,
+    crops: {
+      mr: "केळी, पपई, ऊस आणि वेलवर्गीय पिके.",
+      en: "Banana, Papaya, Sugarcane and trellis crops."
+    },
+    benefits: {
+      mr: ["केळीच्या खोडाला जाडी येते व पाने रुंद होतात.", "घडाचा आकार वाढून फळे समान लांबीची होतात."],
+      en: ["Increases stem diameter and leaves surface area.", "Promotes uniform finger development and large banana bunches."]
+    },
+    usage: {
+      mr: "२ मिली प्रति लिटर पाण्यात मिसळून फवारणी किंवा आळवणी करावी.",
+      en: "Mix 2 ml per liter of water for foliar spray or drenching."
+    }
+  },
+  {
+    id: "white-kill",
+    name: "WHITE KILL",
+    category: "fungicides",
+    tagline: { mr: "पांढऱ्या माशी आणि बुरशीचा तात्काळ नायनाट", en: "Broad Spectrum Whitefly & Fungus Destroyer" },
+    shortDescription: {
+      mr: "मिरची व कापसावरील तेल्या, करपा आणि कीड यांचा वेगाने बंदोबस्त.",
+      en: "Provides quick knock-down action against whiteflies and leaf-spots."
+    },
+    description: {
+      mr: "व्हाईट कील हे झाडाच्या पानांमध्ये खोलवर पसरून रोगकारक बुरशी आणि कीटक नियंत्रित करते.",
+      en: "WHITE KILL is an advanced crop wellness formulation containing organic insect repellents and active fungicides."
+    },
+    basePrice: 480,
+    originalPrice: 600,
+    packSizes: [
+      { size: "250 ml", price: 480 },
+      { size: "500 ml", price: 900 }
+    ],
+    image: "/assets/products/white_kill.png",
+    isPopular: true,
+    isNew: true,
+    rating: 4.8,
+    reviewsCount: 130,
+    crops: {
+      mr: "मिरची, कापूस, टोमॅटो, द्राक्षे आणि भाजीपाला पिके.",
+      en: "Chilli, Cotton, Tomato, Grapes and all vegetables."
+    },
+    benefits: {
+      mr: ["पांढऱ्या माशीचा प्रादुर्भाव पूर्ण थांबवतो.", "बुरशीजन्य करपा व पानावरील डाग तात्काळ आटोक्यात आणतो."],
+      en: ["Drives out stubborn whitefly populations safely.", "Arrests severe leaf rust and anthracnose spread."]
+    },
+    usage: {
+      mr: "१.५ ते २ मिली प्रति लिटर पाण्यात मिसळून पानांवर फवारणी करावी.",
+      en: "Mix 1.5 to 2 ml per liter of water and spray on infested leaves."
+    }
+  },
+  {
+    id: "top-10",
+    name: "TOP 10",
+    category: "plant-growth",
+    tagline: { mr: "उत्कृष्ट उत्पादन आणि फुलांसाठी १०-इन-१ टॉनिक", en: "10-in-1 Premium Plant Tonic" },
+    shortDescription: {
+      mr: "पिकांच्या निरोगी पानांसाठी १० हून अधिक सेंद्रिय पोषण द्रव्यांचे मिश्रण.",
+      en: "10-in-1 organic liquid nutrients formulation for bumper crops."
+    },
+    description: {
+      mr: "टॉप १० पिकाच्या पानांचा आकार, चकाकी आणि फळांचे पोषण सुधारणारे सर्वसमावेशक संजीवक आहे.",
+      en: "TOP 10 integrates seaweed extract, vitamins, fulvic acid, and chelated minerals to keep crops yielding at peak."
+    },
+    basePrice: 390,
+    originalPrice: 500,
+    packSizes: [
+      { size: "250 ml", price: 390 },
+      { size: "500 ml", price: 720 }
+    ],
+    image: "/assets/products/top_10.png",
+    isPopular: false,
+    isNew: true,
+    rating: 4.9,
+    reviewsCount: 205,
+    crops: {
+      mr: "सर्व तृणधान्ये, भाजीपाला, फळबागा आणि गळित धान्ये.",
+      en: "All cereal crops, vegetables, fruit orchards and cash crops."
+    },
+    benefits: {
+      mr: ["झाडांना १० पट वेगाने पोषण प्रदान करते.", "पाती आणि फुलांची गळती थांबवून फळांची चमक सुधारते."],
+      en: ["Accelerates nutrient transportation 10x faster.", "Stops bud drop and gives glossy premium look to fruits."]
+    },
+    usage: {
+      mr: "२ मिली प्रति लिटर पाणी या प्रमाणात पिकाच्या शाकीय वाढीच्या काळात फवारणी करावी.",
+      en: "Mix 2 ml per liter of water and spray during active growth nodes."
     }
   }
 ];
