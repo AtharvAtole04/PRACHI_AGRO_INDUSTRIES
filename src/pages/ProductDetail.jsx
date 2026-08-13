@@ -3,16 +3,20 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, MessageCircle, Star, Shield, HelpCircle, Truck, HeartHandshake } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
-import { products } from '../data/products';
+import { getProducts } from '../data/products';
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const [productsList, setProductsList] = useState([]);
+  useEffect(() => {
+    setProductsList(getProducts());
+  }, []);
   const { t, language } = useLanguage();
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
   // Find product
-  const product = products.find(p => p.id === id);
+  const product = productsList.find(p => p.id === id);
 
   // States
   const [selectedPack, setSelectedPack] = useState(null);
@@ -69,7 +73,7 @@ const ProductDetail = () => {
   };
 
   // Compute related products
-  const relatedProducts = products
+  const relatedProducts = productsList
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 3);
 

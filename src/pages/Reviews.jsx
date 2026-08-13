@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, Star } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { reviews } from '../data/reviews';
+import { getReviews } from '../data/reviews';
 import FarmerReviewCard from '../components/FarmerReviewCard';
 
 const Reviews = () => {
+  const [reviewsList, setReviewsList] = useState([]);
+  useEffect(() => {
+    setReviewsList(getReviews());
+  }, []);
   const { t, language } = useLanguage();
 
   return (
@@ -50,7 +54,7 @@ const Reviews = () => {
 
       {/* Reviews Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {reviews.map((rev) => (
+        {reviewsList.map((rev) => (
           <FarmerReviewCard key={rev.id} review={rev} />
         ))}
       </div>

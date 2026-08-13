@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { blogs } from '../data/blogs';
+import { getBlogs } from '../data/blogs';
 
 const BlogDetail = () => {
   const { id } = useParams();
+  const [blogsList, setBlogsList] = useState([]);
+  useEffect(() => {
+    setBlogsList(getBlogs());
+  }, []);
   const { t, language } = useLanguage();
 
   // Find blog
-  const blog = blogs.find(b => b.id === id);
+  const blog = blogsList.find(b => b.id === id);
 
   if (!blog) {
     return (

@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, X, Tag } from 'lucide-react';
 import { YoutubeIcon } from '../components/BrandIcons';
 import { useLanguage } from '../context/LanguageContext';
-import { videos, videoCategories } from '../data/videos';
+import { getVideos, videoCategories } from '../data/videos';
 import VideoCard from '../components/VideoCard';
 
 const Videos = () => {
+  const [videosList, setVideosList] = useState([]);
+  useEffect(() => {
+    setVideosList(getVideos());
+  }, []);
   const { t, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedVideo, setSelectedVideo] = useState(null);
 
   // Filter videos based on category
-  const filteredVideos = videos.filter((video) => {
+  const filteredVideos = videosList.filter((video) => {
     if (selectedCategory === 'all') return true;
     
     // Category mapping logic from ID to Marathi/English titles

@@ -22,6 +22,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Reviews from './pages/Reviews';
 import NotFound from './pages/NotFound';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/reviews" element={<Reviews />} />
+              <Route path="/admin" element={<Admin />} />
               
               {/* Mock placeholder static routes to avoid 404 on Footer links */}
               <Route path="/privacy" element={<Home />} />

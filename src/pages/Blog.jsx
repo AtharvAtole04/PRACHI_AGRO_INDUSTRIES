@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { blogs } from '../data/blogs';
+import { getBlogs } from '../data/blogs';
 import BlogCard from '../components/BlogCard';
 
 const Blog = () => {
+  const [blogsList, setBlogsList] = useState([]);
+  useEffect(() => {
+    setBlogsList(getBlogs());
+  }, []);
   const { language } = useLanguage();
 
   return (
@@ -21,7 +25,7 @@ const Blog = () => {
 
       {/* Blogs Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {blogs.map((blog) => (
+        {blogsList.map((blog) => (
           <BlogCard key={blog.id} blog={blog} />
         ))}
       </div>

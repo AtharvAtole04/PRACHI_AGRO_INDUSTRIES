@@ -1,4 +1,4 @@
-export const products = [
+const defaultProducts = [
   {
     id: "bactrikiller",
     name: "BACTRIKILLER",
@@ -366,3 +366,47 @@ export const products = [
     }
   }
 ];
+
+export const getProducts = () => {
+  const data = localStorage.getItem('prachi_products');
+  if (!data) {
+    localStorage.setItem('prachi_products', JSON.stringify(defaultProducts));
+    return defaultProducts;
+  }
+  return JSON.parse(data);
+};
+
+export const saveProducts = (array) => {
+  localStorage.setItem('prachi_products', JSON.stringify(array));
+};
+
+export const addProduct = (product) => {
+  const list = getProducts();
+  // Ensure unique ID
+  const newProduct = {
+    ...product,
+    id: product.id || product.name.toLowerCase().replace(/\s+/g, '-')
+  };
+  list.push(newProduct);
+  saveProducts(list);
+  return list;
+};
+
+export const updateProduct = (id, updatedProduct) => {
+  const list = getProducts();
+  const index = list.findIndex(p => p.id === id);
+  if (index > -1) {
+    list[index] = { ...list[index], ...updatedProduct };
+    saveProducts(list);
+  }
+  return list;
+};
+
+export const deleteProduct = (id) => {
+  const list = getProducts();
+  const filtered = list.filter(p => p.id !== id);
+  saveProducts(filtered);
+  return filtered;
+};
+
+export const products = getProducts();

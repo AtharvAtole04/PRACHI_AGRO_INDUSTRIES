@@ -1,4 +1,4 @@
-export const blogs = [
+const defaultBlogs = [
   {
     id: "identifying-crop-diseases",
     title: {
@@ -8,7 +8,7 @@ export const blogs = [
     category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
     date: "2026-08-10",
     readTime: "5 min read",
-    image: "/assets/blog/blog1.jpg",
+    image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400",
     excerpt: {
       mr: "पिकांवर बुरशीजन्य रोग आल्यास पानांवर डाग पडणे, पाने पिवळी पडणे किंवा वाळणे अशी लक्षणे दिसतात. या लेखात आपण बुरशीजन्य रोगांचे वेळेवर निदान कसे करावे हे पाहू.",
       en: "Fungal diseases present symptoms like spots on leaves, yellowing, or drying of plants. Learn how to identify these diseases early to protect your yields."
@@ -49,7 +49,7 @@ Browning, rotting, or cankers on the main stem.
     category: { mr: "कीड व्यवस्थापन", en: "Pest Management" },
     date: "2026-08-05",
     readTime: "4 min read",
-    image: "/assets/blog/blog2.jpg",
+    image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=400",
     excerpt: {
       mr: "पावसाळ्यात दमट वातावरणामुळे मावा, तुडतुडे, आणि फुलकिडे (Thrips) यांचा प्रादुर्भाव वाढतो. जाणून घ्या पिकांना कीडमुक्त ठेवण्याचे नैसर्गिक आणि रासायनिक मार्ग.",
       en: "Humidity during monsoons leads to a spike in aphids, jassids, and thrips. Learn natural and scientific ways to keep your fields pest-free."
@@ -84,7 +84,7 @@ Aphids, Jassids, Thrips, and Whiteflies.
     category: { mr: "खत व्यवस्थापन", en: "Fertilizer Management" },
     date: "2026-07-28",
     readTime: "6 min read",
-    image: "/assets/blog/blog3.jpg",
+    image: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400",
     excerpt: {
       mr: "केवळ नत्र, स्फुरद आणि पालाश देऊन पिकांचे पोषण पूर्ण होत नाही. चांगल्या उत्पादनासाठी सूक्ष्म अन्नद्रव्यांचे (मायक्रोन्युट्रिएंट्स) काय महत्त्व आहे, सविस्तर वाचा.",
       en: "NPK fertilizers alone are not enough for complete crop nutrition. Read why micronutrients play a critical role in unlocking record yields."
@@ -115,3 +115,37 @@ Yellowing of leaves, dry vegetative buds, and heavy flower drop indicate a lack 
     }
   }
 ];
+
+export const getBlogs = () => {
+  const data = localStorage.getItem('prachi_blogs');
+  if (!data) {
+    localStorage.setItem('prachi_blogs', JSON.stringify(defaultBlogs));
+    return defaultBlogs;
+  }
+  return JSON.parse(data);
+};
+
+export const saveBlogs = (array) => {
+  localStorage.setItem('prachi_blogs', JSON.stringify(array));
+};
+
+export const addBlog = (blog) => {
+  const list = getBlogs();
+  const newBlog = {
+    ...blog,
+    id: blog.id || blog.title.en.toLowerCase().replace(/\s+/g, '-'),
+    date: new Date().toISOString().split('T')[0]
+  };
+  list.push(newBlog);
+  saveBlogs(list);
+  return list;
+};
+
+export const deleteBlog = (id) => {
+  const list = getBlogs();
+  const filtered = list.filter(b => b.id !== id);
+  saveBlogs(filtered);
+  return filtered;
+};
+
+export const blogs = getBlogs();

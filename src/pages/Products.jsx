@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Filter, X, Grid, List, SlidersHorizontal } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { products } from '../data/products';
+import { getProducts } from '../data/products';
 import { categories } from '../data/categories';
 import ProductCard from '../components/ProductCard';
 
 const Products = () => {
+  const [productsList, setProductsList] = useState([]);
+  useEffect(() => {
+    setProductsList(getProducts());
+  }, []);
   const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   
@@ -39,7 +43,7 @@ const Products = () => {
   };
 
   // Filter and Sort Logic
-  const filteredProducts = products
+  const filteredProducts = productsList
     .filter((product) => {
       // 1. Search Query Match
       if (searchQuery.trim()) {

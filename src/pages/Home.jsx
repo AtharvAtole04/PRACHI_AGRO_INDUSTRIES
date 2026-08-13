@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Play, X, Percent } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { products } from '../data/products';
+import { getProducts } from '../data/products';
 import { categories } from '../data/categories';
-import { reviews } from '../data/reviews';
-import { videos } from '../data/videos';
-import { blogs } from '../data/blogs';
+import { getReviews } from '../data/reviews';
+import { getVideos } from '../data/videos';
+import { getBlogs } from '../data/blogs';
 
 // Shared Components
 import HeroSlider from '../components/HeroSlider';
@@ -21,10 +21,23 @@ const Home = () => {
   const navigate = useNavigate();
   const [selectedVideo, setSelectedVideo] = useState(null);
 
+  // Dynamic States for localStorage datasets
+  const [productsList, setProductsList] = useState([]);
+  const [reviewsList, setReviewsList] = useState([]);
+  const [videosList, setVideosList] = useState([]);
+  const [blogsList, setBlogsList] = useState([]);
+
+  useEffect(() => {
+    setProductsList(getProducts());
+    setReviewsList(getReviews());
+    setVideosList(getVideos());
+    setBlogsList(getBlogs());
+  }, []);
+
   // Filter popular and new products
-  const popularProducts = products.filter(p => p.isPopular).slice(0, 6);
-  const newProducts = products.filter(p => p.isNew).slice(0, 4);
-  const specialOffers = products.filter(p => p.originalPrice > p.basePrice).slice(0, 3);
+  const popularProducts = productsList.filter(p => p.isPopular).slice(0, 6);
+  const newProducts = productsList.filter(p => p.isNew).slice(0, 4);
+  const specialOffers = productsList.filter(p => p.originalPrice > p.basePrice).slice(0, 3);
 
   const handlePlayVideo = (video) => {
     setSelectedVideo(video);
@@ -203,7 +216,7 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {videos.slice(0, 3).map((video) => (
+          {videosList.slice(0, 3).map((video) => (
             <VideoCard key={video.id} video={video} onPlayClick={handlePlayVideo} />
           ))}
         </div>
@@ -222,7 +235,7 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {reviews.map((rev) => (
+          {reviewsList.map((rev) => (
             <FarmerReviewCard key={rev.id} review={rev} />
           ))}
         </div>
@@ -250,7 +263,7 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {blogs.slice(0, 3).map((blog) => (
+          {blogsList.slice(0, 3).map((blog) => (
             <BlogCard key={blog.id} blog={blog} />
           ))}
         </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { products } from '../data/products';
+import { getProducts } from '../data/products';
 
 const SearchBar = () => {
   const { t, language } = useLanguage();
@@ -15,7 +15,7 @@ const SearchBar = () => {
   // Filter products based on query
   useEffect(() => {
     if (query.trim().length > 0) {
-      const filtered = products.filter(product => {
+      const filtered = getProducts().filter(product => {
         const nameMatch = product.name.toLowerCase().includes(query.toLowerCase());
         const descMatch = (product.shortDescription[language] || '').toLowerCase().includes(query.toLowerCase());
         const categoryMatch = product.category.toLowerCase().includes(query.toLowerCase());
