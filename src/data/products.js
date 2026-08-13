@@ -367,7 +367,15 @@ const defaultProducts = [
   }
 ];
 
-export const getProducts = () => {
+export const getProducts = async () => {
+  try {
+    const res = await fetch('/api/products');
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Falling back to localStorage for products.");
+  }
   const data = localStorage.getItem('prachi_products');
   if (!data) {
     localStorage.setItem('prachi_products', JSON.stringify(defaultProducts));
@@ -376,37 +384,70 @@ export const getProducts = () => {
   return JSON.parse(data);
 };
 
-export const saveProducts = (array) => {
-  localStorage.setItem('prachi_products', JSON.stringify(array));
+export const saveProducts = async (array) => {
+  try {
+    localStorage.setItem('prachi_products', JSON.stringify(array));
+  } catch (err) {}
 };
 
-export const addProduct = (product) => {
-  const list = getProducts();
-  // Ensure unique ID
+export const addProduct = async (product) => {
+  try {
+    const res = await fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product)
+    });
+    if (res.ok) {
+      return await getProducts();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Saving to localStorage.");
+  }
+  const list = await getProducts();
   const newProduct = {
     ...product,
     id: product.id || product.name.toLowerCase().replace(/\s+/g, '-')
   };
   list.push(newProduct);
-  saveProducts(list);
+  await saveProducts(list);
   return list;
 };
 
-export const updateProduct = (id, updatedProduct) => {
-  const list = getProducts();
+export const updateProduct = async (id, updatedProduct) => {
+  try {
+    const res = await fetch(`/api/products/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedProduct)
+    });
+    if (res.ok) {
+      return await getProducts();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Saving to localStorage.");
+  }
+  const list = await getProducts();
   const index = list.findIndex(p => p.id === id);
   if (index > -1) {
     list[index] = { ...list[index], ...updatedProduct };
-    saveProducts(list);
+    await saveProducts(list);
   }
   return list;
 };
 
-export const deleteProduct = (id) => {
-  const list = getProducts();
+export const deleteProduct = async (id) => {
+  try {
+    const res = await fetch(`/api/products/${id}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      return await getProducts();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Saving to localStorage.");
+  }
+  const list = await getProducts();
   const filtered = list.filter(p => p.id !== id);
-  saveProducts(filtered);
+  await saveProducts(filtered);
   return filtered;
 };
-
-export const products = getProducts();

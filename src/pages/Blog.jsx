@@ -6,7 +6,7 @@ import BlogCard from '../components/BlogCard';
 const Blog = () => {
   const [blogsList, setBlogsList] = useState([]);
   useEffect(() => {
-    setBlogsList(getBlogs());
+    getBlogs().then(data => setBlogsList(data));
   }, []);
   const { language } = useLanguage();
 

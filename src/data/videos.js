@@ -63,7 +63,15 @@ export const videoCategories = [
   { id: "prachi-products", title: { mr: "प्राची अॅग्रो उत्पादने", en: "Prachi Agro Products" } }
 ];
 
-export const getVideos = () => {
+export const getVideos = async () => {
+  try {
+    const res = await fetch('/api/videos');
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Falling back to localStorage for videos.");
+  }
   const data = localStorage.getItem('prachi_videos');
   if (!data) {
     localStorage.setItem('prachi_videos', JSON.stringify(defaultVideos));
@@ -72,35 +80,56 @@ export const getVideos = () => {
   return JSON.parse(data);
 };
 
-export const saveVideos = (array) => {
-  localStorage.setItem('prachi_videos', JSON.stringify(array));
+export const saveVideos = async (array) => {
+  try {
+    localStorage.setItem('prachi_videos', JSON.stringify(array));
+  } catch (err) {}
 };
 
-export const addVideo = (video) => {
-  const list = getVideos();
+export const addVideo = async (video) => {
+  try {
+    const res = await fetch('/api/videos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(video)
+    });
+    if (res.ok) {
+      return await getVideos();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Saving to localStorage.");
+  }
+  const list = await getVideos();
   const newVideo = {
     ...video,
     id: video.id || video.title.en.toLowerCase().replace(/\s+/g, '-'),
     embedId: video.embedId || extractEmbedId(video.youtubeUrl)
   };
   list.push(newVideo);
-  saveVideos(list);
+  await saveVideos(list);
   return list;
 };
 
-export const deleteVideo = (id) => {
-  const list = getVideos();
+export const deleteVideo = async (id) => {
+  try {
+    const res = await fetch(`/api/videos/${id}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      return await getVideos();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Saving to localStorage.");
+  }
+  const list = await getVideos();
   const filtered = list.filter(v => v.id !== id);
-  saveVideos(filtered);
+  await saveVideos(filtered);
   return filtered;
 };
 
-// Helper function to extract YouTube Embed ID
 function extractEmbedId(url) {
   if (!url) return 'dQw4w9WgXcQ';
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
   return (match && match[2].length === 11) ? match[2] : 'dQw4w9WgXcQ';
 }
-
-export const videos = getVideos();

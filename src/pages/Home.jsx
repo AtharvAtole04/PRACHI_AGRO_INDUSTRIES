@@ -28,10 +28,10 @@ const Home = () => {
   const [blogsList, setBlogsList] = useState([]);
 
   useEffect(() => {
-    setProductsList(getProducts());
-    setReviewsList(getReviews());
-    setVideosList(getVideos());
-    setBlogsList(getBlogs());
+    getProducts().then(data => setProductsList(data));
+    getReviews().then(data => setReviewsList(data));
+    getVideos().then(data => setVideosList(data));
+    getBlogs().then(data => setBlogsList(data));
   }, []);
 
   // Filter popular and new products

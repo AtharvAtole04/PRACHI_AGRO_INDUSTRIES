@@ -8,7 +8,7 @@ const BlogDetail = () => {
   const { id } = useParams();
   const [blogsList, setBlogsList] = useState([]);
   useEffect(() => {
-    setBlogsList(getBlogs());
+    getBlogs().then(data => setBlogsList(data));
   }, []);
   const { t, language } = useLanguage();
 

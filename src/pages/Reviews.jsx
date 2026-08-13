@@ -7,7 +7,7 @@ import FarmerReviewCard from '../components/FarmerReviewCard';
 const Reviews = () => {
   const [reviewsList, setReviewsList] = useState([]);
   useEffect(() => {
-    setReviewsList(getReviews());
+    getReviews().then(data => setReviewsList(data));
   }, []);
   const { t, language } = useLanguage();
 

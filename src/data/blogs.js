@@ -116,7 +116,15 @@ Yellowing of leaves, dry vegetative buds, and heavy flower drop indicate a lack 
   }
 ];
 
-export const getBlogs = () => {
+export const getBlogs = async () => {
+  try {
+    const res = await fetch('/api/blogs');
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Falling back to localStorage for blogs.");
+  }
   const data = localStorage.getItem('prachi_blogs');
   if (!data) {
     localStorage.setItem('prachi_blogs', JSON.stringify(defaultBlogs));
@@ -125,27 +133,49 @@ export const getBlogs = () => {
   return JSON.parse(data);
 };
 
-export const saveBlogs = (array) => {
-  localStorage.setItem('prachi_blogs', JSON.stringify(array));
+export const saveBlogs = async (array) => {
+  try {
+    localStorage.setItem('prachi_blogs', JSON.stringify(array));
+  } catch (err) {}
 };
 
-export const addBlog = (blog) => {
-  const list = getBlogs();
+export const addBlog = async (blog) => {
+  try {
+    const res = await fetch('/api/blogs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(blog)
+    });
+    if (res.ok) {
+      return await getBlogs();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Saving to localStorage.");
+  }
+  const list = await getBlogs();
   const newBlog = {
     ...blog,
     id: blog.id || blog.title.en.toLowerCase().replace(/\s+/g, '-'),
     date: new Date().toISOString().split('T')[0]
   };
   list.push(newBlog);
-  saveBlogs(list);
+  await saveBlogs(list);
   return list;
 };
 
-export const deleteBlog = (id) => {
-  const list = getBlogs();
+export const deleteBlog = async (id) => {
+  try {
+    const res = await fetch(`/api/blogs/${id}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      return await getBlogs();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Saving to localStorage.");
+  }
+  const list = await getBlogs();
   const filtered = list.filter(b => b.id !== id);
-  saveBlogs(filtered);
+  await saveBlogs(filtered);
   return filtered;
 };
-
-export const blogs = getBlogs();

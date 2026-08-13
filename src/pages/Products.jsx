@@ -9,7 +9,7 @@ import ProductCard from '../components/ProductCard';
 const Products = () => {
   const [productsList, setProductsList] = useState([]);
   useEffect(() => {
-    setProductsList(getProducts());
+    getProducts().then(data => setProductsList(data));
   }, []);
   const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();

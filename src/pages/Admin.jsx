@@ -83,10 +83,10 @@ const Admin = () => {
   }, [isAuthenticated]);
 
   const loadAllData = () => {
-    setProductsList(getProducts());
-    setVideosList(getVideos());
-    setBlogsList(getBlogs());
-    setReviewsList(getReviews());
+    getProducts().then(data => setProductsList(data));
+    getVideos().then(data => setVideosList(data));
+    getBlogs().then(data => setBlogsList(data));
+    getReviews().then(data => setReviewsList(data));
   };
 
   const handleLogin = (e) => {
@@ -105,7 +105,7 @@ const Admin = () => {
   };
 
   // Product CRUD
-  const handleProductSubmit = (e) => {
+  const handleProductSubmit = async (e) => {
     e.preventDefault();
     
     // Structure packSizes
@@ -141,10 +141,10 @@ const Admin = () => {
     };
 
     if (isEditingProduct) {
-      updateProduct(productForm.id, formattedProduct);
+      await updateProduct(productForm.id, formattedProduct);
       setSuccessMsg(language === 'mr' ? 'उत्पादन यशस्वीरित्या सुधारित केले गेले!' : 'Product updated successfully!');
     } else {
-      addProduct(formattedProduct);
+      await addProduct(formattedProduct);
       setSuccessMsg(language === 'mr' ? 'नवीन उत्पादन यशस्वीरित्या जोडले गेले!' : 'New product added successfully!');
     }
 
@@ -187,9 +187,9 @@ const Admin = () => {
     window.scrollTo(0, 300);
   };
 
-  const handleDeleteProduct = (id) => {
+  const handleDeleteProduct = async (id) => {
     if (window.confirm(language === 'mr' ? 'हे उत्पादन हटवायचे आहे का?' : 'Are you sure you want to delete this product?')) {
-      deleteProduct(id);
+      await deleteProduct(id);
       loadAllData();
     }
   };
@@ -216,7 +216,7 @@ const Admin = () => {
   };
 
   // Video CRUD
-  const handleVideoSubmit = (e) => {
+  const handleVideoSubmit = async (e) => {
     e.preventDefault();
     
     const newVideo = {
@@ -228,7 +228,7 @@ const Admin = () => {
       thumbnail: videoForm.thumbnail
     };
 
-    addVideo(newVideo);
+    await addVideo(newVideo);
     setSuccessMsg(language === 'mr' ? 'व्हिडिओ जोडला गेला!' : 'Video added successfully!');
     setVideoForm({
       title_mr: '', title_en: '',
@@ -242,15 +242,15 @@ const Admin = () => {
     setTimeout(() => setSuccessMsg(''), 4000);
   };
 
-  const handleDeleteVideo = (id) => {
+  const handleDeleteVideo = async (id) => {
     if (window.confirm(language === 'mr' ? 'व्हिडिओ हटवायचा आहे का?' : 'Delete this video?')) {
-      deleteVideo(id);
+      await deleteVideo(id);
       loadAllData();
     }
   };
 
   // Blog CRUD
-  const handleBlogSubmit = (e) => {
+  const handleBlogSubmit = async (e) => {
     e.preventDefault();
     const newBlog = {
       title: { mr: blogForm.title_mr, en: blogForm.title_en },
@@ -260,7 +260,7 @@ const Admin = () => {
       content: { mr: blogForm.content_mr, en: blogForm.content_en },
       image: blogForm.image
     };
-    addBlog(newBlog);
+    await addBlog(newBlog);
     setSuccessMsg(language === 'mr' ? 'ब्लॉग प्रसिद्ध केला गेला!' : 'Blog published successfully!');
     setBlogForm({
       title_mr: '', title_en: '',
@@ -274,15 +274,15 @@ const Admin = () => {
     setTimeout(() => setSuccessMsg(''), 4000);
   };
 
-  const handleDeleteBlog = (id) => {
+  const handleDeleteBlog = async (id) => {
     if (window.confirm(language === 'mr' ? 'ब्लॉग हटवायचा आहे का?' : 'Delete this blog?')) {
-      deleteBlog(id);
+      await deleteBlog(id);
       loadAllData();
     }
   };
 
   // Review CRUD
-  const handleReviewSubmit = (e) => {
+  const handleReviewSubmit = async (e) => {
     e.preventDefault();
     const newReview = {
       name: reviewForm.name,
@@ -291,7 +291,7 @@ const Admin = () => {
       rating: Number(reviewForm.rating),
       review: { mr: reviewForm.review_mr, en: reviewForm.review_en }
     };
-    addReview(newReview);
+    await addReview(newReview);
     setSuccessMsg(language === 'mr' ? 'अभिप्राय जोडला गेला!' : 'Review added successfully!');
     setReviewForm({
       name: '', location: '',
@@ -303,9 +303,9 @@ const Admin = () => {
     setTimeout(() => setSuccessMsg(''), 4000);
   };
 
-  const handleDeleteReview = (id) => {
+  const handleDeleteReview = async (id) => {
     if (window.confirm(language === 'mr' ? 'अभिप्राय हटवायचा आहे का?' : 'Delete this review?')) {
-      deleteReview(id);
+      await deleteReview(id);
       loadAllData();
     }
   };

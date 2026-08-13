@@ -9,7 +9,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [productsList, setProductsList] = useState([]);
   useEffect(() => {
-    setProductsList(getProducts());
+    getProducts().then(data => setProductsList(data));
   }, []);
   const { t, language } = useLanguage();
   const { addToCart } = useCart();

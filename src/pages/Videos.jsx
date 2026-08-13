@@ -8,7 +8,7 @@ import VideoCard from '../components/VideoCard';
 const Videos = () => {
   const [videosList, setVideosList] = useState([]);
   useEffect(() => {
-    setVideosList(getVideos());
+    getVideos().then(data => setVideosList(data));
   }, []);
   const { t, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState('all');
