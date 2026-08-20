@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prachi Agro Industries | कृषी उत्पादने | Maharashtra</title>
+    <meta name="description" content="Prachi Agro Industries - Premium agricultural products for Maharashtra farmers. Shop fungicides, growth promoters, micronutrients and more.">
+    <meta name="keywords" content="prachi agro, agriculture products, fungicide, growth promoter, Maharashtra farming, कृषी उत्पादने">
+    <meta property="og:title" content="Prachi Agro Industries">
+    <meta property="og:description" content="Prachi Agro Industries - Premium agricultural products for Maharashtra farmers. Shop fungicides, growth promoters, micronutrients and more.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#005c2a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Prachi Agro">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('SW registration failed: ', err);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
