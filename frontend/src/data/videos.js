@@ -11,7 +11,7 @@ const defaultVideos = [
     category: { mr: "उत्पादन माहिती", en: "Product Info" },
     duration: "08:15",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=600",
     views: "12.4K",
     uploaded: "1 month ago"
@@ -26,7 +26,7 @@ const defaultVideos = [
     category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
     duration: "06:40",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600",
     views: "18.2K",
     uploaded: "2 months ago"
@@ -41,7 +41,7 @@ const defaultVideos = [
     category: { mr: "खत व्यवस्थापन", en: "Fertilizer Management" },
     duration: "11:20",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&q=80&w=600",
     views: "24.5K",
     uploaded: "3 weeks ago"
@@ -56,7 +56,7 @@ const defaultVideos = [
     category: { mr: "शेतकरी मार्गदर्शन", en: "Farmer Guidance" },
     duration: "14:10",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600",
     views: "35.1K",
     uploaded: "1 month ago"
@@ -71,7 +71,7 @@ const defaultVideos = [
     category: { mr: "उत्पादन माहिती", en: "Product Info" },
     duration: "07:35",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=600",
     views: "9.8K",
     uploaded: "2 weeks ago"
@@ -86,7 +86,7 @@ const defaultVideos = [
     category: { mr: "प्राची अॅग्रो उत्पादने", en: "Prachi Agro Products" },
     duration: "09:05",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=600",
     views: "15.6K",
     uploaded: "3 months ago"
@@ -101,7 +101,7 @@ const defaultVideos = [
     category: { mr: "कीड व रोग व्यवस्थापन", en: "Pest & Disease" },
     duration: "10:50",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&q=80&w=600",
     views: "21.3K",
     uploaded: "1 month ago"
@@ -116,7 +116,7 @@ const defaultVideos = [
     category: { mr: "उत्पादन माहिती", en: "Product Info" },
     duration: "08:45",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&q=80&w=600",
     views: "14.9K",
     uploaded: "4 weeks ago"
@@ -131,7 +131,7 @@ const defaultVideos = [
     category: { mr: "कीड व रोग व्यवस्थापन", en: "Pest & Disease" },
     duration: "07:15",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=600",
     views: "17.4K",
     uploaded: "2 months ago"
@@ -146,7 +146,7 @@ const defaultVideos = [
     category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
     duration: "09:30",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "dQw4w9WgXcQ",
+    embedId: "",
     thumbnail: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600",
     views: "11.1K",
     uploaded: "3 weeks ago"
@@ -169,7 +169,7 @@ export const getVideos = async () => {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        return data;
+        return data.map(v => v.embedId === 'dQw4w9WgXcQ' ? { ...v, embedId: '' } : v);
       }
     }
   } catch (err) {
@@ -181,8 +181,13 @@ export const getVideos = async () => {
     return defaultVideos;
   }
   try {
-    const parsed = JSON.parse(data);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultVideos;
+    let parsed = JSON.parse(data);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      parsed = parsed.map(v => v.embedId === 'dQw4w9WgXcQ' ? { ...v, embedId: '' } : v);
+      localStorage.setItem('prachi_videos', JSON.stringify(parsed));
+      return parsed;
+    }
+    return defaultVideos;
   } catch {
     return defaultVideos;
   }
@@ -236,8 +241,8 @@ export const deleteVideo = async (id) => {
 };
 
 function extractEmbedId(url) {
-  if (!url) return 'dQw4w9WgXcQ';
+  if (!url) return '';
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : 'dQw4w9WgXcQ';
+  return (match && match[2].length === 11 && match[2] !== 'dQw4w9WgXcQ') ? match[2] : '';
 }

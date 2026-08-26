@@ -142,7 +142,11 @@ const Videos = () => {
             <iframe
               title={typeof selectedVideo.title === 'object' ? selectedVideo.title.mr : selectedVideo.title}
               className="w-full h-full border-0"
-              src={`https://www.youtube.com/embed/${selectedVideo.embedId}?autoplay=1&rel=0`}
+              src={
+                selectedVideo.embedId && selectedVideo.embedId !== 'dQw4w9WgXcQ'
+                  ? `https://www.youtube.com/embed/${selectedVideo.embedId}?autoplay=1&rel=0`
+                  : `https://www.youtube.com/embed?listType=user_uploads&list=prachiagroindustries03&autoplay=1`
+              }
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />

@@ -369,7 +369,11 @@ const Home = () => {
               <iframe
                 title={selectedVideo.title[language]}
                 className="w-full h-full"
-                src={`https://www.youtube.com/embed/${selectedVideo.embedId}?autoplay=1`}
+                src={
+                  selectedVideo.embedId && selectedVideo.embedId !== 'dQw4w9WgXcQ'
+                    ? `https://www.youtube.com/embed/${selectedVideo.embedId}?autoplay=1`
+                    : `https://www.youtube.com/embed?listType=user_uploads&list=prachiagroindustries03&autoplay=1`
+                }
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
