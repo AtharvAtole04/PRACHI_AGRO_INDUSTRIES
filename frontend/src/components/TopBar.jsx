@@ -44,10 +44,10 @@ const TopBar = () => {
             <a href="https://www.youtube.com/@prachiagroindustries03" target="_blank" rel="noreferrer" aria-label="YouTube" className="hover:text-brand-gold hover:scale-110 transition-all">
               <YoutubeIcon size={14} />
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:text-brand-gold hover:scale-110 transition-all">
+            <a href="https://www.facebook.com/profile.php?id=61550881985946" target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:text-brand-gold hover:scale-110 transition-all">
               <FacebookIcon size={14} />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-brand-gold hover:scale-110 transition-all">
+            <a href="https://www.instagram.com/prachiagroindustries1/" target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-brand-gold hover:scale-110 transition-all">
               <InstagramIcon size={14} />
             </a>
           </div>

@@ -14,28 +14,29 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         
         {/* Column 1: Company Info */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <div className="border border-brand-green-bright rounded px-2 py-0.5 bg-white text-brand-green-dark font-black tracking-tight text-xs">
-              PRACHI AGRO
-            </div>
-            <span className="font-extrabold text-white text-lg tracking-tight">PRACHI AGRO</span>
-          </div>
-          <p className="text-sm text-slate-400 leading-relaxed font-bold">
-            {t('positioning')}
-          </p>
-          <p className="text-xs text-slate-500 italic">
+        <div className="flex flex-col gap-3.5">
+          <Link to="/" className="inline-block self-start">
+            <img
+              src="/assets/logo.png"
+              alt="Prachi Agro Industries"
+              className="h-12 w-auto object-contain bg-white rounded-xl p-1.5 shadow-sm"
+            />
+          </Link>
+          <p className="text-sm text-brand-gold leading-relaxed font-black">
             "{t('tagline')}"
+          </p>
+          <p className="text-xs text-slate-400">
+            {language === 'mr' ? 'उच्च दर्जाची कृषी टॉनिक व दाणेदार खते उत्पादक.' : 'Manufacturer of Quality Plant Tonics & Granular Fertilizers.'}
           </p>
           {/* Social Icons */}
           <div className="flex items-center gap-3.5 mt-2">
             <a href="https://www.youtube.com/@prachiagroindustries03" target="_blank" rel="noreferrer" aria-label="YouTube" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all duration-300">
               <YoutubeIcon size={16} />
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-all duration-300">
+            <a href="https://www.facebook.com/profile.php?id=61550881985946" target="_blank" rel="noreferrer" aria-label="Facebook" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-all duration-300">
               <FacebookIcon size={16} />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-pink-600 hover:text-white flex items-center justify-center transition-all duration-300">
+            <a href="https://www.instagram.com/prachiagroindustries1/" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-8 h-8 rounded-full bg-slate-800 hover:bg-pink-600 hover:text-white flex items-center justify-center transition-all duration-300">
               <InstagramIcon size={16} />
             </a>
           </div>
@@ -60,11 +61,6 @@ const Footer = () => {
             <li>
               <Link to="/products?filter=popular" className="hover:text-white hover:underline transition-all">
                 {t('popularProducts')}
-              </Link>
-            </li>
-            <li>
-              <Link to="/products?filter=new" className="hover:text-white hover:underline transition-all">
-                {t('newProducts')}
               </Link>
             </li>
           </ul>

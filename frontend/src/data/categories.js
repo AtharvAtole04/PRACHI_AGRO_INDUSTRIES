@@ -35,24 +35,10 @@ export const categories = [
     slug: "silicon-based"
   },
   {
-    id: "bio-products",
-    title: { mr: "जैविक उत्पादने (Bio Products)", en: "Bio Products" },
-    subtitle: { mr: "सेंद्रिय शेतीसाठी जैविक संजीवके", en: "Bio Options for Organic Farming" },
-    image: "/assets/categories/bio.svg",
-    slug: "bio-products"
-  },
-  {
     id: "insecticides",
     title: { mr: "कीटकनाशके (Insecticides)", en: "Insecticides" },
     subtitle: { mr: "रस शोषक कीड व अळ्यांचे नियंत्रण", en: "Effective Pest & Insect Control" },
     image: "/assets/categories/insecticide.svg",
     slug: "insecticides"
-  },
-  {
-    id: "other",
-    title: { mr: "इतर कृषी उत्पादने", en: "Other Agri Products" },
-    subtitle: { mr: "इतर कृषी सहाय्यक उत्पादने", en: "Other Agricultural Accessories" },
-    image: "/assets/categories/other.svg",
-    slug: "other"
   }
 ];

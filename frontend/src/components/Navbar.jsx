@@ -58,10 +58,17 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
         }`}
       >
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-          <div>
-            <p className="text-white font-black text-base tracking-tight leading-none">PRACHI AGRO</p>
-            <p className="text-brand-gold text-[10px] font-semibold mt-0.5 leading-none">INDUSTRIES</p>
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10">
+          <div className="flex items-center gap-2.5">
+            <img
+              src="/assets/logo.png"
+              alt="Prachi Agro Industries"
+              className="h-9 w-auto object-contain bg-white rounded-md p-0.5"
+            />
+            <div>
+              <p className="text-white font-black text-sm tracking-tight leading-none">PRACHI AGRO</p>
+              <p className="text-brand-gold text-[9px] font-semibold mt-0.5 leading-none uppercase">INDUSTRIES</p>
+            </div>
           </div>
           <button
             onClick={onClose}

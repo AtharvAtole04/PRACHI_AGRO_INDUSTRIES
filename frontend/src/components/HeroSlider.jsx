@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MessageCircle, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const HeroSlider = () => {
@@ -9,54 +9,64 @@ const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
+    // Slide 1: NPK खतांना सर्वोत्तम पर्याय (कृषी वरदान + कॉम्बी न्यूट्री किट)
     {
-      bgImage: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1600",
-      tag: { mr: "दर्जेदार कृषी संजीवक व खते", en: "Quality Bio-Stimulants & Fertilizers" },
-      heading: {
-        mr: "दर्जेदार कृषी टॉनिक आणि दाणेदार खते - भरघोस उत्पादनाची हमी!",
-        en: "Quality Agri Tonics & Granular Fertilizers - Guaranteed Bumper Harvest!"
+      theme: "from-emerald-950 via-green-900 to-slate-950",
+      accentColor: "text-amber-300",
+      badgeBg: "bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950",
+      tag: { mr: "१००% ORGANIC • संपूर्ण पोषण", en: "100% Organic • Complete Nutrition" },
+      productTitle: "NPK खतांना सर्वोत्तम पर्याय!",
+      subtitle: {
+        mr: "कृषी वरदान + कॉम्बी न्यूट्री किट (संपूर्ण पोषण, भरघोस उत्पादन)",
+        en: "Krushi Vardan + Combi Nutri Kit (Superior NPK Bio-Alternative)"
       },
-      supportingText: {
-        mr: "मुळांच्या जोमदार वाढीसाठी दाणेदार खते व पानांच्या विकासासाठी विशेष टॉनिक",
-        en: "Granular fertilizers for root strength & specialized tonics for vigorous vegetative growth"
-      },
-      productsToShow: [
-        { name: "MAGIC GOLD", img: "/assets/products/magic_gold.png" },
-        { name: "BHOORATNA", img: "/assets/products/bhooratna_mockup.png" },
-        { name: "BACTRIKILLER", img: "/assets/products/bactrikiller.png" }
-      ]
+      points: [
+        { icon: "🌿", mr: "NPK ची उपलब्धता व पोषकांचे शोषण वाढवते", en: "Increases NPK availability & nutrient absorption" },
+        { icon: "🌱", mr: "पिकांची जोमदार वाढ व सूक्ष्म अन्नद्रव्यांची पूर्तता", en: "Vigorous crop growth & fulfills micronutrients" },
+        { icon: "🛡️", mr: "रोग व हवामानाचा ताण सहन करण्याची क्षमता वाढवते", en: "Builds high resistance to disease & weather stress" }
+      ],
+      posterImg: "/assets/banners/banner_npk_krushivardan.jpg",
+      whatsappQuery: "कृषी वरदान + कॉम्बी न्यूट्री किट"
     },
+
+    // Slide 2: ओके + फास्ट रिझल्ट (वेगवेगळ्या पिकांना एकच जोडी)
     {
-      bgImage: "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=1600",
-      tag: { mr: "जोमदार शाकीय वाढ व फूलधारणा", en: "Vigorous Plant Growth & Bud Boosting" },
-      heading: {
-        mr: "कळ्या आणि फुलांची विक्रमी वाढ - फास्ट रिझल्ट व मॅजिक गोल्ड!",
-        en: "Record Flowering & Yields with Fast Result & Magic Gold!"
+      theme: "from-blue-950 via-indigo-950 to-slate-950",
+      accentColor: "text-yellow-300",
+      badgeBg: "bg-gradient-to-r from-red-500 to-pink-600 text-white",
+      tag: { mr: "एकदम कसं ओके • जसं नावं तसा रिझल्ट", en: "All-In-One Solution • Proven Results" },
+      productTitle: "OK + FAST RESULT ची महा-जोडी",
+      subtitle: {
+        mr: "वेगवेगळ्या पिकांना वेगवेगळी औषधे देऊ नका, फक्त एकच जोडी वापरा!",
+        en: "One powerful combo for all crops: OK Botanical + Fast Result!"
       },
-      supportingText: {
-        mr: "मॅजिक गोल्ड टॉनिक आणि फास्ट रिझल्ट वाढ प्रवर्तक - पिकांना देईल नवीन ताकद!",
-        en: "Unlock the full genetic potential of your crops with Magic Gold tonic and Fast Result"
-      },
-      productsToShow: [
-        { name: "MAGIC GOLD", img: "/assets/products/magic_gold.png" },
-        { name: "FAST RESULT", img: "/assets/products/fast_result.png" }
-      ]
+      points: [
+        { icon: "🍅", mr: "पिकाची चमक, साईझ, वजन व टिकवण क्षमता वाढवते", en: "Boosts crop shine, fruit size, weight & shelf life" },
+        { icon: "🎋", mr: "जोमदार वाढ, फळ सेटिंग व पांढऱ्या मुळ्यांचा विकास", en: "Multiplies feeder roots, branch growth & fruit set" },
+        { icon: "🧅", mr: "कांदा, ऊस, टोमॅटो, मिरची, डाळिंब व सर्व पिकांसाठी", en: "Ideal for Onion, Sugarcane, Tomato, Chilli & Veg" }
+      ],
+      posterImg: "/assets/banners/banner_ok_fastresult.jpg",
+      whatsappQuery: "OK + FAST RESULT जोडी"
     },
+
+    // Slide 3: ऑरगॅनिक कार्बन (एक किलोत एका ट्रॉलीची ताकद)
     {
-      bgImage: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=1600",
-      tag: { mr: "बुरशीजन्य रोगांवर १००% नियंत्रण", en: "100% Control Over Fungal Infections" },
-      heading: {
-        mr: "पिकांचे बुरशीपासून रक्षण करा, उत्पादन वाढवा!",
-        en: "Shield Your Crops from Fungi, Double Your Harvest!"
+      theme: "from-amber-950 via-emerald-950 to-slate-950",
+      accentColor: "text-emerald-300",
+      badgeBg: "bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950",
+      tag: { mr: "१००% WATER SOLUBLE • सेंद्रिय क्रांती", en: "100% Water Soluble • Organic Carbon" },
+      productTitle: "एक किलोत एका ट्रॉलीची ताकद!",
+      subtitle: {
+        mr: "१ ट्रॉली शेणखत = १ किलो ऑरगॅनिक कार्बन (प्रती एकरी १ किलो)",
+        en: "1 Trolley Farmyard Manure Power in Just 1 Kg Organic Carbon!"
       },
-      supportingText: {
-        mr: "बॅक्ट्रीकिलर प्रणालीगत बुरशीनाशक - सर्व प्रकारच्या बुरशीवर प्रभावी",
-        en: "BACTRIKILLER Systemic Fungicide - The Ultimate Shield Against Diseases"
-      },
-      productsToShow: [
-        { name: "BACTRIKILLER", img: "/assets/products/bactrikiller.png" },
-        { name: "SRPF", img: "/assets/products/srpf.png" }
-      ]
+      points: [
+        { icon: "🚜", mr: "१ ट्रॉली शेणखताएवढी सेंद्रिय ताकद अवघ्या १ किलोमध्ये", en: "Concentrated organic carbon equivalent to 1 cart of manure" },
+        { icon: "🌱", mr: "जमिनीतील जिवाणू वाढवून सुपीकता व पाण्याचा निचरा सुधारते", en: "Multiplies beneficial soil microbes & water retention" },
+        { icon: "🌾", mr: "सर्व प्रकारच्या पिकांसाठी ठिबक किंवा फवारणीद्वारे लागू", en: "100% soluble for drip irrigation & basal drenching" }
+      ],
+      posterImg: "/assets/banners/banner_organic_carbon.jpg",
+      whatsappQuery: "ऑरगॅनिक कार्बन (Organic Carbon)"
     }
   ];
 
@@ -77,103 +87,103 @@ const HeroSlider = () => {
   };
 
   const handleWhatsApp = () => {
-    const message = encodeURIComponent("नमस्कार Prachi Agro Industries, मी मुख्यपृष्ठावरील ऑफर्स पाहून संपर्क करत आहे.");
+    const currentProd = slides[currentSlide];
+    const message = encodeURIComponent(`नमस्कार Prachi Agro Industries, मला ${currentProd.whatsappQuery} या उत्पादनाविषयी माहिती हवी आहे आणि ऑर्डर करायची आहे.`);
     window.open(`https://wa.me/9021605160?text=${message}`, '_blank');
   };
 
   return (
-    <div className="relative w-full h-[420px] sm:h-[480px] lg:h-[480px] rounded-2xl overflow-hidden shadow-lg border border-slate-100 group/slider">
+    <div className="relative w-full min-h-[460px] sm:min-h-[480px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-slate-200/60 group/slider">
       
       {/* Slides Wrapper */}
       <div className="w-full h-full relative">
         {slides.map((slide, idx) => (
           <div
             key={idx}
-            className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${
-              idx === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+            className={`absolute inset-0 w-full h-full transition-all duration-700 ease-in-out ${
+              idx === currentSlide ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-95 pointer-events-none z-0'
             }`}
           >
-            {/* Background Image with Green Gradient Overlay */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center -z-10"
-              style={{ backgroundImage: `url(${slide.bgImage})` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-green-dark/85 via-brand-green-dark/65 to-transparent -z-10" />
-            <div className="absolute inset-0 bg-black/15 -z-10" />
+            {/* Dynamic Background Gradient */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${slide.theme} -z-10`} />
+            
+            {/* Subtle glow lights */}
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-gold/15 rounded-full blur-3xl pointer-events-none -z-10" />
+            <div className="absolute bottom-0 left-10 w-80 h-80 bg-brand-magenta/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
-            {/* Slide Content Layout */}
-            <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-8 pt-6 sm:pt-10 pb-6 sm:pb-8 lg:py-0">
+            {/* Layout Grid */}
+            <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-0 flex flex-col-reverse lg:flex-row items-center justify-between gap-6 lg:gap-10">
               
-              {/* Left Column: Typography & CTAs */}
-              <div className="flex-1 text-center lg:text-left text-white max-w-2xl lg:py-6">
-                <span className="inline-block bg-brand-gold text-brand-green-dark font-extrabold text-[10px] sm:text-xs uppercase tracking-widest px-3 py-1 rounded-full mb-4 shadow-md">
-                  {slide.tag[language]}
-                </span>
-                <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-black leading-tight tracking-tight drop-shadow-sm">
-                  {slide.heading[language]}
+              {/* Left Column: Commercial Ad Headline & Bullet points */}
+              <div className="flex-1 text-center lg:text-left text-white max-w-xl flex flex-col justify-center">
+                
+                {/* Tag Badge */}
+                <div className="flex items-center justify-center lg:justify-start gap-2 mb-2.5">
+                  <span className={`font-black text-[11px] sm:text-xs uppercase tracking-wider px-3.5 py-1 rounded-full shadow-lg inline-flex items-center gap-1.5 ${slide.badgeBg}`}>
+                    <Sparkles size={13} />
+                    <span>{slide.tag[language]}</span>
+                  </span>
+                </div>
+
+                {/* Main Ad Title */}
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-md">
+                  {slide.productTitle}
                 </h2>
-                <p className="text-sm sm:text-base text-slate-100 font-bold mt-4 tracking-wide leading-relaxed">
-                  {slide.supportingText[language]}
+
+                {/* Subtitle */}
+                <p className={`text-xs sm:text-base font-black mt-2 leading-snug ${slide.accentColor}`}>
+                  {slide.subtitle[language]}
                 </p>
 
-                {/* Buttons */}
-                <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4">
-                  <button
-                    onClick={() => navigate('/products')}
-                    className="w-full sm:w-auto bg-brand-green-bright hover:bg-emerald-600 active:scale-95 text-white font-extrabold text-sm px-7 py-3 rounded-full flex items-center justify-center gap-1.5 cursor-pointer shadow-lg transition-all"
-                  >
-                    <span>{t('allProductsBtn')}</span>
-                  </button>
-                  
-                  <button
-                    onClick={handleWhatsApp}
-                    className="w-full sm:w-auto bg-brand-magenta hover:bg-brand-magenta-dark active:scale-95 text-white font-extrabold text-sm px-7 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-900/10 transition-all"
-                  >
-                    <MessageCircle size={18} className="fill-current" />
-                    <span>{t('whatsAppOrder')}</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Right Column: Dynamic Overlap Product Display & Farmer Image */}
-              <div className="flex-1 hidden lg:flex items-center justify-center relative h-full w-full min-h-[300px]">
-                
-                {/* Farmer Image representation on the right */}
-                <div className="absolute right-0 bottom-0 top-6 overflow-hidden h-[90%] flex items-end opacity-90 hover:opacity-100 transition-opacity">
-                  <img
-                    src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=400"
-                    alt="Indian Farmer Smiling"
-                    className="h-full object-cover rounded-t-full border-4 border-white/20 shadow-2xl"
-                    onError={(e) => { e.target.style.display = 'none' }}
-                  />
-                </div>
-
-                {/* Overlapped product bottles layered dynamically */}
-                <div className="absolute left-6 bottom-4 flex items-end gap-2 drop-shadow-2xl max-w-[280px]">
-                  {slide.productsToShow.map((prod, pIdx) => (
-                    <div 
-                      key={pIdx} 
-                      className="bg-white/80 backdrop-blur rounded-2xl p-2.5 border border-white/30 transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 shadow-xl"
-                      style={{
-                        zIndex: 10 + pIdx,
-                        marginLeft: pIdx > 0 ? '-35px' : '0',
-                        marginBottom: pIdx === 1 ? '15px' : '0',
-                        width: '110px'
-                      }}
-                    >
-                      <div className="aspect-square bg-slate-50 rounded-xl flex items-center justify-center p-1.5 border border-slate-100/50">
-                        <img
-                          src={prod.img}
-                          alt={prod.name}
-                          className="max-h-full max-w-full object-contain"
-                          onError={(e) => { e.target.src = 'https://placehold.co/100x120?text=Agri' }}
-                        />
-                      </div>
-                      <p className="text-[10px] font-black text-brand-green-dark text-center mt-1 truncate">{prod.name}</p>
+                {/* Benefit Points Strip */}
+                <div className="flex flex-col gap-2 mt-4 text-left max-w-lg mx-auto lg:mx-0">
+                  {slide.points.map((pt, pIdx) => (
+                    <div key={pIdx} className="flex items-center gap-2.5 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-3 py-1.5 shadow-sm hover:bg-white/15 transition-colors">
+                      <span className="text-sm sm:text-base flex-shrink-0">{pt.icon}</span>
+                      <span className="text-xs sm:text-sm font-bold text-slate-100">
+                        {pt[language]}
+                      </span>
                     </div>
                   ))}
                 </div>
 
+                {/* The Two Action Buttons (सर्व उत्पादने पहा & WhatsApp वर ऑर्डर करा) */}
+                <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4">
+                  
+                  {/* Button 1: सर्व उत्पादने पहा */}
+                  <button
+                    onClick={() => navigate('/products')}
+                    className="w-full sm:w-auto bg-brand-green-bright hover:bg-emerald-600 active:scale-95 text-white font-extrabold text-xs sm:text-sm px-7 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <span>{t('allProductsBtn')}</span>
+                    <ArrowRight size={16} />
+                  </button>
+                  
+                  {/* Button 2: WhatsApp वर ऑर्डर करा */}
+                  <button
+                    onClick={handleWhatsApp}
+                    className="w-full sm:w-auto bg-brand-magenta hover:bg-brand-magenta-dark active:scale-95 text-white font-extrabold text-xs sm:text-sm px-7 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-900/30 hover:shadow-xl transition-all"
+                  >
+                    <MessageCircle size={18} className="fill-current" />
+                    <span>{t('whatsAppOrder')}</span>
+                  </button>
+
+                </div>
+              </div>
+
+              {/* Right Column: High-Resolution Real Product Marketing Banner Graphic */}
+              <div className="flex-1 w-full flex items-center justify-center relative">
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-4 border-white/80 shadow-2xl bg-white max-w-[320px] sm:max-w-[380px] lg:max-w-[420px] aspect-square group/poster hover:scale-102 transition-transform duration-300">
+                  <img
+                    src={slide.posterImg}
+                    alt={slide.productTitle}
+                    className="w-full h-full object-cover object-center"
+                    onError={(e) => { e.target.src = '/assets/logo.png'; }}
+                  />
+                  <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    Official Ad
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -184,27 +194,27 @@ const HeroSlider = () => {
       {/* Slide Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 active:scale-90 text-white p-2 rounded-full cursor-pointer opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-20"
+        className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2.5 rounded-full cursor-pointer opacity-80 sm:opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-20"
         aria-label="Previous slide"
       >
-        <ChevronLeft size={22} />
+        <ChevronLeft size={20} />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 active:scale-90 text-white p-2 rounded-full cursor-pointer opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-20"
+        className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2.5 rounded-full cursor-pointer opacity-80 sm:opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-20"
         aria-label="Next slide"
       >
-        <ChevronRight size={22} />
+        <ChevronRight size={20} />
       </button>
 
       {/* Pagination Dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {slides.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentSlide(idx)}
-            className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all duration-300 ${
-              idx === currentSlide ? 'bg-brand-gold w-6' : 'bg-white/40 hover:bg-white/60'
+            className={`h-2.5 rounded-full cursor-pointer transition-all duration-300 ${
+              idx === currentSlide ? 'bg-brand-gold w-8' : 'bg-white/40 hover:bg-white/70 w-2.5'
             }`}
             aria-label={`Go to slide ${idx + 1}`}
           />

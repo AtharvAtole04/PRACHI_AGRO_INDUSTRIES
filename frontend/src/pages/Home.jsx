@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Play, X, Percent } from 'lucide-react';
+import { ArrowRight, Play, X, Percent, Sparkles, Sprout, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getProducts } from '../data/products';
 import { categories } from '../data/categories';
@@ -11,13 +11,57 @@ import { getBlogs } from '../data/blogs';
 // Shared Components
 import HeroSlider from '../components/HeroSlider';
 import FeatureStrip from '../components/FeatureStrip';
+import CropFinder from '../components/CropFinder';
 import ProductCard from '../components/ProductCard';
 import FarmerReviewCard from '../components/FarmerReviewCard';
 import VideoCard from '../components/VideoCard';
 import BlogCard from '../components/BlogCard';
 import SEOHead from '../components/SEOHead';
-import StatsCounter from '../components/StatsCounter';
 import MemberBanner from '../components/MemberBanner';
+
+// Main Focus Crops with high-quality agricultural imagery
+const FOCUS_CROPS = [
+  {
+    id: "onion",
+    name_mr: "कांदा (Onion)",
+    tag_mr: "कंद फुगवण, वजन व पात टिकवण्यासाठी",
+    image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&q=80&w=600",
+    solutions: "BHOORATNA + MAGIC GOLD",
+    query: "कांदा"
+  },
+  {
+    id: "sugarcane",
+    name_mr: "ऊस (Sugarcane)",
+    tag_mr: "कांडीची लांबी, जाडी व जोमदार फुटवे",
+    image: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600",
+    solutions: "HUMIC 98% + FAST RESULT",
+    query: "ऊस"
+  },
+  {
+    id: "tomato",
+    name_mr: "टोमॅटो (Tomato)",
+    tag_mr: "फुलगळ नियंत्रण, फळांची चमक व आकार",
+    image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=600",
+    solutions: "MAGIC GOLD + BACTRIKILLER",
+    query: "टोमॅटो"
+  },
+  {
+    id: "papaya",
+    name_mr: "पपई (Papaya)",
+    tag_mr: "व्हायरस व बुरशी रक्षण, गोडवा व वजन",
+    image: "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&fit=crop&q=80&w=600",
+    solutions: "SRPF + MYCRODIFENCE",
+    query: "पपई"
+  },
+  {
+    id: "chilli",
+    name_mr: "मिरची (Chilli)",
+    tag_mr: "बोकड्या/चुरडा-मुरडा नियंत्रण व अधिक फुले",
+    image: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&q=80&w=600",
+    solutions: "BACTRIKILLER + MAGIC GOLD",
+    query: "मिरची"
+  }
+];
 
 const Home = () => {
   const { t, language } = useLanguage();
@@ -49,10 +93,11 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-10 md:gap-14">
       <SEOHead 
-        title={language === 'mr' ? 'प्राची ॲग्रो इंडस्ट्रीज - दर्जेदार कृषी टॉनिक व दाणेदार खते' : 'Prachi Agro Industries - Quality Plant Tonics & Granular Fertilizers'} 
+        title={language === 'mr' ? 'प्राची ॲग्रो इंडस्ट्रीज - शेतकऱ्यांच्या प्रगतीचा विश्वासू साथीदार!' : 'Prachi Agro Industries - Trusted Partner in Farmer\'s Progress!'} 
         description="Manufacturer of premium plant growth promoters, crop tonics, and granular fertilizers."
       />
-      {/* 1. Hero Section Banner Slider */}
+
+      {/* 1. Hero Section Banner Slider with Commercial Product Ads */}
       <section aria-label="Hero Banner">
         <HeroSlider />
       </section>
@@ -67,57 +112,120 @@ const Home = () => {
         <MemberBanner />
       </section>
 
-      <section aria-label="Stats Counter" className="mt-2 md:mt-4">
-        <StatsCounter />
-      </section>
-
-      {/* 3. Product Categories Grid */}
+      {/* 3. Focused 6 Product Categories Grid (Bolder & Sharper) */}
       <section className="text-center">
         <div className="flex flex-col items-center mb-8">
+          <span className="bg-emerald-50 text-brand-green-dark text-[10px] sm:text-xs font-extrabold uppercase tracking-widest px-3.5 py-1 rounded-full mb-2">
+            उत्कृष्ट उत्पादने
+          </span>
           <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
-            कृषी उत्पादनांच्या श्रेणी
+            कृषी उत्पादनांच्या मुख्य श्रेणी
           </h2>
           <div className="h-1 w-20 bg-brand-magenta mt-2.5 rounded-full" />
-          <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-            {language === 'mr' ? 'आपल्या पिकांच्या प्रत्येक गरजेसाठी सर्वोत्तम उत्पादने' : 'Premium agricultural solutions for every crop cycle'}
+          <p className="text-slate-500 text-xs md:text-sm mt-3 font-semibold">
+            {language === 'mr' ? 'पिकांच्या प्रत्येक अवस्थेसाठी दर्जेदार टॉनिक, खते व पीक संरक्षण' : 'Premium agricultural solutions for every crop growth cycle'}
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {/* 6 Grid items in 2 rows on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {categories.map((cat) => (
             <div 
               key={cat.id}
               onClick={() => navigate(`/products?category=${cat.id}`)}
-              className="bg-white border border-slate-100 rounded-2xl p-4 md:p-5 text-center shadow-sm hover:shadow-md hover:-translate-y-1 cursor-pointer transition-all duration-300 group flex flex-col items-center justify-between min-h-[180px]"
+              className="bg-white border-2 border-slate-100/80 rounded-2xl p-5 md:p-6 text-center shadow-sm hover:shadow-xl hover:border-emerald-300 hover:-translate-y-1.5 cursor-pointer transition-all duration-300 group flex flex-col items-center justify-between min-h-[190px]"
             >
-              <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center p-2 mb-3 border border-slate-100 group-hover:bg-emerald-50 transition-colors">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50/60 flex items-center justify-center p-3 mb-3 border border-emerald-100 group-hover:bg-brand-green-dark group-hover:scale-110 transition-all duration-300 shadow-sm">
                 <img 
                   src={cat.image} 
                   alt={t(cat.title)}
-                  className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
+                  className="max-h-full max-w-full object-contain"
                   onError={(e) => {
-                    // Fallback to placeholder if category icon path doesn't exist
-                    e.target.src = 'https://placehold.co/100x100?text=Agri';
+                    e.target.src = '/assets/logo.png';
                   }}
                 />
               </div>
               <div>
-                <h3 className="font-extrabold text-slate-800 text-sm md:text-base leading-snug">
+                <h3 className="font-black text-slate-800 text-sm md:text-base leading-snug group-hover:text-brand-green-dark transition-colors">
                   {t(cat.title)}
                 </h3>
-                <p className="text-[10px] md:text-xs text-slate-400 font-medium mt-1 leading-snug">
+                <p className="text-[10px] md:text-xs text-slate-500 font-medium mt-1 leading-snug">
                   {t(cat.subtitle)}
                 </p>
               </div>
-              <button className="text-[10px] md:text-xs font-black text-brand-green-dark bg-emerald-50 group-hover:bg-brand-green-dark group-hover:text-white px-3.5 py-1 rounded-full mt-3 transition-colors cursor-pointer">
-                पहा / View
+              <button className="text-[10px] md:text-xs font-black text-brand-green-dark bg-emerald-50 group-hover:bg-brand-green-dark group-hover:text-white px-4 py-1.5 rounded-full mt-3.5 transition-all shadow-xs cursor-pointer">
+                पहा / View Category
               </button>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 4. Popular Products Grid */}
+      {/* 4. Special Crop Focus Spotlight (कांदा, ऊस, टोमॅटो, पपई, मिरची) */}
+      <section className="bg-gradient-to-br from-slate-900 via-emerald-950 to-brand-green-dark text-white rounded-3xl p-6 sm:p-10 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+          <div>
+            <span className="bg-brand-gold text-slate-900 font-extrabold text-[10px] sm:text-xs uppercase tracking-widest px-3 py-0.5 rounded-full inline-block shadow-sm">
+              विशेष पीक मार्गदर्शन
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-2">
+              कांदा, ऊस, टोमॅटो, पपई व मिरची विशेष सोल्यूशन्स
+            </h2>
+            <p className="text-emerald-200 text-xs sm:text-sm font-medium mt-1">
+              आपल्या पिकाच्या प्रत्येक अवस्थेसाठी सिद्ध झालेले खात्रीशीर रिझल्ट्स
+            </p>
+          </div>
+          <Link
+            to="/products"
+            className="text-brand-gold hover:text-white font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+          >
+            <span>सर्व पिकांची उत्पादने</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        {/* 5 Crop Focus Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {FOCUS_CROPS.map((crop) => (
+            <div
+              key={crop.id}
+              onClick={() => navigate(`/products`)}
+              className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/15 hover:border-brand-gold hover:bg-white/15 transition-all duration-300 cursor-pointer flex flex-col group"
+            >
+              <div className="h-36 w-full overflow-hidden relative">
+                <img
+                  src={crop.image}
+                  alt={crop.name_mr}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <span className="absolute bottom-2 left-3 font-black text-white text-base">
+                  {crop.name_mr}
+                </span>
+              </div>
+
+              <div className="p-3.5 flex flex-col justify-between flex-grow text-left">
+                <p className="text-[11px] text-emerald-100 font-medium leading-snug">
+                  {crop.tag_mr}
+                </p>
+                <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-[10px] font-black text-brand-gold truncate">
+                    {crop.solutions}
+                  </span>
+                  <ArrowRight size={14} className="text-white/60 group-hover:text-brand-gold group-hover:translate-x-1 transition-all" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. Interactive Crop Finder Widget */}
+      <section aria-label="Crop Finder">
+        <CropFinder />
+      </section>
+
+      {/* 6. Popular Products Grid */}
       <section>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="text-left">
@@ -145,16 +253,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 5. Special Offers Strip banner */}
+      {/* 7. Special Offers Strip banner */}
       {specialOffers.length > 0 && (
         <section className="bg-gradient-to-r from-brand-magenta to-brand-magenta-dark rounded-3xl p-6 md:p-8 text-white relative overflow-hidden shadow-lg">
-          {/* Leaf decoration */}
-          <div className="absolute right-0 top-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-            <svg className="w-80 h-80 fill-current" viewBox="0 0 24 24">
-              <path d="M17 8C8 10 5.9 16.12 5 21C3.9 15.65 6.07 9.8 11 6C7.54 8 4.25 11.23 3 16.5C3.21 11.36 7.42 5 13 3C9.5 4.5 7.17 7.66 6 11.5C9.33 6.67 14 5 19 4C18.67 6.33 18 8 17 8Z" />
-            </svg>
-          </div>
-
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="text-center lg:text-left">
               <span className="bg-brand-gold text-brand-green-dark font-extrabold text-[10px] md:text-xs uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block">
@@ -167,144 +268,112 @@ const Home = () => {
                 {language === 'mr' ? 'उच्च गुणवत्तेच्या उत्पादनांवर विशेष सवलत मिळवा. आजच खरेदी करा आणि नफा वाढवा!' : 'Get high-performance products at reduced price points. Grow healthier crops for less.'}
               </p>
             </div>
-            
-            <div className="flex gap-4 items-center">
-              <Link 
-                to="/products?filter=offers"
-                className="bg-brand-gold hover:bg-brand-gold-hover active:scale-95 text-brand-green-dark font-black text-sm px-6 py-3 rounded-full shadow-md transition-all cursor-pointer"
-              >
-                ऑफर पहा (View Offers)
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 6. New Products Grid Section */}
-      {newProducts.length > 0 && (
-        <section>
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div className="text-left">
-              <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
-                नवीन उत्पादने
-              </h2>
-              <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
-              <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-                {language === 'mr' ? 'आमची नव्याने लाँच झालेली अत्याधुनिक उत्पादने' : 'Discover newly launched innovative additions to our catalog'}
-              </p>
-            </div>
-            <Link 
-              to="/products?filter=new" 
-              className="text-brand-green-dark hover:text-brand-green-light font-black text-xs sm:text-sm flex items-center gap-1 hover:gap-2 self-start sm:self-auto transition-all"
+            <button
+              onClick={() => navigate('/products')}
+              className="bg-brand-gold hover:bg-brand-gold-hover active:scale-95 text-brand-green-dark font-extrabold text-sm px-8 py-3.5 rounded-full cursor-pointer shadow-lg transition-all flex items-center gap-2 flex-shrink-0"
             >
-              <span>सर्व पहा (View All)</span>
+              <span>ऑफर पहा (Shop Offers)</span>
               <ArrowRight size={16} />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {newProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            </button>
           </div>
         </section>
       )}
 
-      {/* 7. Latest Videos Section */}
+      {/* 8. YouTube Agri Guidance Videos */}
       <section>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="text-left">
-            <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
-              नवीन व्हिडिओ / शेतकरी मार्गदर्शन
+            <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight flex items-center gap-2">
+              <Play className="fill-brand-magenta text-brand-magenta" size={24} />
+              <span>{t('agriVideos')}</span>
             </h2>
             <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
             <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-              {language === 'mr' ? 'पीक सल्ला, रोग नियंत्रण आणि प्रगत शेतीचे मार्गदर्शन' : 'Practical crop advice, pest solutions, and expert farming methodologies'}
+              {language === 'mr' ? 'पिकांची काळजी, फवारणीचे वेळापत्रक आणि तज्ज्ञांचे मार्गदर्शन व्हिडिओ' : 'Field applications, spray schedules and crop advisory'}
             </p>
           </div>
           <Link 
             to="/videos" 
             className="text-brand-green-dark hover:text-brand-green-light font-black text-xs sm:text-sm flex items-center gap-1 hover:gap-2 self-start sm:self-auto transition-all"
           >
-            <span>सर्व व्हिडिओ पहा (All Videos)</span>
+            <span>{t('viewAllVideos')}</span>
             <ArrowRight size={16} />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {videosList.slice(0, 3).map((video) => (
-            <VideoCard key={video.id} video={video} onPlayClick={handlePlayVideo} />
+            <VideoCard key={video.id} video={video} onPlay={handlePlayVideo} />
           ))}
         </div>
       </section>
 
-      {/* 8. Farmer Reviews (Testimonials) */}
-      <section className="bg-brand-bg rounded-3xl p-6 md:p-10 border border-slate-100/50">
-        <div className="flex flex-col items-center mb-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
-            शेतकऱ्यांचा विश्वास
-          </h2>
-          <div className="h-1 w-20 bg-brand-magenta mt-2.5 rounded-full" />
-          <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-            {language === 'mr' ? 'प्राची अॅग्रो उत्पादने वापरून शेतकऱ्यांनी मिळविले विक्रमी उत्पादन!' : 'Real stories from proud farmers who transformed their crops with us'}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {reviewsList.map((rev) => (
-            <FarmerReviewCard key={rev.id} review={rev} />
-          ))}
-        </div>
-      </section>
-
-      {/* 9. Latest Blog Posts */}
-      <section className="mb-4">
+      {/* 9. Agri Blogs Section */}
+      <section>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="text-left">
             <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
-              शेती मार्गदर्शन ब्लॉग
+              {t('viewAllBlogs')}
             </h2>
             <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
             <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-              {language === 'mr' ? 'माती परीक्षण, खत नियोजन आणि आधुनिक शेती तंत्रज्ञान विषयक लेख' : 'Informative articles about crop cycles, soil testing, and pest controls'}
+              {language === 'mr' ? 'हंगामी पिकांचे रोग नियंत्रण आणि खत व्यवस्थापन मार्गदर्शिका' : 'Season-wise crop disease and fertilizer management tips'}
             </p>
           </div>
           <Link 
             to="/blog" 
             className="text-brand-green-dark hover:text-brand-green-light font-black text-xs sm:text-sm flex items-center gap-1 hover:gap-2 self-start sm:self-auto transition-all"
           >
-            <span>सर्व ब्लॉग पहा (View Blogs)</span>
+            <span>सर्व ब्लॉग पहा (View All Blogs)</span>
             <ArrowRight size={16} />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogsList.slice(0, 3).map((blog) => (
             <BlogCard key={blog.id} blog={blog} />
           ))}
         </div>
       </section>
 
-      {/* YouTube Video Modal Iframe Pop-up */}
+      {/* 10. Farmer Testimonials */}
+      <section>
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
+            {t('farmerTrust')}
+          </h2>
+          <div className="h-1 w-16 bg-brand-magenta mx-auto mt-2.5 rounded-full" />
+          <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
+            {language === 'mr' ? 'प्राची अॅग्रो उत्पादने वापरणाऱ्या समाधानी शेतकऱ्यांचे अनुभव' : 'Verified testimonials from progressive farmers'}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reviewsList.slice(0, 3).map((review) => (
+            <FarmerReviewCard key={review.id} review={review} />
+          ))}
+        </div>
+      </section>
+
+      {/* Video Modal Popup */}
       {selectedVideo && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="relative bg-black rounded-2xl overflow-hidden max-w-3xl w-full aspect-video shadow-2xl border border-white/10">
-            {/* Close Button */}
-            <button 
-              onClick={() => setSelectedVideo(null)}
-              className="absolute top-4 right-4 text-white hover:text-brand-gold bg-black/60 hover:bg-black/80 p-2 rounded-full cursor-pointer transition-all z-10"
-              aria-label="Close video player"
-            >
-              <X size={20} />
-            </button>
-            {/* Iframe */}
-            <iframe
-              title={t(selectedVideo.title)}
-              src={`https://www.youtube.com/embed/${selectedVideo.embedId}?autoplay=1`}
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl overflow-hidden max-w-2xl w-full relative">
+            <div className="p-4 bg-slate-900 text-white flex justify-between items-center">
+              <h3 className="font-bold text-sm sm:text-base truncate pr-4">{selectedVideo.title[language]}</h3>
+              <button onClick={() => setSelectedVideo(null)} className="text-slate-400 hover:text-white cursor-pointer">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="aspect-video w-full">
+              <iframe
+                title={selectedVideo.title[language]}
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${selectedVideo.embedId}?autoplay=1`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       )}

@@ -44,22 +44,17 @@ const MainHeader = ({ onCartClick }) => {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 flex-shrink-0 hover:opacity-95 transition-opacity">
-              <div
-                className="border border-brand-magenta rounded px-2 py-1 bg-white flex flex-col items-center justify-center font-black tracking-tight"
-                style={{ minWidth: '64px', height: '44px' }}
-              >
-                <div className="text-brand-green-dark text-sm leading-none font-bold">PRACHI</div>
-                <div className="bg-brand-magenta text-white text-[7px] px-1.5 py-0.5 rounded-sm font-bold my-0.5 transform -skew-x-6">
-                  AGRO
-                </div>
-                <div className="text-brand-magenta text-[6px] leading-none tracking-widest font-semibold uppercase">INDUSTRIES</div>
-              </div>
+            <Link to="/" className="flex items-center gap-2.5 sm:gap-3.5 flex-shrink-0 hover:opacity-95 transition-opacity">
+              <img
+                src="/assets/logo.png"
+                alt="Prachi Agro Industries"
+                className="h-10 sm:h-12 md:h-13 w-auto object-contain flex-shrink-0"
+              />
               <div className="hidden sm:block">
                 <h1 className="text-base md:text-xl lg:text-2xl font-black text-brand-green-dark tracking-tight leading-none m-0">
                   PRACHI AGRO INDUSTRIES
                 </h1>
-                <p className="text-[10px] md:text-sm font-bold text-brand-magenta mt-0.5 leading-none">
+                <p className="text-[10px] md:text-xs font-bold text-brand-magenta mt-1 leading-none">
                   {t('positioning')}
                 </p>
               </div>

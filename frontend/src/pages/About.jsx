@@ -2,7 +2,6 @@ import React from 'react';
 import { ShieldCheck, Heart, Sparkles, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import SEOHead from '../components/SEOHead';
-import StatsCounter from '../components/StatsCounter';
 import CertificatesSection from '../components/CertificatesSection';
 
 const About = () => {
@@ -28,34 +27,70 @@ const About = () => {
 
       {/* 2. Brand Story / Values */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white p-6 sm:p-10 rounded-3xl border border-slate-100 shadow-sm">
-        <div className="md:col-span-7 flex flex-col gap-4">
+        <div className="md:col-span-7 flex flex-col gap-4 text-left">
+          <span className="bg-emerald-50 text-brand-green-dark text-xs font-black px-3.5 py-1 rounded-full self-start border border-emerald-200">
+            🌱 १५ वर्षांची साथ… समृद्ध शेतीची नवी वाट!
+          </span>
+          
           <h2 className="text-xl sm:text-2xl font-black text-brand-green-dark tracking-tight border-l-4 border-brand-magenta pl-3">
-            शेतकऱ्यांचा विश्वास, समृद्ध शेतीचा विकास!
+            शेतकऱ्यांच्या प्रगतीचा विश्वासू साथीदार!
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+
+          <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
             {language === 'mr' 
-              ? 'प्राची अॅग्रो इंडस्ट्रीज ही शेतकऱ्यांची एक विश्वासार्ह आणि अग्रगण्य कृषी उत्पादन कंपनी आहे. आमचे मुख्य उद्दिष्ट शेतकऱ्यांना त्यांच्या शेती उत्पादनात विक्रमी वाढ करण्यासाठी उच्च दर्जाची कृषी टॉनिक, दाणेदार खते आणि पीक संरक्षण उत्पादने प्रदान करणे आहे.'
-              : 'Prachi Agro Industries is a leading and trusted agricultural products company. Our primary goal is to empower farmers by providing them with high-quality plant growth tonics, granular fertilizers, and reliable inputs that boost crop performance.'}
+              ? 'गेल्या १५ वर्षांपासून प्राची अॅग्रो इंडस्ट्रीज शेतकऱ्यांच्या गरजा समजून घेत, आधुनिक शेतीसाठी विश्वासार्ह आणि प्रभावी उपाय उपलब्ध करून देण्यासाठी सातत्याने कार्यरत आहे.'
+              : 'For over 15 years, Prachi Agro Industries has been dedicated to understanding farmer needs and providing proven agricultural solutions.'}
           </p>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+
+          <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
             {language === 'mr'
-              ? 'आम्ही पिकांच्या मुळांच्या जोमदार वाढीसाठी दाणेदार सेंद्रिय खते, वनस्पती वाढ संजीवक (टॉनिक), मायक्रोन्युट्रिएंट्स, सिलिकॉन आधारित उत्पादने आणि बुरशीनाशकांचे उत्पादन करतो. आमची सर्व उत्पादने उत्कृष्ट गुणवत्तेची खात्री देतात जेणेकरून प्रत्येक शेतकऱ्याला भरघोस नफा मिळेल.'
-              : 'We manufacture modern agricultural granular soil fertilizers, plant growth promoters, micronutrient formulations, silicon protection inputs, and systemic fungicides. Our formulations deliver proven results in the field.'}
+              ? 'शेतकऱ्यांचा विश्वास, गुणवत्तेची बांधिलकी आणि शेतीतील आधुनिक तंत्रज्ञानाचा स्वीकार, या मूल्यांच्या बळावर आम्ही आज अनेक शेतकऱ्यांशी विश्वासाचे नाते निर्माण केले आहे.'
+              : 'Built on farmer trust, uncompromising quality, and modern agricultural science, we have formed long-lasting bonds with thousands of growers.'}
+          </p>
+
+          {/* Highlights Ribbon */}
+          <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-2xl p-3.5 my-1 flex flex-wrap items-center justify-between gap-2 text-xs font-black text-brand-green-dark">
+            <span>✨ १५ वर्षांचा अनुभव</span>
+            <span className="text-emerald-300">•</span>
+            <span>🤝 शेतकऱ्यांचा विश्वास</span>
+            <span className="text-emerald-300">•</span>
+            <span>🏅 गुणवत्तेची बांधिलकी</span>
+          </div>
+
+          <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
+            {language === 'mr'
+              ? 'आजवर मिळालेली शेतकऱ्यांची साथ आमच्यासाठी प्रेरणादायी आहे. भविष्यातही अधिक चांगली उत्पादने, योग्य मार्गदर्शन आणि आधुनिक शेतीचे प्रभावी उपाय शेतकऱ्यांपर्यंत पोहोचवण्यासाठी आम्ही कटिबद्ध आहोत.'
+              : 'The trust and partnership of our farmers inspires us to continually deliver higher-grade tonics, fertilizers, and personalized advisory.'}
+          </p>
+
+          <p className="font-black text-brand-magenta text-sm sm:text-base mt-1">
+            प्राची अॅग्रो इंडस्ट्रीज — {t('tagline')}
           </p>
         </div>
 
-        {/* Brand Image representation */}
-        <div className="md:col-span-5 aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
-          <img 
-            src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=500" 
-            alt="Agriculture Field crops" 
-            className="w-full h-full object-cover"
-          />
+        {/* Official Company Logo Card */}
+        <div className="md:col-span-5 rounded-3xl overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-slate-50 border-2 border-emerald-100/80 shadow-lg p-6 sm:p-8 flex flex-col items-center justify-center text-center relative group">
+          <div className="w-full aspect-square max-w-[280px] bg-white rounded-2xl p-6 shadow-md border border-slate-100 flex items-center justify-center relative hover:scale-105 transition-transform duration-300">
+            <img 
+              src="/assets/logo.png" 
+              alt="Prachi Agro Industries Official Logo" 
+              className="max-h-full max-w-full object-contain drop-shadow-md"
+            />
+          </div>
+
+          <div className="mt-5 w-full">
+            <span className="bg-brand-gold text-brand-green-dark font-black text-xs px-3.5 py-1 rounded-full uppercase tracking-wider shadow-xs inline-block">
+              ★ १५+ वर्षे शेतकऱ्यांच्या सेवेत ★
+            </span>
+            <h3 className="font-black text-brand-green-dark text-base sm:text-lg mt-2 tracking-tight">
+              PRACHI AGRO INDUSTRIES
+            </h3>
+            <p className="text-xs font-bold text-brand-magenta mt-0.5">
+              {t('tagline')}
+            </p>
+          </div>
         </div>
       </section>
-
-      {/* Stats Counter Section */}
-      <StatsCounter />
 
       {/* 3. Core Values Grid */}
       <section>
