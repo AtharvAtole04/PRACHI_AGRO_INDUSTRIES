@@ -493,16 +493,7 @@ const Admin = () => {
           <span>उत्पादने (Products: {productsList.length})</span>
         </button>
 
-        {/* Tab: Videos */}
-        <button
-          onClick={() => setActiveTab('videos')}
-          className={`px-5 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'videos' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          <Video size={14} />
-          <span>व्हिडिओ (Videos: {videosList.length})</span>
-        </button>
+
 
         {/* Tab: Blogs */}
         <button
@@ -1027,50 +1018,7 @@ const Admin = () => {
         </div>
       )}
 
-      {/* ============================================================ */}
-      {/* 4. Tab Contents: VIDEOS                                       */}
-      {/* ============================================================ */}
-      {activeTab === 'videos' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-5 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
-            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3">
-              नवीन व्हिडिओ जोडा (Add YouTube Video)
-            </h2>
-            <form onSubmit={handleVideoSubmit} className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Video Title (Marathi)</label>
-                <input type="text" required value={videoForm.title_mr} onChange={(e) => setVideoForm({...videoForm, title_mr: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Video Title (English)</label>
-                <input type="text" required value={videoForm.title_en} onChange={(e) => setVideoForm({...videoForm, title_en: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">YouTube Link (उदा. https://youtu.be/...)</label>
-                <input type="text" required value={videoForm.youtubeUrl} onChange={(e) => setVideoForm({...videoForm, youtubeUrl: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
-              </div>
-              <button type="submit" className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer">व्हिडिओ सेव्ह करा (Save Video)</button>
-            </form>
-          </div>
 
-          <div className="lg:col-span-7 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
-            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3">व्हिडिओ यादी (Videos Directory)</h2>
-            <div className="flex flex-col gap-3">
-              {videosList.map((vid) => (
-                <div key={vid.id} className="flex justify-between items-center p-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
-                  <div className="min-w-0 pr-4">
-                    <h4 className="font-bold text-slate-800 text-xs truncate">{vid.title[language]}</h4>
-                    <p className="text-[10px] text-slate-400 font-bold mt-0.5">{vid.crop[language]} • {vid.category[language]}</p>
-                  </div>
-                  <button onClick={() => handleDeleteVideo(vid.id)} className="p-2 text-slate-300 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer flex-shrink-0">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ============================================================ */}
       {/* 5. Tab Contents: BLOGS                                        */}
