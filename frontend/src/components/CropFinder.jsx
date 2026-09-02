@@ -13,8 +13,7 @@ const CROPS = [
   { id: 'cotton', emoji: '🌿', mr: 'कापूस (Cotton)', en: 'Cotton', tag: 'पांढरी मुळी व बोंड वाढ' },
   { id: 'soybean', emoji: '🫘', mr: 'सोयाबीन (Soybean)', en: 'Soybean', tag: 'शेंगांची संख्या व दाणे भरणी' },
   { id: 'pomegranate', emoji: '🍎', mr: 'डाळिंब (Pomegranate)', en: 'Pomegranate', tag: 'तेल्या व बुरशी नियंत्रण' },
-  { id: 'grape', emoji: '🍇', mr: 'द्राक्षे (Grapes)', en: 'Grapes', tag: 'घडांची लांबी व गोडवा' },
-  { id: 'turmeric', emoji: '🟡', mr: 'हळद (Turmeric)', en: 'Turmeric', tag: 'गड्ड्यांची जाडी व वजन' }
+  { id: 'banana', emoji: '🍌', mr: 'केळी (Banana)', en: 'Banana', tag: 'घडाचे वजन व झाडाचा जोम' }
 ];
 
 const CropFinder = () => {
