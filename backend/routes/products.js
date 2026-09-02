@@ -41,9 +41,8 @@ router.put('/:id', async (req, res) => {
     const updatedProduct = await Product.findOneAndUpdate(
       { id: req.params.id },
       req.body,
-      { new: true, runValidators: true }
+      { new: true, upsert: true, runValidators: true }
     );
-    if (!updatedProduct) return res.status(404).json({ message: 'Product not found' });
     res.json(updatedProduct);
   } catch (err) {
     res.status(400).json({ message: err.message });

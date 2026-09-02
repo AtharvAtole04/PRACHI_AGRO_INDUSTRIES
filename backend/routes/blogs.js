@@ -35,6 +35,20 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PUT update blog
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedBlog = await Blog.findOneAndUpdate(
+      { id: req.params.id },
+      req.body,
+      { new: true, upsert: true, runValidators: true }
+    );
+    res.json(updatedBlog);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 // DELETE blog
 router.delete('/:id', async (req, res) => {
   try {
