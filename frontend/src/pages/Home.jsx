@@ -279,33 +279,38 @@ const Home = () => {
         </section>
       )}
 
-      {/* 8. YouTube Agri Guidance Videos */}
-      <section>
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-          <div className="text-left">
-            <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight flex items-center gap-2">
-              <Play className="fill-brand-magenta text-brand-magenta" size={24} />
-              <span>{t('agriVideos')}</span>
-            </h2>
-            <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
-            <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-              {language === 'mr' ? 'पिकांची काळजी, फवारणीचे वेळापत्रक आणि तज्ज्ञांचे मार्गदर्शन व्हिडिओ' : 'Field applications, spray schedules and crop advisory'}
+      {/* 8. YouTube Channel Subscribe Banner */}
+      <section className="bg-gradient-to-r from-red-600 via-red-700 to-slate-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-red-500/30">
+        <div className="flex items-center gap-4 text-center sm:text-left">
+          <div className="w-16 h-16 rounded-2xl bg-white text-red-600 flex items-center justify-center flex-shrink-0 shadow-lg p-2">
+            <img
+              src="/assets/logo.png"
+              alt="Prachi Agro Logo"
+              className="max-h-full max-w-full object-contain"
+            />
+          </div>
+          <div>
+            <span className="bg-white/20 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full inline-block mb-1">
+              OFFICIAL YOUTUBE CHANNEL
+            </span>
+            <h3 className="text-lg sm:text-xl font-black">
+              {language === 'mr' ? 'मोफत कृषी सल्ल्यासाठी आमचे युट्युब चॅनेल सबस्क्राईब करा' : 'Subscribe to Our Official YouTube Channel'}
+            </h3>
+            <p className="text-xs sm:text-sm text-red-100 mt-1 font-medium">
+              @prachiagroindustries03 • {language === 'mr' ? 'पीक मार्गदर्शन, औषध फवारणी वेळापत्रक आणि आधुनिक शेतीचे उपाय' : 'Free farming guidance & crop spray schedules'}
             </p>
           </div>
-          <Link 
-            to="/videos" 
-            className="text-brand-green-dark hover:text-brand-green-light font-black text-xs sm:text-sm flex items-center gap-1 hover:gap-2 self-start sm:self-auto transition-all"
-          >
-            <span>{t('viewAllVideos')}</span>
-            <ArrowRight size={16} />
-          </Link>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {videosList.slice(0, 3).map((video) => (
-            <VideoCard key={video.id} video={video} onPlay={handlePlayVideo} />
-          ))}
-        </div>
+        
+        <a
+          href="https://www.youtube.com/@prachiagroindustries03?sub_confirmation=1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-white text-red-600 hover:bg-red-50 active:scale-95 font-black text-sm px-7 py-3.5 rounded-2xl shadow-lg transition-all flex items-center gap-2 flex-shrink-0 cursor-pointer"
+        >
+          <span>{language === 'mr' ? 'चॅनेल सबस्क्राईब करा' : 'Subscribe on YouTube'}</span>
+          <ArrowRight size={16} />
+        </a>
       </section>
 
       {/* 9. Agri Blogs Section */}
