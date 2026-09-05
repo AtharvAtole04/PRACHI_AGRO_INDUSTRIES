@@ -184,6 +184,17 @@ const Admin = () => {
     setTimeout(() => setSuccessMsg(''), 4000);
   };
 
+  const handleImageFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProductForm(prev => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Product CRUD
   const handleProductSubmit = async (e) => {
     e.preventDefault();
@@ -953,10 +964,63 @@ const Admin = () => {
                 <input type="text" value={productForm.benefit2_mr} onChange={(e) => setProductForm({ ...productForm, benefit2_mr: e.target.value })} placeholder="फायदा २: पांढऱ्या मुळांचा विकास" className="border border-slate-200 rounded p-2 text-xs" />
               </div>
 
-              {/* Image URL */}
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Image Path / URL</label>
-                <input type="text" value={productForm.image} onChange={(e) => setProductForm({ ...productForm, image: e.target.value })} className="border border-slate-200 rounded p-2 text-xs" />
+              {/* Product Photo Upload & Live Preview */}
+              <div className="flex flex-col gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                <label className="text-[11px] font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                  <span>🖼️</span>
+                  <span>उत्पादनाचा फोटो (Product Photo)</span>
+                </label>
+
+                {/* Option 1: File Upload */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-500">
+                    १. संगणक किंवा मोबाईलवरून फोटो निवडा (Choose File):
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageFileUpload}
+                    className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-brand-green-dark file:text-white hover:file:bg-brand-green-light cursor-pointer border border-slate-200 rounded-lg bg-white p-1"
+                  />
+                </div>
+
+                <div className="relative flex py-0.5 items-center">
+                  <div className="flex-grow border-t border-slate-200"></div>
+                  <span className="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">किंवा (OR)</span>
+                  <div className="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                {/* Option 2: Image URL Path */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-500">
+                    २. फोटोची वेब URL किंवा पाथ (Image Path / URL):
+                  </label>
+                  <input
+                    type="text"
+                    value={productForm.image}
+                    onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
+                    placeholder="/assets/products/magic_gold_500.png"
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-brand-green-dark"
+                  />
+                </div>
+
+                {/* Live Image Preview */}
+                {productForm.image && (
+                  <div className="flex items-center gap-3 mt-1 p-2 bg-white rounded-xl border border-slate-200 shadow-xs">
+                    <div className="w-14 h-14 rounded-lg bg-slate-50 p-1 flex items-center justify-center border border-slate-200 flex-shrink-0 overflow-hidden">
+                      <img
+                        src={productForm.image}
+                        alt="Product Preview"
+                        className="max-w-full max-h-full object-contain"
+                        onError={(e) => { e.target.src = '/assets/logo.png'; }}
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-black text-brand-green-dark uppercase">फोटो प्रिव्ह्यू (Live Preview)</p>
+                      <p className="text-[10px] text-slate-500 truncate max-w-[210px]">{productForm.image}</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Form Buttons */}
