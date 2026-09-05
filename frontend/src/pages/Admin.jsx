@@ -21,8 +21,10 @@ const Admin = () => {
   const [passcode, setPasscode] = useState('');
   const [loginError, setLoginError] = useState('');
 
-  // Active Admin Tab
-  const [activeTab, setActiveTab] = useState('content');
+  // Active Admin Tab (default to 'products' for immediate access)
+  const [activeTab, setActiveTab] = useState('products');
+  const [productSearch, setProductSearch] = useState('');
+  const [dealerSearch, setDealerSearch] = useState('');
 
   // Database lists
   const [productsList, setProductsList] = useState([]);
@@ -468,64 +470,124 @@ const Admin = () => {
         </div>
       )}
 
-      {/* Tabs list */}
-      <div className="flex gap-2 border-b border-slate-100 overflow-x-auto pb-1 no-scrollbar">
+      {/* Quick Dashboard Stats Summary */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div 
+          onClick={() => setActiveTab('products')} 
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            activeTab === 'products' ? 'bg-emerald-900 text-white border-emerald-800 shadow-md' : 'bg-white border-slate-200/80 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">उत्पादने (Products)</span>
+            <span className="text-lg">📦</span>
+          </div>
+          <p className="text-2xl font-black mt-1">{productsList.length}</p>
+        </div>
+
+        <div 
+          onClick={() => setActiveTab('users')} 
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            activeTab === 'users' ? 'bg-pink-900 text-white border-pink-800 shadow-md' : 'bg-white border-slate-200/80 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-pink-300">डीलर मंजुरी (Dealers)</span>
+            <span className="text-lg">🏪</span>
+          </div>
+          <div className="flex items-center gap-2 mt-1">
+            <p className="text-2xl font-black">{usersList.length}</p>
+            {usersList.filter(u => u.role === 'dealer' && !u.isVerifiedDealer).length > 0 && (
+              <span className="bg-pink-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full animate-bounce">
+                {usersList.filter(u => u.role === 'dealer' && !u.isVerifiedDealer).length} नवीन
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div 
+          onClick={() => setActiveTab('blogs')} 
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            activeTab === 'blogs' ? 'bg-indigo-900 text-white border-indigo-800 shadow-md' : 'bg-white border-slate-200/80 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-indigo-300">ब्लॉग्स (Blogs)</span>
+            <span className="text-lg">📝</span>
+          </div>
+          <p className="text-2xl font-black mt-1">{blogsList.length}</p>
+        </div>
+
+        <div 
+          onClick={() => setActiveTab('reviews')} 
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            activeTab === 'reviews' ? 'bg-amber-900 text-white border-amber-800 shadow-md' : 'bg-white border-slate-200/80 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-amber-300">अभिप्राय (Reviews)</span>
+            <span className="text-lg">🌟</span>
+          </div>
+          <p className="text-2xl font-black mt-1">{reviewsList.length}</p>
+        </div>
+      </div>
+
+      {/* Primary Navigation Tabs */}
+      <div className="flex gap-2 border-b border-slate-200/80 overflow-x-auto pb-2 no-scrollbar">
         
-        {/* Tab: CMS & Visibility */}
-        <button
-          onClick={() => setActiveTab('content')}
-          className={`px-5 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'content' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          <Sparkles size={14} />
-          <span>कन्टेन्ट व नोटिसेस (Content CMS)</span>
-        </button>
-
-        {/* Tab: Users & Dealers */}
-        <button
-          onClick={() => setActiveTab('users')}
-          className={`px-5 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'users' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          <UserCheck size={14} />
-          <span>युझर्स व डीलर मंजुरी (Users: {usersList.length})</span>
-        </button>
-
-        {/* Tab: Products */}
+        {/* Tab 1: Products */}
         <button
           onClick={() => setActiveTab('products')}
-          className={`px-5 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'products' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50'
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'products' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
           }`}
         >
-          <PlusCircle size={14} />
-          <span>उत्पादने (Products: {productsList.length})</span>
+          <PlusCircle size={16} />
+          <span>१. उत्पादने मॅनेज करा (Products: {productsList.length})</span>
         </button>
 
+        {/* Tab 2: Users & Dealers */}
+        <button
+          onClick={() => setActiveTab('users')}
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'users' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <UserCheck size={16} />
+          <span>२. डीलर मंजुरी (Dealers: {usersList.length})</span>
+        </button>
 
-
-        {/* Tab: Blogs */}
+        {/* Tab 3: Blogs */}
         <button
           onClick={() => setActiveTab('blogs')}
-          className={`px-5 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'blogs' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50'
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'blogs' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
           }`}
         >
-          <BookOpen size={14} />
-          <span>ब्लॉग (Blogs: {blogsList.length})</span>
+          <BookOpen size={16} />
+          <span>३. शेती सल्ला ब्लॉग्स (Blogs: {blogsList.length})</span>
         </button>
 
-        {/* Tab: Reviews */}
+        {/* Tab 4: Reviews */}
         <button
           onClick={() => setActiveTab('reviews')}
-          className={`px-5 py-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-            activeTab === 'reviews' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200/60 text-slate-600 hover:bg-slate-50'
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'reviews' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
           }`}
         >
-          <Users size={14} />
-          <span>अभिप्राय (Reviews: {reviewsList.length})</span>
+          <Users size={16} />
+          <span>४. शेतकरी अभिप्राय (Reviews: {reviewsList.length})</span>
+        </button>
+
+        {/* Tab 5: CMS Content Settings */}
+        <button
+          onClick={() => setActiveTab('content')}
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'content' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <Sparkles size={16} />
+          <span>५. साइट नोटीस सेटिंग्ज (Site Content)</span>
         </button>
       </div>
 
@@ -718,6 +780,25 @@ const Admin = () => {
             </p>
           </div>
 
+          {/* Search Filter for Dealers */}
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={dealerSearch}
+              onChange={(e) => setDealerSearch(e.target.value)}
+              placeholder="🔍 शोधा: डीलरचे नाव, दुकानाचे नाव, फोन नंबर किंवा शहर (Search dealers)..."
+              className="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 focus:bg-white focus:ring-1 focus:ring-brand-green-dark font-medium"
+            />
+            {dealerSearch && (
+              <button 
+                onClick={() => setDealerSearch('')} 
+                className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs px-3 py-2 rounded-xl cursor-pointer"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
           {usersList.length === 0 ? (
             <div className="p-8 text-center bg-slate-50 rounded-2xl border border-slate-200">
               <Users size={36} className="mx-auto text-slate-300 mb-2" />
@@ -738,7 +819,15 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs">
-                  {usersList.map((usr) => (
+                  {usersList
+                    .filter(usr => 
+                      (usr.name && usr.name.toLowerCase().includes(dealerSearch.toLowerCase())) ||
+                      (usr.businessName && usr.businessName.toLowerCase().includes(dealerSearch.toLowerCase())) ||
+                      (usr.city && usr.city.toLowerCase().includes(dealerSearch.toLowerCase())) ||
+                      (usr.district && usr.district.toLowerCase().includes(dealerSearch.toLowerCase())) ||
+                      (usr.phone && usr.phone.includes(dealerSearch))
+                    )
+                    .map((usr) => (
                     <tr key={usr.id || usr._id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="p-3 font-bold text-slate-800">
                         <div>{usr.name}</div>
@@ -1040,16 +1129,43 @@ const Admin = () => {
 
           {/* Products Directory */}
           <div className="lg:col-span-7 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
-            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3">
-              विद्यमान उत्पादने (Existing Products: {productsList.length})
-            </h2>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-3">
+              <h2 className="font-extrabold text-slate-800 text-base">
+                विद्यमान उत्पादने (Existing Products: {productsList.length})
+              </h2>
+            </div>
 
-            <div className="flex flex-col gap-3">
-              {productsList.map((prod) => (
+            {/* Quick Search Filter for Products */}
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={productSearch}
+                onChange={(e) => setProductSearch(e.target.value)}
+                placeholder="🔍 शोधा: उत्पादनाचे नाव किंवा प्रकार (Search products)..."
+                className="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50 focus:bg-white focus:ring-1 focus:ring-brand-green-dark font-medium"
+              />
+              {productSearch && (
+                <button 
+                  onClick={() => setProductSearch('')} 
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs px-3 py-2 rounded-xl cursor-pointer"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-3 max-h-[650px] overflow-y-auto custom-scrollbar pr-1">
+              {productsList
+                .filter(p => 
+                  p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
+                  (p.category && p.category.toLowerCase().includes(productSearch.toLowerCase())) ||
+                  (p.crops?.mr && p.crops.mr.toLowerCase().includes(productSearch.toLowerCase()))
+                )
+                .map((prod) => (
                 <div key={prod.id} className="flex items-center justify-between p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3 min-w-0 pr-2">
                     <div className="w-12 h-12 bg-white border border-slate-200 rounded-xl p-1 flex items-center justify-center flex-shrink-0">
-                      <img src={prod.image} alt={prod.name} className="max-h-full max-w-full object-contain" />
+                      <img src={prod.image} alt={prod.name} className="max-h-full max-w-full object-contain" onError={(e) => { e.target.src = '/assets/logo.png'; }} />
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-black text-slate-800 text-xs sm:text-sm truncate">{prod.name}</h4>
@@ -1061,17 +1177,18 @@ const Admin = () => {
                   <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button
                       onClick={() => handleEditProduct(prod)}
-                      className="p-2 text-slate-400 hover:text-brand-green-dark hover:bg-emerald-50 rounded-lg cursor-pointer transition-colors"
-                      title="Edit"
+                      className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-brand-green-dark rounded-lg text-xs font-black flex items-center gap-1 cursor-pointer transition-colors border border-emerald-200/60"
+                      title="Edit Product"
                     >
-                      <Edit size={16} />
+                      <Edit size={13} />
+                      <span>एडिट (Edit)</span>
                     </button>
                     <button
                       onClick={() => handleDeleteProduct(prod.id)}
-                      className="p-2 text-slate-400 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
-                      title="Delete"
+                      className="p-1.5 text-slate-400 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
+                      title="Delete Product"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </button>
                   </div>
                 </div>
