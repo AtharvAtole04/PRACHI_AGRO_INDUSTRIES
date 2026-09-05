@@ -11,7 +11,7 @@ const HeroSlider = () => {
   const slides = [
     // Slide 1: NPK खतांना सर्वोत्तम पर्याय (कृषी वरदान + कॉम्बी न्यूट्री किट)
     {
-      theme: "from-emerald-950 via-green-900 to-slate-950",
+      bgStyle: "linear-gradient(135deg, #022c22 0%, #064e3b 50%, #020617 100%)",
       accentColor: "text-amber-300",
       badgeBg: "bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950",
       tag: { mr: "१००% ORGANIC • संपूर्ण पोषण", en: "100% Organic • Complete Nutrition" },
@@ -31,7 +31,7 @@ const HeroSlider = () => {
 
     // Slide 2: ओके + फास्ट रिझल्ट (वेगवेगळ्या पिकांना एकच जोडी)
     {
-      theme: "from-blue-950 via-indigo-950 to-slate-950",
+      bgStyle: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%)",
       accentColor: "text-yellow-300",
       badgeBg: "bg-gradient-to-r from-red-500 to-pink-600 text-white",
       tag: { mr: "एकदम कसं ओके • जसं नावं तसा रिझल्ट", en: "All-In-One Solution • Proven Results" },
@@ -51,7 +51,7 @@ const HeroSlider = () => {
 
     // Slide 3: ऑरगॅनिक कार्बन (एक किलोत एका ट्रॉलीची ताकद)
     {
-      theme: "from-amber-950 via-emerald-950 to-slate-950",
+      bgStyle: "linear-gradient(135deg, #3f1d0b 0%, #064e3b 50%, #020617 100%)",
       accentColor: "text-emerald-300",
       badgeBg: "bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950",
       tag: { mr: "१००% WATER SOLUBLE • सेंद्रिय क्रांती", en: "100% Water Soluble • Organic Carbon" },
@@ -104,23 +104,23 @@ const HeroSlider = () => {
               idx === currentSlide ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-95 pointer-events-none z-0'
             }`}
           >
-            {/* Dynamic Background Gradient */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${slide.theme}`} />
+            {/* Inline Dynamic Background Gradient */}
+            <div className="absolute inset-0 z-0" style={{ background: slide.bgStyle }} />
             
             {/* Subtle glow lights */}
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-gold/20 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-10 w-80 h-80 bg-brand-magenta/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-gold/20 rounded-full blur-3xl pointer-events-none z-0" />
+            <div className="absolute bottom-0 left-10 w-80 h-80 bg-brand-magenta/20 rounded-full blur-3xl pointer-events-none z-0" />
 
             {/* Layout Grid */}
             <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-5 sm:py-8 flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-10">
               
               {/* Top/Right Column: High-Resolution Real Product Marketing Banner Graphic */}
               <div className="w-full lg:flex-1 flex items-center justify-center relative flex-shrink-0">
-                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 sm:border-4 border-white/90 shadow-2xl bg-white max-h-[190px] sm:max-h-[280px] lg:max-h-[420px] aspect-video sm:aspect-square group/poster hover:scale-102 transition-transform duration-300">
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 sm:border-4 border-white/90 shadow-2xl bg-white max-h-[210px] sm:max-h-[280px] lg:max-h-[420px] aspect-video sm:aspect-square group/poster hover:scale-102 transition-transform duration-300">
                   <img
                     src={slide.posterImg}
                     alt={slide.productTitle}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-contain bg-white object-center"
                     onError={(e) => { e.target.src = '/assets/logo.png'; }}
                   />
                   <div className="absolute top-2 right-2 bg-slate-900/80 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-white/20">
