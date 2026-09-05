@@ -23,6 +23,7 @@ import MemberBanner from '../components/MemberBanner';
 const FOCUS_CROPS = [
   {
     id: "onion",
+    emoji: "🧅",
     name_mr: "कांदा (Onion)",
     tag_mr: "कंद फुगवण, वजन व पात टिकवण्यासाठी",
     image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&q=80&w=600",
@@ -31,6 +32,7 @@ const FOCUS_CROPS = [
   },
   {
     id: "sugarcane",
+    emoji: "🎋",
     name_mr: "ऊस (Sugarcane)",
     tag_mr: "कांडीची लांबी, जाडी व जोमदार फुटवे",
     image: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600",
@@ -39,6 +41,7 @@ const FOCUS_CROPS = [
   },
   {
     id: "tomato",
+    emoji: "🍅",
     name_mr: "टोमॅटो (Tomato)",
     tag_mr: "फुलगळ नियंत्रण, फळांची चमक व आकार",
     image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=600",
@@ -47,6 +50,7 @@ const FOCUS_CROPS = [
   },
   {
     id: "papaya",
+    emoji: "🍈",
     name_mr: "पपई (Papaya)",
     tag_mr: "व्हायरस व बुरशी रक्षण, गोडवा व वजन",
     image: "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&fit=crop&q=80&w=600",
@@ -55,6 +59,7 @@ const FOCUS_CROPS = [
   },
   {
     id: "chilli",
+    emoji: "🌶️",
     name_mr: "मिरची (Chilli)",
     tag_mr: "बोकड्या/चुरडा-मुरडा नियंत्रण व अधिक फुले",
     image: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&q=80&w=600",
@@ -192,15 +197,16 @@ const Home = () => {
               onClick={() => navigate(`/products`)}
               className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/15 hover:border-brand-gold hover:bg-white/15 transition-all duration-300 cursor-pointer flex flex-col group"
             >
-              <div className="h-36 w-full overflow-hidden relative">
+              <div className="h-36 w-full overflow-hidden relative bg-emerald-950">
                 <img
                   src={crop.image}
-                  alt={crop.name_mr}
+                  alt=""
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={(e) => { e.target.style.display = 'none'; }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <span className="absolute bottom-2 left-3 font-black text-white text-base">
-                  {crop.name_mr}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-emerald-950/40 to-transparent" />
+                <span className="absolute bottom-2.5 left-3 font-black text-white text-sm sm:text-base drop-shadow-md">
+                  {crop.emoji} {crop.name_mr}
                 </span>
               </div>
 

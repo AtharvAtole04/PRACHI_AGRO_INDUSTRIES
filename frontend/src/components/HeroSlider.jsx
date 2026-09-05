@@ -93,7 +93,7 @@ const HeroSlider = () => {
   };
 
   return (
-    <div className="relative w-full min-h-[460px] sm:min-h-[480px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-slate-200/60 group/slider">
+    <div className="relative w-full min-h-[560px] sm:min-h-[520px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-slate-200/60 group/slider">
       
       {/* Slides Wrapper */}
       <div className="w-full h-full relative">
@@ -112,68 +112,11 @@ const HeroSlider = () => {
             <div className="absolute bottom-0 left-10 w-80 h-80 bg-brand-magenta/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
             {/* Layout Grid */}
-            <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 lg:py-0 flex flex-col-reverse lg:flex-row items-center justify-between gap-6 lg:gap-10">
+            <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-5 sm:py-8 flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-10">
               
-              {/* Left Column: Commercial Ad Headline & Bullet points */}
-              <div className="flex-1 text-center lg:text-left text-white max-w-xl flex flex-col justify-center">
-                
-                {/* Tag Badge */}
-                <div className="flex items-center justify-center lg:justify-start gap-2 mb-2.5">
-                  <span className={`font-black text-[11px] sm:text-xs uppercase tracking-wider px-3.5 py-1 rounded-full shadow-lg inline-flex items-center gap-1.5 ${slide.badgeBg}`}>
-                    <Sparkles size={13} />
-                    <span>{slide.tag[language]}</span>
-                  </span>
-                </div>
-
-                {/* Main Ad Title */}
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-md">
-                  {slide.productTitle}
-                </h2>
-
-                {/* Subtitle */}
-                <p className={`text-xs sm:text-base font-black mt-2 leading-snug ${slide.accentColor}`}>
-                  {slide.subtitle[language]}
-                </p>
-
-                {/* Benefit Points Strip */}
-                <div className="flex flex-col gap-2 mt-4 text-left max-w-lg mx-auto lg:mx-0">
-                  {slide.points.map((pt, pIdx) => (
-                    <div key={pIdx} className="flex items-center gap-2.5 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-3 py-1.5 shadow-sm hover:bg-white/15 transition-colors">
-                      <span className="text-sm sm:text-base flex-shrink-0">{pt.icon}</span>
-                      <span className="text-xs sm:text-sm font-bold text-slate-100">
-                        {pt[language]}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* The Two Action Buttons (सर्व उत्पादने पहा & WhatsApp वर ऑर्डर करा) */}
-                <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4">
-                  
-                  {/* Button 1: सर्व उत्पादने पहा */}
-                  <button
-                    onClick={() => navigate('/products')}
-                    className="w-full sm:w-auto bg-brand-green-bright hover:bg-emerald-600 active:scale-95 text-white font-extrabold text-xs sm:text-sm px-7 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl transition-all"
-                  >
-                    <span>{t('allProductsBtn')}</span>
-                    <ArrowRight size={16} />
-                  </button>
-                  
-                  {/* Button 2: WhatsApp वर ऑर्डर करा */}
-                  <button
-                    onClick={handleWhatsApp}
-                    className="w-full sm:w-auto bg-brand-magenta hover:bg-brand-magenta-dark active:scale-95 text-white font-extrabold text-xs sm:text-sm px-7 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-pink-900/30 hover:shadow-xl transition-all"
-                  >
-                    <MessageCircle size={18} className="fill-current" />
-                    <span>{t('whatsAppOrder')}</span>
-                  </button>
-
-                </div>
-              </div>
-
-              {/* Right Column: High-Resolution Real Product Marketing Banner Graphic */}
-              <div className="flex-1 w-full flex items-center justify-center relative">
-                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-4 border-white/80 shadow-2xl bg-white max-w-[320px] sm:max-w-[380px] lg:max-w-[420px] aspect-square group/poster hover:scale-102 transition-transform duration-300">
+              {/* Top/Right Column: High-Resolution Real Product Marketing Banner Graphic */}
+              <div className="w-full lg:flex-1 flex items-center justify-center relative flex-shrink-0">
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-2 sm:border-4 border-white/80 shadow-2xl bg-white max-h-[190px] sm:max-h-[280px] lg:max-h-[420px] aspect-video sm:aspect-square group/poster hover:scale-102 transition-transform duration-300">
                   <img
                     src={slide.posterImg}
                     alt={slide.productTitle}
@@ -183,6 +126,63 @@ const HeroSlider = () => {
                   <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                     Official Ad
                   </div>
+                </div>
+              </div>
+
+              {/* Bottom/Left Column: Commercial Ad Headline & Bullet points */}
+              <div className="flex-1 text-center lg:text-left text-white max-w-xl flex flex-col justify-center">
+                
+                {/* Tag Badge */}
+                <div className="flex items-center justify-center lg:justify-start gap-2 mb-2">
+                  <span className={`font-black text-[10px] sm:text-xs uppercase tracking-wider px-3 py-0.5 sm:py-1 rounded-full shadow-lg inline-flex items-center gap-1.5 ${slide.badgeBg}`}>
+                    <Sparkles size={12} />
+                    <span>{slide.tag[language]}</span>
+                  </span>
+                </div>
+
+                {/* Main Ad Title */}
+                <h2 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight drop-shadow-md">
+                  {slide.productTitle}
+                </h2>
+
+                {/* Subtitle */}
+                <p className={`text-xs sm:text-base font-black mt-1 sm:mt-2 leading-snug ${slide.accentColor}`}>
+                  {slide.subtitle[language]}
+                </p>
+
+                {/* Benefit Points Strip */}
+                <div className="flex flex-col gap-1.5 sm:gap-2 mt-3 sm:mt-4 text-left max-w-lg mx-auto lg:mx-0">
+                  {slide.points.map((pt, pIdx) => (
+                    <div key={pIdx} className="flex items-center gap-2 sm:gap-2.5 bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-2.5 sm:px-3 py-1 sm:py-1.5 shadow-sm hover:bg-white/15 transition-colors">
+                      <span className="text-xs sm:text-base flex-shrink-0">{pt.icon}</span>
+                      <span className="text-[11px] sm:text-sm font-bold text-slate-100 leading-tight">
+                        {pt[language]}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* The Two Action Buttons (सर्व उत्पादने पहा & WhatsApp वर ऑर्डर करा) */}
+                <div className="mt-4 sm:mt-6 flex flex-row justify-center lg:justify-start items-center gap-2 sm:gap-4">
+                  
+                  {/* Button 1: सर्व उत्पादने पहा */}
+                  <button
+                    onClick={() => navigate('/products')}
+                    className="flex-1 sm:flex-initial bg-brand-green-bright hover:bg-emerald-600 active:scale-95 text-white font-extrabold text-xs sm:text-sm px-4 sm:px-7 py-2.5 sm:py-3 rounded-full flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <span>{t('allProductsBtn')}</span>
+                    <ArrowRight size={15} />
+                  </button>
+                  
+                  {/* Button 2: WhatsApp वर ऑर्डर करा */}
+                  <button
+                    onClick={handleWhatsApp}
+                    className="flex-1 sm:flex-initial bg-brand-magenta hover:bg-brand-magenta-dark active:scale-95 text-white font-extrabold text-xs sm:text-sm px-4 sm:px-7 py-2.5 sm:py-3 rounded-full flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-pink-900/30 hover:shadow-xl transition-all"
+                  >
+                    <MessageCircle size={16} className="fill-current" />
+                    <span>{t('whatsAppOrder')}</span>
+                  </button>
+
                 </div>
               </div>
 
