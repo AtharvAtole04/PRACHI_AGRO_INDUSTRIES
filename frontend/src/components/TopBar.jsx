@@ -32,9 +32,9 @@ const TopBar = () => {
           </a>
 
           {/* Email — desktop only */}
-          <a href="mailto:info@prachiagro.com" className="hidden md:flex items-center gap-1 hover:text-brand-gold transition-colors">
+          <a href="mailto:info@prachiagroindustries.in" className="hidden md:flex items-center gap-1 hover:text-brand-gold transition-colors">
             <Mail size={12} />
-            <span className="text-[11px]">info@prachiagro.com</span>
+            <span className="text-[11px]">info@prachiagroindustries.in</span>
           </a>
 
           <span className="text-white/30 hidden sm:inline">|</span>

@@ -118,11 +118,11 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="mailto:info@prachiagro.com" className="flex items-center gap-2.5 hover:text-white transition-colors group">
+              <a href="mailto:info@prachiagroindustries.in" className="flex items-center gap-2.5 hover:text-white transition-colors group">
                 <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center group-hover:bg-slate-700 transition-colors">
                   <Mail size={14} />
                 </div>
-                <span className="truncate">info@prachiagro.com</span>
+                <span className="truncate">info@prachiagroindustries.in</span>
               </a>
             </li>
           </ul>

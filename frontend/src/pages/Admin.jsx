@@ -129,7 +129,7 @@ const Admin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (passcode === 'admin123' || passcode === 'admin') {
-      await login('admin@prachiagro.com', 'admin123', 'admin');
+      await login('info@prachiagroindustries.in', 'admin123', 'admin');
       setIsAuthenticated(true);
       setLoginError('');
     } else {
@@ -248,27 +248,28 @@ const Admin = () => {
   const handleEditProduct = (prod) => {
     setIsEditingProduct(true);
     setProductForm({
-      id: prod.id,
+      id: prod.id || prod._id,
       name: prod.name,
       category: prod.category,
-      tagline_mr: prod.tagline.mr, tagline_en: prod.tagline.en,
-      shortDesc_mr: prod.shortDescription.mr, shortDesc_en: prod.shortDescription.en,
-      desc_mr: prod.description.mr, desc_en: prod.description.en,
+      tagline_mr: prod.tagline?.mr || '', tagline_en: prod.tagline?.en || '',
+      shortDesc_mr: prod.shortDescription?.mr || '', shortDesc_en: prod.shortDescription?.en || '',
+      desc_mr: prod.description?.mr || '', desc_en: prod.description?.en || '',
       basePrice: prod.basePrice,
       originalPrice: prod.originalPrice || '',
-      pack1_size: prod.packSizes[0]?.size || '250 ml', pack1_price: prod.packSizes[0]?.price || '',
-      pack2_size: prod.packSizes[1]?.size || '500 ml', pack2_price: prod.packSizes[1]?.price || '',
-      pack3_size: prod.packSizes[2]?.size || '1 L', pack3_price: prod.packSizes[2]?.price || '',
-      crops_mr: prod.crops.mr, crops_en: prod.crops.en,
-      benefit1_mr: prod.benefits.mr[0] || '', benefit1_en: prod.benefits.en[0] || '',
-      benefit2_mr: prod.benefits.mr[1] || '', benefit2_en: prod.benefits.en[1] || '',
-      usage_mr: prod.usage.mr, usage_en: prod.usage.en,
+      pack1_size: prod.packSizes?.[0]?.size || '250 ml', pack1_price: prod.packSizes?.[0]?.price || '',
+      pack2_size: prod.packSizes?.[1]?.size || '500 ml', pack2_price: prod.packSizes?.[1]?.price || '',
+      pack3_size: prod.packSizes?.[2]?.size || '1 L', pack3_price: prod.packSizes?.[2]?.price || '',
+      crops_mr: prod.crops?.mr || '', crops_en: prod.crops?.en || '',
+      benefit1_mr: prod.benefits?.mr?.[0] || '', benefit1_en: prod.benefits?.en?.[0] || '',
+      benefit2_mr: prod.benefits?.mr?.[1] || '', benefit2_en: prod.benefits?.en?.[1] || '',
+      usage_mr: prod.usage?.mr || '', usage_en: prod.usage?.en || '',
       image: prod.image
     });
     window.scrollTo({ top: 100, behavior: 'smooth' });
   };
 
   const handleDeleteProduct = async (id) => {
+    if (!id) return;
     if (window.confirm(language === 'mr' ? 'हे उत्पादन हटवायचे आहे का?' : 'Delete this product?')) {
       await deleteProduct(id);
       loadAllData();
@@ -1162,7 +1163,7 @@ const Admin = () => {
                   (p.crops?.mr && p.crops.mr.toLowerCase().includes(productSearch.toLowerCase()))
                 )
                 .map((prod) => (
-                <div key={prod.id} className="flex items-center justify-between p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors">
+                <div key={prod.id || prod._id} className="flex items-center justify-between p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3 min-w-0 pr-2">
                     <div className="w-12 h-12 bg-white border border-slate-200 rounded-xl p-1 flex items-center justify-center flex-shrink-0">
                       <img src={prod.image} alt={prod.name} className="max-h-full max-w-full object-contain" onError={(e) => { e.target.src = '/assets/logo.png'; }} />
@@ -1184,7 +1185,7 @@ const Admin = () => {
                       <span>एडिट (Edit)</span>
                     </button>
                     <button
-                      onClick={() => handleDeleteProduct(prod.id)}
+                      onClick={() => handleDeleteProduct(prod.id || prod._id)}
                       className="p-1.5 text-slate-400 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
                       title="Delete Product"
                     >

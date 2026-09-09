@@ -172,12 +172,16 @@ export const deleteBlog = async (id) => {
     });
     if (res.ok) {
       return await getBlogs();
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      console.error(`Failed to delete blog from backend (${res.status}):`, errData);
+      return await getBlogs();
     }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    console.warn("Backend offline. Removing from localStorage fallback.");
+    const list = await getBlogs();
+    const filtered = list.filter(b => b.id !== id && b._id !== id);
+    await saveBlogs(filtered);
+    return filtered;
   }
-  const list = await getBlogs();
-  const filtered = list.filter(b => b.id !== id);
-  await saveBlogs(filtered);
-  return filtered;
 };

@@ -94,13 +94,13 @@ router.post('/login', async (req, res) => {
     }
 
     // Check if it's the default Admin credentials
-    if ((email === ADMIN_EMAIL || email === 'admin' || email === 'admin@prachiagro.com') && (password === ADMIN_PASSWORD || password === 'admin123')) {
+    if ((email === ADMIN_EMAIL || email === 'admin' || email === 'admin@prachiagro.com' || email === 'info@prachiagroindustries.in') && (password === ADMIN_PASSWORD || password === 'admin123')) {
       return res.json({
         success: true,
         user: {
           id: 'admin-master',
           name: 'Prachi Agro Admin',
-          email: 'admin@prachiagro.com',
+          email: 'info@prachiagroindustries.in',
           phone: '9021605160',
           role: 'admin',
           isVerifiedDealer: true,

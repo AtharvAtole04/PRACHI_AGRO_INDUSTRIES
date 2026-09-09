@@ -1,7 +1,14 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Blog from '../models/Blog.js';
 
 const router = express.Router();
+
+const getQueryForId = (idParam) => {
+  return mongoose.Types.ObjectId.isValid(idParam)
+    ? { $or: [{ id: idParam }, { _id: idParam }] }
+    : { id: idParam };
+};
 
 // GET all blogs
 router.get('/', async (req, res) => {
@@ -13,10 +20,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single blog by ID slug
+// GET single blog by ID slug or Mongo _id
 router.get('/:id', async (req, res) => {
   try {
-    const blog = await Blog.findOne({ id: req.params.id });
+    const blog = await Blog.findOne(getQueryForId(req.params.id));
     if (!blog) return res.status(404).json({ message: 'Blog post not found' });
     res.json(blog);
   } catch (err) {
@@ -39,7 +46,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const updatedBlog = await Blog.findOneAndUpdate(
-      { id: req.params.id },
+      getQueryForId(req.params.id),
       req.body,
       { new: true, upsert: true, runValidators: true }
     );
@@ -52,7 +59,7 @@ router.put('/:id', async (req, res) => {
 // DELETE blog
 router.delete('/:id', async (req, res) => {
   try {
-    const deletedBlog = await Blog.findOneAndDelete({ id: req.params.id });
+    const deletedBlog = await Blog.findOneAndDelete(getQueryForId(req.params.id));
     if (!deletedBlog) return res.status(404).json({ message: 'Blog not found' });
     res.json({ message: 'Blog successfully deleted', id: req.params.id });
   } catch (err) {

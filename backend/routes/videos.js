@@ -1,7 +1,14 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Video from '../models/Video.js';
 
 const router = express.Router();
+
+const getQueryForId = (idParam) => {
+  return mongoose.Types.ObjectId.isValid(idParam)
+    ? { $or: [{ id: idParam }, { _id: idParam }] }
+    : { id: idParam };
+};
 
 // GET all videos
 router.get('/', async (req, res) => {
@@ -28,7 +35,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const updatedVideo = await Video.findOneAndUpdate(
-      { id: req.params.id },
+      getQueryForId(req.params.id),
       req.body,
       { new: true, upsert: true, runValidators: true }
     );
@@ -41,7 +48,7 @@ router.put('/:id', async (req, res) => {
 // DELETE video
 router.delete('/:id', async (req, res) => {
   try {
-    const deletedVideo = await Video.findOneAndDelete({ id: req.params.id });
+    const deletedVideo = await Video.findOneAndDelete(getQueryForId(req.params.id));
     if (!deletedVideo) return res.status(404).json({ message: 'Video not found' });
     res.json({ message: 'Video successfully deleted', id: req.params.id });
   } catch (err) {

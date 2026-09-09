@@ -230,14 +230,18 @@ export const deleteVideo = async (id) => {
     });
     if (res.ok) {
       return await getVideos();
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      console.error(`Failed to delete video from backend (${res.status}):`, errData);
+      return await getVideos();
     }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    console.warn("Backend offline. Removing from localStorage fallback.");
+    const list = await getVideos();
+    const filtered = list.filter(v => v.id !== id && v._id !== id);
+    await saveVideos(filtered);
+    return filtered;
   }
-  const list = await getVideos();
-  const filtered = list.filter(v => v.id !== id);
-  await saveVideos(filtered);
-  return filtered;
 };
 
 function extractEmbedId(url) {

@@ -105,12 +105,16 @@ export const deleteReview = async (id) => {
     });
     if (res.ok) {
       return await getReviews();
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      console.error(`Failed to delete review from backend (${res.status}):`, errData);
+      return await getReviews();
     }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    console.warn("Backend offline. Removing from localStorage fallback.");
+    const list = await getReviews();
+    const filtered = list.filter(r => String(r.id) !== String(id) && String(r._id) !== String(id));
+    await saveReviews(filtered);
+    return filtered;
   }
-  const list = await getReviews();
-  const filtered = list.filter(r => String(r.id) !== String(id) && String(r._id) !== String(id));
-  await saveReviews(filtered);
-  return filtered;
 };

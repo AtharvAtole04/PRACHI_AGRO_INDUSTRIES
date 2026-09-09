@@ -8,7 +8,7 @@ const DEMO_USERS = {
   admin: {
     id: 'demo-admin',
     name: 'Prachi Agro Admin',
-    email: 'admin@prachiagro.com',
+    email: 'info@prachiagroindustries.in',
     phone: '9021605160',
     role: 'admin',
     isVerifiedDealer: true,
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
     // 1. Check if user is logging into standard Demo accounts
     if (
-      (trimmedEmail === 'admin@prachiagro.com' || trimmedEmail === 'admin') &&
+      (trimmedEmail === 'info@prachiagroindustries.in' || trimmedEmail === 'admin@prachiagro.com' || trimmedEmail === 'admin') &&
       (cleanPassword === 'admin123' || cleanPassword === 'admin')
     ) {
       const adminUser = DEMO_USERS.admin;

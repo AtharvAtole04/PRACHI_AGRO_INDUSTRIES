@@ -184,7 +184,7 @@ const Contact = () => {
 
             {/* Email */}
             <a 
-              href="mailto:info@prachiagro.com" 
+              href="mailto:info@prachiagroindustries.in" 
               className="flex items-center gap-4 p-3.5 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-100/50 group transition-all"
             >
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-brand-green-dark flex items-center justify-center flex-shrink-0 group-hover:bg-brand-green-dark group-hover:text-white transition-all">
@@ -194,7 +194,7 @@ const Contact = () => {
                 <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wide">
                   {language === 'mr' ? 'अधिकृत ईमेल' : 'Official Email'}
                 </span>
-                <span className="text-sm sm:text-base font-extrabold text-slate-800 truncate block">info@prachiagro.com</span>
+                <span className="text-sm sm:text-base font-extrabold text-slate-800 truncate block">info@prachiagroindustries.in</span>
               </div>
             </a>
 
