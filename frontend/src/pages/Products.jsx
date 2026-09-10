@@ -34,7 +34,7 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState(50000);
   const [sortBy, setSortBy] = useState('popularity');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [visibleCount, setVisibleCount] = useState(12);
   const [compareList, setCompareList] = useState([]);
 
   const handleCompare = (product) => {
@@ -65,6 +65,7 @@ const Products = () => {
     setSelectedCategory('');
     setMaxPrice(highestProductPrice);
     setSortBy('popularity');
+    setVisibleCount(12);
     setSearchParams({});
   };
 
@@ -126,7 +127,11 @@ const Products = () => {
   };
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 4);
+    setVisibleCount((prev) => prev + 12);
+  };
+
+  const handleShowAll = () => {
+    setVisibleCount(filteredProducts.length);
   };
 
   return (
@@ -302,14 +307,22 @@ const Products = () => {
                 ))}
               </div>
 
-              {/* Load More Button */}
+              {/* Load More & Show All Buttons */}
               {visibleCount < filteredProducts.length && (
-                <button
-                  onClick={handleLoadMore}
-                  className="mx-auto bg-white border border-slate-200 hover:bg-slate-50 active:scale-95 text-slate-700 font-bold text-sm px-8 py-3 rounded-full cursor-pointer shadow-sm hover:shadow transition-all"
-                >
-                  आणखी उत्पादने दाखवा (Load More)
-                </button>
+                <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+                  <button
+                    onClick={handleLoadMore}
+                    className="bg-brand-green-dark hover:bg-brand-green-light active:scale-95 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-full cursor-pointer shadow-md transition-all flex items-center gap-2"
+                  >
+                    <span>आणखी उत्पादने दाखवा (Load More +12)</span>
+                  </button>
+                  <button
+                    onClick={handleShowAll}
+                    className="bg-white border-2 border-brand-green-dark hover:bg-emerald-50 active:scale-95 text-brand-green-dark font-extrabold text-xs sm:text-sm px-6 py-3 rounded-full cursor-pointer shadow-xs transition-all"
+                  >
+                    <span>सर्व उत्पादने एकत्र पहा (Show All {filteredProducts.length} Products)</span>
+                  </button>
+                </div>
               )}
             </>
           )}
