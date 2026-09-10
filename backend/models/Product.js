@@ -7,7 +7,8 @@ const localizedStringSchema = new mongoose.Schema({
 
 const packSizeSchema = new mongoose.Schema({
   size: { type: String, required: true },
-  price: { type: Number, required: true }
+  price: { type: Number, required: true },
+  originalPrice: { type: Number }
 }, { _id: false });
 
 const productSchema = new mongoose.Schema({

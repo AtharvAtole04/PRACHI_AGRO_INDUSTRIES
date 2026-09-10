@@ -45,9 +45,11 @@ const Admin = () => {
     shortDesc_mr: '', shortDesc_en: '',
     desc_mr: '', desc_en: '',
     basePrice: '', originalPrice: '',
-    pack1_size: '250 ml', pack1_price: '',
-    pack2_size: '500 ml', pack2_price: '',
-    pack3_size: '1 L', pack3_price: '',
+    packSizes: [
+      { size: '250 ml', price: '', originalPrice: '' },
+      { size: '500 ml', price: '', originalPrice: '' },
+      { size: '1 L', price: '', originalPrice: '' }
+    ],
     crops_mr: '', crops_en: '',
     benefit1_mr: '', benefit1_en: '',
     benefit2_mr: '', benefit2_en: '',
@@ -201,16 +203,18 @@ const Admin = () => {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     
-    const packSizes = [];
-    if (productForm.pack1_size && productForm.pack1_price) {
-      packSizes.push({ size: productForm.pack1_size, price: Number(productForm.pack1_price) });
-    }
-    if (productForm.pack2_size && productForm.pack2_price) {
-      packSizes.push({ size: productForm.pack2_size, price: Number(productForm.pack2_price) });
-    }
-    if (productForm.pack3_size && productForm.pack3_price) {
-      packSizes.push({ size: productForm.pack3_size, price: Number(productForm.pack3_price) });
-    }
+    // Parse dynamic packSizes
+    const packSizes = (productForm.packSizes || [])
+      .filter(p => p.size && p.size.trim() !== '' && p.price !== '' && p.price !== null)
+      .map(p => ({
+        size: p.size.trim(),
+        price: Number(p.price),
+        originalPrice: p.originalPrice ? Number(p.originalPrice) : null
+      }));
+
+    const primaryPack = packSizes[0];
+    const computedBasePrice = primaryPack ? primaryPack.price : (Number(productForm.basePrice) || 0);
+    const computedOriginalPrice = primaryPack && primaryPack.originalPrice ? primaryPack.originalPrice : (productForm.originalPrice ? Number(productForm.originalPrice) : null);
 
     const formattedProduct = {
       name: productForm.name,
@@ -218,9 +222,9 @@ const Admin = () => {
       tagline: { mr: productForm.tagline_mr, en: productForm.tagline_en },
       shortDescription: { mr: productForm.shortDesc_mr, en: productForm.shortDesc_en },
       description: { mr: productForm.desc_mr, en: productForm.desc_en },
-      basePrice: Number(productForm.basePrice),
-      originalPrice: productForm.originalPrice ? Number(productForm.originalPrice) : null,
-      packSizes: packSizes.length > 0 ? packSizes : [{ size: "250 ml", price: Number(productForm.basePrice) }],
+      basePrice: computedBasePrice,
+      originalPrice: computedOriginalPrice,
+      packSizes: packSizes.length > 0 ? packSizes : [{ size: "250 ml", price: computedBasePrice, originalPrice: computedOriginalPrice }],
       image: productForm.image,
       rating: 4.8,
       reviewsCount: 12,
@@ -247,6 +251,14 @@ const Admin = () => {
 
   const handleEditProduct = (prod) => {
     setIsEditingProduct(true);
+    const loadedPacks = Array.isArray(prod.packSizes) && prod.packSizes.length > 0
+      ? prod.packSizes.map(p => ({
+          size: p.size || '',
+          price: p.price !== undefined ? p.price : '',
+          originalPrice: p.originalPrice !== undefined ? p.originalPrice : ''
+        }))
+      : [{ size: '250 ml', price: prod.basePrice || '', originalPrice: prod.originalPrice || '' }];
+
     setProductForm({
       id: prod.id || prod._id,
       name: prod.name,
@@ -254,11 +266,9 @@ const Admin = () => {
       tagline_mr: prod.tagline?.mr || '', tagline_en: prod.tagline?.en || '',
       shortDesc_mr: prod.shortDescription?.mr || '', shortDesc_en: prod.shortDescription?.en || '',
       desc_mr: prod.description?.mr || '', desc_en: prod.description?.en || '',
-      basePrice: prod.basePrice,
+      basePrice: prod.basePrice || '',
       originalPrice: prod.originalPrice || '',
-      pack1_size: prod.packSizes?.[0]?.size || '250 ml', pack1_price: prod.packSizes?.[0]?.price || '',
-      pack2_size: prod.packSizes?.[1]?.size || '500 ml', pack2_price: prod.packSizes?.[1]?.price || '',
-      pack3_size: prod.packSizes?.[2]?.size || '1 L', pack3_price: prod.packSizes?.[2]?.price || '',
+      packSizes: loadedPacks,
       crops_mr: prod.crops?.mr || '', crops_en: prod.crops?.en || '',
       benefit1_mr: prod.benefits?.mr?.[0] || '', benefit1_en: prod.benefits?.en?.[0] || '',
       benefit2_mr: prod.benefits?.mr?.[1] || '', benefit2_en: prod.benefits?.en?.[1] || '',
@@ -284,9 +294,11 @@ const Admin = () => {
       shortDesc_mr: '', shortDesc_en: '',
       desc_mr: '', desc_en: '',
       basePrice: '', originalPrice: '',
-      pack1_size: '250 ml', pack1_price: '',
-      pack2_size: '500 ml', pack2_price: '',
-      pack3_size: '1 L', pack3_price: '',
+      packSizes: [
+        { size: '250 ml', price: '', originalPrice: '' },
+        { size: '500 ml', price: '', originalPrice: '' },
+        { size: '1 L', price: '', originalPrice: '' }
+      ],
       crops_mr: '', crops_en: '',
       benefit1_mr: '', benefit1_en: '',
       benefit2_mr: '', benefit2_en: '',
@@ -993,46 +1005,128 @@ const Admin = () => {
                 </div>
               </div>
 
-              {/* Pricing */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Base Price ₹</label>
-                  <input 
-                    type="number" 
-                    required 
-                    value={productForm.basePrice} 
-                    onChange={(e) => setProductForm({ ...productForm, basePrice: e.target.value })}
-                    placeholder="750"
-                    className="border border-slate-200 rounded p-2 text-xs font-bold"
-                  />
+              {/* Dynamic Pack Sizes & Dual Pricing Section */}
+              <div className="flex flex-col gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                    <span>📦</span>
+                    <span>पॅक आकार व किमती (Quantity Options & Dual Pricing)</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProductForm(prev => ({
+                        ...prev,
+                        packSizes: [...(prev.packSizes || []), { size: '', price: '', originalPrice: '' }]
+                      }));
+                    }}
+                    className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-[10px] px-2.5 py-1 rounded-lg flex items-center gap-1 cursor-pointer shadow-xs"
+                  >
+                    <Plus size={12} />
+                    <span>+ नवीन ऑप्शन जोडा</span>
+                  </button>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Original Price ₹ (MRP)</label>
-                  <input 
-                    type="number" 
-                    value={productForm.originalPrice} 
-                    onChange={(e) => setProductForm({ ...productForm, originalPrice: e.target.value })}
-                    placeholder="900"
-                    className="border border-slate-200 rounded p-2 text-xs"
-                  />
+                
+                {/* Preset Quick Chips */}
+                <div className="flex flex-col gap-1 text-[10px]">
+                  <span className="font-bold text-slate-500">जलद आकार निवडा (Quick Preset Options):</span>
+                  <div className="flex flex-wrap gap-1">
+                    {['250 ml', '500 ml', '1 L', '5 L', '250 g', '500 g', '1 kg', '5 kg', '10 kg'].map((presetSize) => (
+                      <button
+                        type="button"
+                        key={presetSize}
+                        onClick={() => {
+                          const existing = productForm.packSizes || [];
+                          if (!existing.some(p => p.size === presetSize)) {
+                            setProductForm(prev => ({
+                              ...prev,
+                              packSizes: [...(prev.packSizes || []), { size: presetSize, price: '', originalPrice: '' }]
+                            }));
+                          }
+                        }}
+                        className="bg-white hover:bg-emerald-50 text-slate-700 hover:text-brand-green-dark font-extrabold border border-slate-200 px-2 py-0.5 rounded cursor-pointer transition-colors"
+                      >
+                        + {presetSize}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Pack Sizes */}
-              <div className="flex flex-col gap-1.5 bg-slate-50 p-2.5 rounded border border-slate-100">
-                <label className="text-[10px] font-bold text-slate-500 uppercase">Pack Sizes & Prices (पॅक आकार व किंमत)</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <input type="text" value={productForm.pack1_size} onChange={(e) => setProductForm({...productForm, pack1_size: e.target.value})} className="border p-1.5 rounded text-xs" placeholder="250 ml" />
-                  <input type="number" value={productForm.pack1_price} onChange={(e) => setProductForm({...productForm, pack1_price: e.target.value})} className="border p-1.5 rounded text-xs col-span-2" placeholder="Price ₹" />
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  <input type="text" value={productForm.pack2_size} onChange={(e) => setProductForm({...productForm, pack2_size: e.target.value})} className="border p-1.5 rounded text-xs" placeholder="500 ml" />
-                  <input type="number" value={productForm.pack2_price} onChange={(e) => setProductForm({...productForm, pack2_price: e.target.value})} className="border p-1.5 rounded text-xs col-span-2" placeholder="Price ₹" />
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  <input type="text" value={productForm.pack3_size} onChange={(e) => setProductForm({...productForm, pack3_size: e.target.value})} className="border p-1.5 rounded text-xs" placeholder="1 L" />
-                  <input type="number" value={productForm.pack3_price} onChange={(e) => setProductForm({...productForm, pack3_price: e.target.value})} className="border p-1.5 rounded text-xs col-span-2" placeholder="Price ₹" />
-                </div>
+                {/* Pack Size Rows */}
+                {(productForm.packSizes || []).map((pack, idx) => (
+                  <div key={idx} className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-2">
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-1">
+                      <span className="text-[10px] font-extrabold text-slate-400 uppercase">ऑप्शन #{idx + 1}</span>
+                      {(productForm.packSizes || []).length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setProductForm(prev => ({
+                              ...prev,
+                              packSizes: prev.packSizes.filter((_, i) => i !== idx)
+                            }));
+                          }}
+                          className="text-slate-400 hover:text-red-500 p-0.5 transition-colors cursor-pointer"
+                          title="Remove option"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {/* Size Name */}
+                      <div className="flex flex-col gap-0.5">
+                        <label className="text-[9px] font-bold text-slate-500">पॅक प्रमाण (e.g. 1 L, 1 kg)</label>
+                        <input
+                          type="text"
+                          required
+                          value={pack.size}
+                          onChange={(e) => {
+                            const newPacks = [...(productForm.packSizes || [])];
+                            newPacks[idx].size = e.target.value;
+                            setProductForm({ ...productForm, packSizes: newPacks });
+                          }}
+                          placeholder="उदा. 1 L किंवा 1 kg"
+                          className="border border-slate-200 rounded p-1.5 text-xs font-bold focus:ring-1 focus:ring-brand-green-dark"
+                        />
+                      </div>
+                      
+                      {/* Selling Price */}
+                      <div className="flex flex-col gap-0.5">
+                        <label className="text-[9px] font-bold text-slate-500">विक्री किंमत ₹ (Selling Price)</label>
+                        <input
+                          type="number"
+                          required
+                          value={pack.price}
+                          onChange={(e) => {
+                            const newPacks = [...(productForm.packSizes || [])];
+                            newPacks[idx].price = e.target.value;
+                            setProductForm({ ...productForm, packSizes: newPacks });
+                          }}
+                          placeholder="उदा. 750"
+                          className="border border-slate-200 rounded p-1.5 text-xs font-bold text-brand-green-dark focus:ring-1 focus:ring-brand-green-dark"
+                        />
+                      </div>
+
+                      {/* Original Price / MRP */}
+                      <div className="flex flex-col gap-0.5">
+                        <label className="text-[9px] font-bold text-slate-500">मूळ किंमत / MRP ₹ (Original MRP)</label>
+                        <input
+                          type="number"
+                          value={pack.originalPrice}
+                          onChange={(e) => {
+                            const newPacks = [...(productForm.packSizes || [])];
+                            newPacks[idx].originalPrice = e.target.value;
+                            setProductForm({ ...productForm, packSizes: newPacks });
+                          }}
+                          placeholder="उदा. 950"
+                          className="border border-slate-200 rounded p-1.5 text-xs focus:ring-1 focus:ring-brand-green-dark"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
 
               {/* Crops */}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getBlogs } from '../data/blogs';
 
@@ -12,8 +12,8 @@ const BlogDetail = () => {
   }, []);
   const { t, language } = useLanguage();
 
-  // Find blog
-  const blog = blogsList.find(b => b.id === id);
+  // Find blog by id or _id
+  const blog = blogsList.find(b => b.id === id || b._id === id);
 
   if (!blog) {
     return (

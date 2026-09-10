@@ -114,26 +114,25 @@ const Contact = () => {
           ></iframe>
         </div>
 
-        {/* Dealers Grid */}
+        {/* Dealers / Distribution Regions Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {[
-            { city: 'पुणे (Pune)', name: 'राज ॲग्री सेंटर', phone: '9876543210' },
-            { city: 'नाशिक (Nashik)', name: 'ग्रीन फार्म सप्लाय', phone: '9765432109' },
-            { city: 'छ. संभाजीनगर (Aurangabad)', name: 'किसान सेवा केंद्र', phone: '9654321098' },
-            { city: 'सोलापूर (Solapur)', name: 'प्राची ॲग्रो डीलर', phone: '9543210987' },
-            { city: 'कोल्हापूर (Kolhapur)', name: 'ॲग्री वर्ल्ड कृषी केंद्र', phone: '9432109876' },
-            { city: 'नागपूर (Nagpur)', name: 'भूमी ॲग्रो स्टोअर्स', phone: '9321098765' }
+            { city: 'पुणे (Pune)' },
+            { city: 'नाशिक (Nashik)' },
+            { city: 'छ. संभाजीनगर (Aurangabad)' },
+            { city: 'सोलापूर (Solapur)' },
+            { city: 'कोल्हापूर (Kolhapur)' },
+            { city: 'नागपूर (Nagpur)' }
           ].map((dealer, idx) => (
-            <div key={idx} className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-start gap-3 hover:shadow-md hover:border-emerald-200 transition-all">
+            <div key={idx} className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-emerald-200 transition-all">
               <div className="bg-white p-2.5 rounded-lg shadow-sm text-brand-magenta flex-shrink-0">
                 <MapPin size={18} />
               </div>
               <div className="min-w-0">
-                <h4 className="font-bold text-slate-800 text-sm truncate">{dealer.name}</h4>
-                <p className="text-xs text-slate-500 font-medium">{dealer.city}</p>
-                <a href={`tel:${dealer.phone}`} className="text-brand-green-dark font-bold text-xs mt-1 block hover:underline">
-                  {dealer.phone}
-                </a>
+                <h4 className="font-bold text-slate-800 text-sm truncate">{dealer.city}</h4>
+                <p className="text-xs text-slate-500 font-medium">
+                  {language === 'mr' ? 'अधिकृत वितरण क्षेत्र' : 'Authorized Distribution Zone'}
+                </p>
               </div>
             </div>
           ))}

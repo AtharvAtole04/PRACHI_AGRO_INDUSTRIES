@@ -177,29 +177,41 @@ const ProductDetail = () => {
           )}
 
           {/* Price details */}
-          {selectedPack && (
-            <div className="mt-2 bg-slate-50 p-4 rounded-2xl flex items-center justify-between border border-slate-100">
-              <div>
-                <span className="text-xs text-slate-400 font-bold block uppercase tracking-wider">किंमत (Price)</span>
-                <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-2xl font-black text-brand-green-dark">
-                    ₹{selectedPack.price}
-                  </span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-slate-400 line-through">
-                      ₹{Math.round(selectedPack.price * (product.originalPrice / product.basePrice))}
+          {selectedPack && (() => {
+            const packPrice = selectedPack.price;
+            const packOriginalPrice = selectedPack.originalPrice 
+              ? selectedPack.originalPrice 
+              : product.originalPrice 
+                ? Math.round(selectedPack.price * (product.originalPrice / product.basePrice)) 
+                : null;
+            const discountPercent = (packOriginalPrice && packOriginalPrice > packPrice)
+              ? Math.round(((packOriginalPrice - packPrice) / packOriginalPrice) * 100)
+              : null;
+
+            return (
+              <div className="mt-2 bg-slate-50 p-4 rounded-2xl flex items-center justify-between border border-slate-100">
+                <div>
+                  <span className="text-xs text-slate-400 font-bold block uppercase tracking-wider">किंमत (Price)</span>
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <span className="text-2xl font-black text-brand-green-dark">
+                      ₹{packPrice}
                     </span>
-                  )}
+                    {packOriginalPrice && packOriginalPrice > packPrice && (
+                      <span className="text-sm text-slate-400 line-through">
+                        ₹{packOriginalPrice}
+                      </span>
+                    )}
+                  </div>
                 </div>
+                
+                {discountPercent && discountPercent > 0 && (
+                  <span className="bg-brand-magenta text-white font-extrabold text-xs px-2.5 py-1 rounded-full shadow-sm">
+                    {discountPercent}% OFF
+                  </span>
+                )}
               </div>
-              
-              {product.originalPrice && (
-                <span className="bg-brand-magenta text-white font-extrabold text-xs px-2.5 py-1 rounded-full shadow-sm">
-                  {Math.round(((product.originalPrice - product.basePrice) / product.originalPrice) * 100)}% OFF
-                </span>
-              )}
-            </div>
-          )}
+            );
+          })()}
 
           {/* Quantity and Actions */}
           <div className="flex flex-wrap items-center gap-4 mt-2">

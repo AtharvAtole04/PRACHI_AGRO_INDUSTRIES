@@ -17,9 +17,9 @@ const defaultProducts = [
     basePrice: 320,
     originalPrice: 420,
     packSizes: [
-      { size: "250 ml", price: 320 },
-      { size: "500 ml", price: 580 },
-      { size: "1 L", price: 1050 }
+      { size: "250 ml", price: 320, originalPrice: 420 },
+      { size: "500 ml", price: 580, originalPrice: 750 },
+      { size: "1 L", price: 1050, originalPrice: 1350 }
     ],
     image: "/assets/products/nice_png.png",
     isPopular: true,
@@ -61,9 +61,9 @@ const defaultProducts = [
     basePrice: 280,
     originalPrice: 350,
     packSizes: [
-      { size: "250 ml", price: 280 },
-      { size: "500 ml", price: 500 },
-      { size: "1 L", price: 900 }
+      { size: "250 ml", price: 280, originalPrice: 350 },
+      { size: "500 ml", price: 500, originalPrice: 620 },
+      { size: "1 L", price: 900, originalPrice: 1100 }
     ],
     image: "/assets/products/magic_gold_500.png",
     isPopular: true,

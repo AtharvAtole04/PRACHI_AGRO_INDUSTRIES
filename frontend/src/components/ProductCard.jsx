@@ -39,10 +39,14 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
     );
   }
 
-  // Compute discount percentage if original price exists
-  const discountPercent = Math.round(
-    ((product.originalPrice - product.basePrice) / product.originalPrice) * 100
-  );
+  // Compute active original price & discount percentage for selected pack size
+  const activeOriginalPrice = selectedPack.originalPrice 
+    ? selectedPack.originalPrice 
+    : (product.originalPrice ? Math.round(selectedPack.price * (product.originalPrice / product.basePrice)) : null);
+
+  const discountPercent = (activeOriginalPrice && activeOriginalPrice > displayPrice)
+    ? Math.round(((activeOriginalPrice - displayPrice) / activeOriginalPrice) * 100)
+    : 0;
 
   const handlePackChange = (e) => {
     const packSizeStr = e.target.value;
@@ -145,9 +149,9 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
             <span className="text-lg font-black text-brand-green-dark">
               ₹{displayPrice}
             </span>
-            {(isDealer || isFarmer || product.originalPrice) && (
+            {(isDealer || isFarmer || activeOriginalPrice) && (
               <span className="text-xs text-slate-400 line-through">
-                ₹{selectedPack.price !== displayPrice ? selectedPack.price : product.originalPrice}
+                ₹{selectedPack.price !== displayPrice ? selectedPack.price : activeOriginalPrice}
               </span>
             )}
             {memberBadge}
