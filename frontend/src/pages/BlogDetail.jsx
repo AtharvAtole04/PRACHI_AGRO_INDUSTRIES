@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Tag, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, MessageCircle, Share2, Copy, Check } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getBlogs } from '../data/blogs';
 
 const BlogDetail = () => {
   const { id } = useParams();
   const [blogsList, setBlogsList] = useState([]);
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     getBlogs().then(data => setBlogsList(data));
   }, []);
@@ -33,6 +35,97 @@ const BlogDetail = () => {
       </div>
     );
   }
+
+  const blogTitle = t(blog.title);
+  const blogExcerpt = t(blog.excerpt);
+  const currentUrl = window.location.href;
+
+  const handleWhatsAppShare = () => {
+    const text = `🌾 *${blogTitle}*\n\n${blogExcerpt}\n\nसविस्तर वाचण्यासाठी येथे क्लिक करा:\n${currentUrl}`;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: blogTitle,
+          text: blogExcerpt,
+          url: currentUrl
+        });
+      } catch (err) {
+        console.log('Share canceled:', err);
+      }
+    } else {
+      handleWhatsAppShare();
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(currentUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
+  };
+
+  const renderShareBar = () => (
+    <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100/80 my-2">
+      <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+        <Share2 size={16} className="text-brand-green-dark" />
+        <span>{language === 'mr' ? 'हा लेख मित्रांना शेयर करा:' : 'Share this article:'}</span>
+      </span>
+
+      <div className="flex items-center gap-2 flex-wrap">
+        {/* WhatsApp Share Button */}
+        <button
+          onClick={handleWhatsAppShare}
+          className="bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+        >
+          <MessageCircle size={15} className="fill-current" />
+          <span>WhatsApp</span>
+        </button>
+
+        {/* Native Web Share */}
+        {typeof navigator !== 'undefined' && navigator.share && (
+          <button
+            onClick={handleNativeShare}
+            className="bg-brand-green-dark hover:bg-brand-green-light active:scale-95 text-white font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+          >
+            <Share2 size={15} />
+            <span>{language === 'mr' ? 'सोशल मीडिया' : 'Share'}</span>
+          </button>
+        )}
+
+        {/* Facebook Share */}
+        <a
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`}
+          target="_blank"
+          rel="noreferrer"
+          className="bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1 transition-all cursor-pointer"
+        >
+          <span>Facebook</span>
+        </a>
+
+        {/* Twitter / X Share */}
+        <a
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(blogTitle)}&url=${encodeURIComponent(currentUrl)}`}
+          target="_blank"
+          rel="noreferrer"
+          className="bg-slate-900 hover:bg-black text-white font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1 transition-all cursor-pointer"
+        >
+          <span>X / Twitter</span>
+        </a>
+
+        {/* Copy Link */}
+        <button
+          onClick={handleCopyLink}
+          className="bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold text-xs px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer"
+        >
+          {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+          <span>{copied ? (language === 'mr' ? 'कॉपी झाले!' : 'Copied!') : (language === 'mr' ? 'लिंक कॉपी' : 'Copy Link')}</span>
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="max-w-4xl mx-auto flex flex-col gap-6 text-left">
@@ -96,9 +189,17 @@ const BlogDetail = () => {
             {t(blog.excerpt)}
           </p>
 
+          {/* Top Share Bar */}
+          {renderShareBar()}
+
           {/* Article Main Body */}
           <div className="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line mt-4 flex flex-col gap-4">
             {t(blog.content)}
+          </div>
+
+          {/* Bottom Share Bar */}
+          <div className="pt-6 border-t border-slate-100 mt-6">
+            {renderShareBar()}
           </div>
 
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const BlogCard = ({ blog }) => {
@@ -58,8 +58,8 @@ const BlogCard = ({ blog }) => {
           {t(blog.excerpt)}
         </p>
 
-        {/* Read More Link */}
-        <div className="mt-4 pt-4 border-t border-slate-50">
+        {/* Read More Link & Quick WhatsApp Share */}
+        <div className="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between gap-2">
           <Link 
             to={`/blog/${blogId}`}
             className="text-brand-green-dark hover:text-brand-green-light font-extrabold text-xs flex items-center gap-1 group-hover:gap-2 transition-all"
@@ -67,6 +67,21 @@ const BlogCard = ({ blog }) => {
             <span>{t('readMore')}</span>
             <ArrowRight size={14} />
           </Link>
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const fullUrl = `${window.location.origin}/blog/${blogId}`;
+              const text = `🌾 *${t(blog.title)}*\n\n${t(blog.excerpt)}\n\nसविस्तर वाचण्यासाठी लिंक वर क्लिक करा:\n${fullUrl}`;
+              window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+            }}
+            className="bg-emerald-50 hover:bg-[#25D366] text-brand-green-dark hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+            title="Share on WhatsApp"
+          >
+            <MessageCircle size={13} className="fill-current" />
+            <span className="text-[11px] font-bold">शेअर</span>
+          </button>
         </div>
 
       </div>
