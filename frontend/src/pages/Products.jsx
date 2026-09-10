@@ -12,7 +12,10 @@ import ProductComparison from '../components/ProductComparison';
 const Products = () => {
   const [productsList, setProductsList] = useState([]);
   useEffect(() => {
-    getProducts().then(data => setProductsList(data));
+    const fetchProds = () => getProducts().then(data => setProductsList(data));
+    fetchProds();
+    window.addEventListener('prachi_products_updated', fetchProds);
+    return () => window.removeEventListener('prachi_products_updated', fetchProds);
   }, []);
   const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();

@@ -80,10 +80,14 @@ const Home = () => {
   const [blogsList, setBlogsList] = useState([]);
 
   useEffect(() => {
-    getProducts().then(data => setProductsList(data));
+    const fetchProds = () => getProducts().then(data => setProductsList(data));
+    fetchProds();
     getReviews().then(data => setReviewsList(data));
     getVideos().then(data => setVideosList(data));
     getBlogs().then(data => setBlogsList(data));
+
+    window.addEventListener('prachi_products_updated', fetchProds);
+    return () => window.removeEventListener('prachi_products_updated', fetchProds);
   }, []);
 
   // Filter popular and new products with fallback to list top items

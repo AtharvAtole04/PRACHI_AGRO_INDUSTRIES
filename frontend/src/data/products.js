@@ -750,6 +750,9 @@ export const getLocalProducts = () => {
 export const saveProducts = async (array) => {
   try {
     localStorage.setItem('prachi_products', JSON.stringify(array));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('prachi_products_updated'));
+    }
   } catch (err) {}
 };
 

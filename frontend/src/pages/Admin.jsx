@@ -46,9 +46,7 @@ const Admin = () => {
     desc_mr: '', desc_en: '',
     basePrice: '', originalPrice: '',
     packSizes: [
-      { size: '250 ml', price: '', originalPrice: '' },
-      { size: '500 ml', price: '', originalPrice: '' },
-      { size: '1 L', price: '', originalPrice: '' }
+      { size: '250 ml', price: '', originalPrice: '' }
     ],
     crops_mr: '', crops_en: '',
     benefit1_mr: '', benefit1_en: '',
@@ -205,7 +203,7 @@ const Admin = () => {
     
     // Parse dynamic packSizes
     const packSizes = (productForm.packSizes || [])
-      .filter(p => p.size && p.size.trim() !== '' && p.price !== '' && p.price !== null)
+      .filter(p => p.size && p.size.trim() !== '' && p.price !== '' && p.price !== null && !isNaN(Number(p.price)))
       .map(p => ({
         size: p.size.trim(),
         price: Number(p.price),
@@ -213,29 +211,44 @@ const Admin = () => {
       }));
 
     const primaryPack = packSizes[0];
-    const computedBasePrice = primaryPack ? primaryPack.price : (Number(productForm.basePrice) || 0);
+    const computedBasePrice = primaryPack ? primaryPack.price : (Number(productForm.basePrice) || 300);
     const computedOriginalPrice = primaryPack && primaryPack.originalPrice ? primaryPack.originalPrice : (productForm.originalPrice ? Number(productForm.originalPrice) : null);
+
+    const taglineMr = productForm.tagline_mr || productForm.tagline_en || 'उच्च दर्जाचे दर्जेदार पीक उत्पादन';
+    const taglineEn = productForm.tagline_en || productForm.tagline_mr || 'Premium Agricultural Solutions';
+    
+    const shortDescMr = productForm.shortDesc_mr || productForm.shortDesc_en || 'पिकांच्या जलद वाढीसाठी व उत्कृष्ट उत्पादनासाठी प्रभावी कॉम्बिनेशन.';
+    const shortDescEn = productForm.shortDesc_en || productForm.shortDesc_mr || 'High-performance agricultural product designed for bumper crop yield.';
+
+    const descMr = productForm.desc_mr || productForm.desc_en || shortDescMr;
+    const descEn = productForm.desc_en || productForm.desc_mr || shortDescEn;
+
+    const cropsMr = productForm.crops_mr || productForm.crops_en || 'सोयाबीन, कापूस, टोमॅटो, कांदा, मिरची व इतर पिके.';
+    const cropsEn = productForm.crops_en || productForm.crops_mr || 'Soybean, Cotton, Tomato, Onion, Chilli and all crops.';
 
     const formattedProduct = {
       name: productForm.name,
       category: productForm.category,
-      tagline: { mr: productForm.tagline_mr, en: productForm.tagline_en },
-      shortDescription: { mr: productForm.shortDesc_mr, en: productForm.shortDesc_en },
-      description: { mr: productForm.desc_mr, en: productForm.desc_en },
+      tagline: { mr: taglineMr, en: taglineEn },
+      shortDescription: { mr: shortDescMr, en: shortDescEn },
+      description: { mr: descMr, en: descEn },
       basePrice: computedBasePrice,
       originalPrice: computedOriginalPrice,
       packSizes: packSizes.length > 0 ? packSizes : [{ size: "250 ml", price: computedBasePrice, originalPrice: computedOriginalPrice }],
-      image: productForm.image,
+      image: productForm.image || '/assets/products/placeholder.svg',
       isPopular: true,
       isNew: true,
       rating: 4.8,
       reviewsCount: 12,
-      crops: { mr: productForm.crops_mr, en: productForm.crops_en },
+      crops: { mr: cropsMr, en: cropsEn },
       benefits: {
         mr: [productForm.benefit1_mr, productForm.benefit2_mr].filter(Boolean),
         en: [productForm.benefit1_en, productForm.benefit2_en].filter(Boolean)
       },
-      usage: { mr: productForm.usage_mr, en: productForm.usage_en }
+      usage: {
+        mr: productForm.usage_mr || '१.५ ते २ मिली प्रति लिटर पाण्यात मिसळून फवारणी करावी.',
+        en: productForm.usage_en || 'Mix 1.5 to 2 ml per liter of water and spray on crop foliage.'
+      }
     };
 
     if (isEditingProduct) {
@@ -297,9 +310,7 @@ const Admin = () => {
       desc_mr: '', desc_en: '',
       basePrice: '', originalPrice: '',
       packSizes: [
-        { size: '250 ml', price: '', originalPrice: '' },
-        { size: '500 ml', price: '', originalPrice: '' },
-        { size: '1 L', price: '', originalPrice: '' }
+        { size: '250 ml', price: '', originalPrice: '' }
       ],
       crops_mr: '', crops_en: '',
       benefit1_mr: '', benefit1_en: '',
@@ -984,10 +995,9 @@ const Admin = () => {
               {/* Taglines */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Tagline (Marathi)</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Tagline (Marathi - ऐच्छिक)</label>
                   <input 
                     type="text" 
-                    required 
                     value={productForm.tagline_mr} 
                     onChange={(e) => setProductForm({ ...productForm, tagline_mr: e.target.value })}
                     placeholder="उदा. विशेष पीक टॉनिक"
@@ -995,10 +1005,9 @@ const Admin = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Tagline (English)</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Tagline (English - Optional)</label>
                   <input 
                     type="text" 
-                    required 
                     value={productForm.tagline_en} 
                     onChange={(e) => setProductForm({ ...productForm, tagline_en: e.target.value })}
                     placeholder="e.g. Plant Growth Promoter"
@@ -1058,7 +1067,7 @@ const Admin = () => {
                 {(productForm.packSizes || []).map((pack, idx) => (
                   <div key={idx} className="bg-white p-3 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-2">
                     <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-1">
-                      <span className="text-[10px] font-extrabold text-slate-400 uppercase">ऑप्शन #{idx + 1}</span>
+                      <span className="text-[10px] font-extrabold text-slate-400 uppercase">ऑप्शन #{idx + 1} {idx === 0 ? '(मुख्य)' : ''}</span>
                       {(productForm.packSizes || []).length > 1 && (
                         <button
                           type="button"
@@ -1082,7 +1091,7 @@ const Admin = () => {
                         <label className="text-[9px] font-bold text-slate-500">पॅक प्रमाण (e.g. 1 L, 1 kg)</label>
                         <input
                           type="text"
-                          required
+                          required={idx === 0}
                           value={pack.size}
                           onChange={(e) => {
                             const newPacks = [...(productForm.packSizes || [])];
@@ -1099,7 +1108,7 @@ const Admin = () => {
                         <label className="text-[9px] font-bold text-slate-500">विक्री किंमत ₹ (Selling Price)</label>
                         <input
                           type="number"
-                          required
+                          required={idx === 0}
                           value={pack.price}
                           onChange={(e) => {
                             const newPacks = [...(productForm.packSizes || [])];
@@ -1134,12 +1143,12 @@ const Admin = () => {
               {/* Crops */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops (Marathi)</label>
-                  <input type="text" required value={productForm.crops_mr} onChange={(e) => setProductForm({ ...productForm, crops_mr: e.target.value })} placeholder="कापूस, सोयाबीन, कांदा" className="border border-slate-200 rounded p-2 text-xs" />
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops (Marathi - ऐच्छिक)</label>
+                  <input type="text" value={productForm.crops_mr} onChange={(e) => setProductForm({ ...productForm, crops_mr: e.target.value })} placeholder="कापूस, सोयाबीन, कांदा" className="border border-slate-200 rounded p-2 text-xs" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops (English)</label>
-                  <input type="text" required value={productForm.crops_en} onChange={(e) => setProductForm({ ...productForm, crops_en: e.target.value })} placeholder="Cotton, Soybean, Onion" className="border border-slate-200 rounded p-2 text-xs" />
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops (English - Optional)</label>
+                  <input type="text" value={productForm.crops_en} onChange={(e) => setProductForm({ ...productForm, crops_en: e.target.value })} placeholder="Cotton, Soybean, Onion" className="border border-slate-200 rounded p-2 text-xs" />
                 </div>
               </div>
 
