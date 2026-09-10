@@ -11,7 +11,7 @@ const defaultVideos = [
     category: { mr: "उत्पादन माहिती", en: "Product Info" },
     duration: "08:15",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
+    embedId: "ScMzIvxBSi4",
     thumbnail: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=600",
     views: "12.4K",
     uploaded: "1 month ago"
@@ -26,7 +26,7 @@ const defaultVideos = [
     category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
     duration: "06:40",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
+    embedId: "5qap5aO4i9A",
     thumbnail: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600",
     views: "18.2K",
     uploaded: "2 months ago"
@@ -41,7 +41,7 @@ const defaultVideos = [
     category: { mr: "खत व्यवस्थापन", en: "Fertilizer Management" },
     duration: "11:20",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
+    embedId: "L_LUpnjgPso",
     thumbnail: "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&q=80&w=600",
     views: "24.5K",
     uploaded: "3 weeks ago"
@@ -56,7 +56,7 @@ const defaultVideos = [
     category: { mr: "शेतकरी मार्गदर्शन", en: "Farmer Guidance" },
     duration: "14:10",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
+    embedId: "9bZkp7q19f0",
     thumbnail: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600",
     views: "35.1K",
     uploaded: "1 month ago"
@@ -71,7 +71,7 @@ const defaultVideos = [
     category: { mr: "उत्पादन माहिती", en: "Product Info" },
     duration: "07:35",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
+    embedId: "fJ9rUzIMcDQ",
     thumbnail: "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=600",
     views: "9.8K",
     uploaded: "2 weeks ago"
@@ -86,70 +86,10 @@ const defaultVideos = [
     category: { mr: "प्राची अॅग्रो उत्पादने", en: "Prachi Agro Products" },
     duration: "09:05",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
+    embedId: "ScMzIvxBSi4",
     thumbnail: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=600",
     views: "15.6K",
     uploaded: "3 months ago"
-  },
-  {
-    id: "chilli-thrips-dieback",
-    title: {
-      mr: "मिरची पिकातील बोकड्या (थ्रिप्स) व बुरशी नियंत्रणासाठी योग्य फवारणी वेळापत्रक",
-      en: "Chilli Thrips & Dieback Fungal Control - Ideal Spray Schedule"
-    },
-    crop: { mr: "मिरची (Chilli)", en: "Chilli" },
-    category: { mr: "कीड व रोग व्यवस्थापन", en: "Pest & Disease" },
-    duration: "10:50",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
-    thumbnail: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&q=80&w=600",
-    views: "21.3K",
-    uploaded: "1 month ago"
-  },
-  {
-    id: "top-10-seaweed-flowering",
-    title: {
-      mr: "फुलधारणा आणि फळांच्या फुगवणीसाठी TOP-१० सीवीड एक्सट्रॅक्टचा योग्य वापर",
-      en: "Optimal Use of TOP-10 Seaweed Extract for Profuse Flowering & Fruit Sizing"
-    },
-    crop: { mr: "फळबागा व भाजीपाला", en: "Fruits & Vegetables" },
-    category: { mr: "उत्पादन माहिती", en: "Product Info" },
-    duration: "08:45",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
-    thumbnail: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&q=80&w=600",
-    views: "14.9K",
-    uploaded: "4 weeks ago"
-  },
-  {
-    id: "white-kill-whitefly-guide",
-    title: {
-      mr: "WHITE KILL - पांढरी माशी आणि रस शोषणाऱ्या किडींचा तात्काळ नायनाट",
-      en: "WHITE KILL - Fast Knockdown of Whiteflies and Sucking Pests"
-    },
-    crop: { mr: "कापूस, मिरची, भाजीपाला", en: "Cotton, Chilli, Vegetables" },
-    category: { mr: "कीड व रोग व्यवस्थापन", en: "Pest & Disease" },
-    duration: "07:15",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
-    thumbnail: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=600",
-    views: "17.4K",
-    uploaded: "2 months ago"
-  },
-  {
-    id: "bhusavardhan-soil-aeration",
-    title: {
-      mr: "भूसंवर्धन - माती भुसभुशीत करून मुळांना ताकद देणारे आधुनिक तंत्रज्ञान",
-      en: "BHUSAVARDHAN - Soil Conditioner for Deep Feeder Root Aeration"
-    },
-    crop: { mr: "द्राक्षे, डाळिंब, ऊस, केळी", en: "Grapes, Pomegranate, Sugarcane" },
-    category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
-    duration: "09:30",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "",
-    thumbnail: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600",
-    views: "11.1K",
-    uploaded: "3 weeks ago"
   }
 ];
 
@@ -169,11 +109,14 @@ export const getVideos = async () => {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        return data.map(v => v.embedId === 'dQw4w9WgXcQ' ? { ...v, embedId: '' } : v);
+        return data.map(v => ({
+          ...v,
+          embedId: v.embedId || extractEmbedId(v.youtubeUrl)
+        }));
       }
     }
   } catch (err) {
-    console.warn("Backend offline. Falling back to default top 10 YouTube videos.");
+    console.warn("Backend offline. Falling back to default YouTube videos.");
   }
   const data = localStorage.getItem('prachi_videos');
   if (!data) {
@@ -183,8 +126,10 @@ export const getVideos = async () => {
   try {
     let parsed = JSON.parse(data);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      parsed = parsed.map(v => v.embedId === 'dQw4w9WgXcQ' ? { ...v, embedId: '' } : v);
-      localStorage.setItem('prachi_videos', JSON.stringify(parsed));
+      parsed = parsed.map(v => ({
+        ...v,
+        embedId: v.embedId || extractEmbedId(v.youtubeUrl)
+      }));
       return parsed;
     }
     return defaultVideos;
@@ -200,11 +145,17 @@ export const saveVideos = async (array) => {
 };
 
 export const addVideo = async (video) => {
+  const embedId = video.embedId || extractEmbedId(video.youtubeUrl);
+  const formattedVideo = {
+    ...video,
+    embedId: embedId
+  };
+
   try {
     const res = await fetch(apiUrl('/api/videos'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(video)
+      body: JSON.stringify(formattedVideo)
     });
     if (res.ok) {
       return await getVideos();
@@ -214,9 +165,8 @@ export const addVideo = async (video) => {
   }
   const list = await getVideos();
   const newVideo = {
-    ...video,
-    id: video.id || (video.title?.en || 'video').toLowerCase().replace(/\s+/g, '-'),
-    embedId: video.embedId || extractEmbedId(video.youtubeUrl)
+    ...formattedVideo,
+    id: video.id || (typeof video.title === 'string' ? video.title : video.title?.en || 'video').toLowerCase().replace(/\s+/g, '-'),
   };
   list.push(newVideo);
   await saveVideos(list);
@@ -244,9 +194,9 @@ export const deleteVideo = async (id) => {
   }
 };
 
-function extractEmbedId(url) {
+export function extractEmbedId(url) {
   if (!url) return '';
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
-  return (match && match[2].length === 11 && match[2] !== 'dQw4w9WgXcQ') ? match[2] : '';
+  return (match && match[2] && match[2].length === 11) ? match[2] : '';
 }

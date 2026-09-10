@@ -7,11 +7,19 @@ const VideoCard = ({ video, onPlayClick }) => {
   const { t, language } = useLanguage();
 
   const handleOpenYouTube = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     const url = video.youtubeUrl && video.youtubeUrl.includes('youtube.com/watch')
       ? video.youtubeUrl
       : `https://www.youtube.com/@prachiagroindustries03`;
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handlePlay = (e) => {
+    if (onPlayClick) {
+      onPlayClick(video);
+    } else {
+      handleOpenYouTube(e);
+    }
   };
 
   return (
@@ -19,7 +27,7 @@ const VideoCard = ({ video, onPlayClick }) => {
       
       {/* Thumbnail with Play Overlay */}
       <div 
-        onClick={() => onPlayClick(video)}
+        onClick={handlePlay}
         className="relative aspect-video bg-slate-900 cursor-pointer overflow-hidden group-hover:opacity-95 transition-opacity"
       >
         <img 
@@ -70,7 +78,7 @@ const VideoCard = ({ video, onPlayClick }) => {
 
           {/* Title */}
           <h4 
-            onClick={() => onPlayClick(video)}
+            onClick={handlePlay}
             className="font-bold text-slate-800 text-sm sm:text-base leading-snug cursor-pointer hover:text-brand-green-dark transition-colors line-clamp-2"
           >
             {t(video.title)}
