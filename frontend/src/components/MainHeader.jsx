@@ -68,22 +68,22 @@ const MainHeader = ({ onCartClick }) => {
             {/* Right Actions */}
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-auto lg:ml-0">
 
-              {/* Multi-Role Account / Login Button */}
-              {isAuthenticated ? (
+              {/* Admin Account / Admin Login Button */}
+              {isAuthenticated && isAdmin ? (
                 <div className="flex items-center gap-2">
                   <Link
-                    to={getDashboardPath()}
-                    className="flex items-center gap-2 text-slate-700 hover:text-brand-green-dark group transition-colors bg-slate-50 hover:bg-emerald-50/60 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200/60"
+                    to="/admin"
+                    className="flex items-center gap-2 text-slate-700 hover:text-brand-green-dark group transition-colors bg-emerald-50 px-2.5 sm:px-3 py-1.5 rounded-xl border border-emerald-200"
                   >
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white flex items-center justify-center shadow-xs text-xs">
-                      {isAdmin ? '👑' : isDealer ? '🏪' : '🌾'}
+                      👑
                     </div>
                     <div className="text-left hidden md:block">
-                      <p className="text-[10px] text-slate-400 font-extrabold uppercase leading-none">
-                        {isAdmin ? 'Admin' : isDealer ? 'Dealer' : 'Farmer'}
+                      <p className="text-[10px] text-brand-green-dark font-extrabold uppercase leading-none">
+                        Admin
                       </p>
                       <p className="text-xs font-black text-slate-800 truncate max-w-[110px] mt-0.5 leading-none">
-                        {getRoleLabel()}
+                        अ‍ॅडमिन पॅनेल
                       </p>
                     </div>
                   </Link>
@@ -103,7 +103,7 @@ const MainHeader = ({ onCartClick }) => {
                   className="flex items-center gap-1.5 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-brand-green-dark px-3 py-2 rounded-xl text-xs font-extrabold transition-all border border-slate-200/60 cursor-pointer"
                 >
                   <Lock size={14} className="text-brand-green-dark" />
-                  <span>{language === 'mr' ? 'लॉगिन / नोंदणी' : 'Login / Sign Up'}</span>
+                  <span>{language === 'mr' ? 'अ‍ॅडमिन लॉगिन' : 'Admin Login'}</span>
                 </Link>
               )}
 

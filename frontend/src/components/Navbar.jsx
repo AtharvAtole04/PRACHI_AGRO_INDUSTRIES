@@ -81,18 +81,18 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
 
         {/* User Account / Login Bar in Mobile Drawer */}
         <div className="p-3 mx-4 mt-3 bg-black/20 rounded-2xl border border-white/10">
-          {isAuthenticated ? (
+          {isAuthenticated && isAdmin ? (
             <div className="flex items-center justify-between">
-              <Link to={getDashboardPath()} className="flex items-center gap-2.5 min-w-0 pr-2">
+              <Link to="/admin" className="flex items-center gap-2.5 min-w-0 pr-2">
                 <div className="w-8 h-8 rounded-full bg-brand-gold text-slate-950 font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                  {isAdmin ? '👑' : isDealer ? '🏪' : '🌾'}
+                  👑
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] text-brand-gold font-bold uppercase truncate leading-none">
-                    {isAdmin ? 'Admin' : isDealer ? 'Dealer' : 'Farmer'}
+                    Admin
                   </p>
                   <p className="text-xs font-black text-white truncate leading-tight mt-0.5">
-                    {user.businessName || user.name}
+                    अ‍ॅडमिन पॅनेल
                   </p>
                 </div>
               </Link>
@@ -110,7 +110,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               className="flex items-center justify-center gap-2 bg-brand-gold text-brand-green-dark font-extrabold text-xs py-2 px-3 rounded-xl shadow-sm"
             >
               <Lock size={14} />
-              <span>{language === 'mr' ? 'लॉगिन / नोंदणी करा' : 'Login / Sign Up'}</span>
+              <span>{language === 'mr' ? 'अ‍ॅडमिन लॉगिन' : 'Admin Login'}</span>
             </Link>
           )}
         </div>

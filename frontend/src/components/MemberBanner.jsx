@@ -77,29 +77,20 @@ const MemberBanner = () => {
     );
   }
 
-  // 4. Guest (Before Login)
+  // 4. Guest Public Announcement Banner
   if (!content.publicAnnouncement?.isActive) return null;
   return (
-    <div className="bg-emerald-50 border border-emerald-200/80 rounded-2xl px-4 py-3 sm:py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+    <div className="bg-emerald-50 border border-emerald-200/80 rounded-2xl px-4 py-3 sm:py-3.5 flex items-center justify-between gap-3 shadow-sm">
       <div className="flex items-center gap-2.5 text-xs sm:text-sm font-bold text-brand-green-dark">
         <Sparkles size={18} className="text-brand-magenta flex-shrink-0" />
         <span>{language === 'mr' ? content.publicAnnouncement?.mr : content.publicAnnouncement?.en}</span>
       </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <Link
-          to="/login"
-          className="bg-brand-green-dark hover:bg-brand-green-light active:scale-95 text-white font-extrabold text-xs px-4 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-sm"
-        >
-          <Lock size={12} />
-          <span>{language === 'mr' ? 'लॉगिन करा' : 'Login'}</span>
-        </Link>
-        <Link
-          to="/register"
-          className="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-xs px-3 py-1.5 rounded-lg transition-colors"
-        >
-          {language === 'mr' ? 'नोंदणी' : 'Register'}
-        </Link>
-      </div>
+      <Link
+        to="/products"
+        className="bg-brand-green-dark hover:bg-brand-green-light active:scale-95 text-white font-extrabold text-xs px-4 py-1.5 rounded-lg flex-shrink-0 transition-all shadow-sm"
+      >
+        <span>{language === 'mr' ? 'उत्पादने पहा' : 'View Products'}</span>
+      </Link>
     </div>
   );
 };
