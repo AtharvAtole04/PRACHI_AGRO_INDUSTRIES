@@ -226,6 +226,8 @@ const Admin = () => {
       originalPrice: computedOriginalPrice,
       packSizes: packSizes.length > 0 ? packSizes : [{ size: "250 ml", price: computedBasePrice, originalPrice: computedOriginalPrice }],
       image: productForm.image,
+      isPopular: true,
+      isNew: true,
       rating: 4.8,
       reviewsCount: 12,
       crops: { mr: productForm.crops_mr, en: productForm.crops_en },

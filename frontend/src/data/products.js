@@ -734,23 +734,17 @@ const defaultProducts = [
   }
 ];
 
-export const getProducts = async () => {
-  try {
-    const res = await fetch(apiUrl('/api/products'));
-    if (res.ok) {
-      const data = await res.json();
-      saveProducts(data);
-      return data;
-    }
-  } catch (err) {
-    console.warn("Backend offline. Falling back to localStorage for products.");
-  }
+export const getLocalProducts = () => {
   const data = localStorage.getItem('prachi_products');
   if (!data) {
     localStorage.setItem('prachi_products', JSON.stringify(defaultProducts));
-    return defaultProducts;
+    return [...defaultProducts];
   }
-  return JSON.parse(data);
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return [...defaultProducts];
+  }
 };
 
 export const saveProducts = async (array) => {
@@ -759,30 +753,73 @@ export const saveProducts = async (array) => {
   } catch (err) {}
 };
 
+export const getProducts = async () => {
+  let backendData = null;
+  try {
+    const res = await fetch(apiUrl('/api/products'));
+    if (res.ok) {
+      backendData = await res.json();
+    }
+  } catch (err) {
+    console.warn("Backend offline. Falling back to localStorage for products.");
+  }
+
+  const localData = getLocalProducts();
+
+  if (Array.isArray(backendData) && backendData.length > 0) {
+    const backendIds = new Set(backendData.map(p => p.id || p._id));
+    const backendNames = new Set(backendData.map(p => (p.name || '').toLowerCase()));
+    
+    // Merge any locally added products not yet in backend
+    const extraLocal = localData.filter(p => !backendIds.has(p.id) && !backendIds.has(p._id) && !backendNames.has((p.name || '').toLowerCase()));
+    const merged = [...extraLocal, ...backendData];
+    saveProducts(merged);
+    return merged;
+  }
+
+  return localData;
+};
+
 export const addProduct = async (product) => {
+  const newProduct = {
+    ...product,
+    id: product.id || product.name.toLowerCase().trim().replace(/\s+/g, '-'),
+    isPopular: product.isPopular !== undefined ? product.isPopular : true,
+    isNew: product.isNew !== undefined ? product.isNew : true
+  };
+
+  // 1. Immediately save to localStorage at top of list
+  const localList = getLocalProducts();
+  localList.unshift(newProduct);
+  await saveProducts(localList);
+
+  // 2. Sync to backend if online
   try {
     const res = await fetch(apiUrl('/api/products'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product)
+      body: JSON.stringify(newProduct)
     });
     if (res.ok) {
       return await getProducts();
     }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    console.warn("Backend offline. Saved to localStorage.");
   }
-  const list = await getProducts();
-  const newProduct = {
-    ...product,
-    id: product.id || product.name.toLowerCase().replace(/\s+/g, '-')
-  };
-  list.push(newProduct);
-  await saveProducts(list);
-  return list;
+
+  return localList;
 };
 
 export const updateProduct = async (id, updatedProduct) => {
+  // 1. Update in localStorage immediately
+  const localList = getLocalProducts();
+  const index = localList.findIndex(p => p.id === id || p._id === id);
+  if (index > -1) {
+    localList[index] = { ...localList[index], ...updatedProduct };
+    await saveProducts(localList);
+  }
+
+  // 2. Sync to backend if online
   try {
     const res = await fetch(apiUrl(`/api/products/${id}`), {
       method: 'PUT',
@@ -793,34 +830,29 @@ export const updateProduct = async (id, updatedProduct) => {
       return await getProducts();
     }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    console.warn("Backend offline. Updated in localStorage.");
   }
-  const list = await getProducts();
-  const index = list.findIndex(p => p.id === id || p._id === id);
-  if (index > -1) {
-    list[index] = { ...list[index], ...updatedProduct };
-    await saveProducts(list);
-  }
-  return list;
+
+  return localList;
 };
 
 export const deleteProduct = async (id) => {
+  // 1. Remove from localStorage immediately
+  const localList = getLocalProducts();
+  const filtered = localList.filter(p => p.id !== id && p._id !== id);
+  await saveProducts(filtered);
+
+  // 2. Sync delete to backend if online
   try {
     const res = await fetch(apiUrl(`/api/products/${id}`), {
       method: 'DELETE'
     });
     if (res.ok) {
       return await getProducts();
-    } else {
-      const errData = await res.json().catch(() => ({}));
-      console.error(`Failed to delete product from backend (${res.status}):`, errData);
-      return await getProducts();
     }
   } catch (err) {
-    console.warn("Backend offline. Removing from localStorage fallback.");
-    const list = await getProducts();
-    const filtered = list.filter(p => p.id !== id && p._id !== id);
-    await saveProducts(filtered);
-    return filtered;
+    console.warn("Backend offline. Removed from localStorage.");
   }
+
+  return filtered;
 };

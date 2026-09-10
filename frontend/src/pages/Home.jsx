@@ -86,8 +86,9 @@ const Home = () => {
     getBlogs().then(data => setBlogsList(data));
   }, []);
 
-  // Filter popular and new products
-  const popularProducts = productsList.filter(p => p.isPopular).slice(0, 6);
+  // Filter popular and new products with fallback to list top items
+  const popularFiltered = productsList.filter(p => p.isPopular);
+  const popularProducts = popularFiltered.length >= 3 ? popularFiltered.slice(0, 6) : productsList.slice(0, 6);
   const newProducts = productsList.filter(p => p.isNew).slice(0, 4);
   const specialOffers = productsList.filter(p => p.originalPrice > p.basePrice).slice(0, 3);
 

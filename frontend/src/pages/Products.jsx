@@ -22,10 +22,13 @@ const Products = () => {
   const initialCategory = searchParams.get('category') || '';
   const initialFilter = searchParams.get('filter') || ''; // 'popular', 'new', 'offers'
 
+  // Calculate dynamic highest price limit across all products (default minimum 50,000)
+  const highestProductPrice = Math.max(50000, ...productsList.map(p => Number(p.basePrice) || 0));
+
   // Local state
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [maxPrice, setMaxPrice] = useState(2500);
+  const [maxPrice, setMaxPrice] = useState(50000);
   const [sortBy, setSortBy] = useState('popularity');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(8);
@@ -57,7 +60,7 @@ const Products = () => {
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedCategory('');
-    setMaxPrice(2500);
+    setMaxPrice(highestProductPrice);
     setSortBy('popularity');
     setSearchParams({});
   };
@@ -249,16 +252,16 @@ const Products = () => {
             </h4>
             <input
               type="range"
-              min="150"
-              max="2500"
+              min="50"
+              max={highestProductPrice}
               step="50"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-green-dark"
             />
             <div className="flex justify-between text-[10px] text-slate-400 font-bold mt-2">
-              <span>₹150</span>
-              <span>₹2500</span>
+              <span>₹50</span>
+              <span>₹{highestProductPrice}</span>
             </div>
           </div>
 

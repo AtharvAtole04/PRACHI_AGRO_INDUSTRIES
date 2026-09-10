@@ -15,8 +15,8 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  // Find product
-  const product = productsList.find(p => p.id === id);
+  // Find product by id or _id
+  const product = productsList.find(p => p.id === id || p._id === id);
 
   // States
   const [selectedPack, setSelectedPack] = useState(null);
