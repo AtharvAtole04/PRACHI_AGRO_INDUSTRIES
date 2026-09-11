@@ -34,11 +34,20 @@ const CropFinder = () => {
     
     const cropNameEn = selectedCrop.en.toLowerCase();
     const cropNameMr = selectedCrop.mr.toLowerCase();
+    const cropId = selectedCrop.id.toLowerCase();
     
     const matched = products.filter(product => {
-      const pCropsEn = (product.crops?.en || '').toLowerCase();
-      const pCropsMr = (product.crops?.mr || '').toLowerCase();
-      return pCropsEn.includes(cropNameEn) || pCropsMr.includes('कांदा') || pCropsMr.includes(cropNameMr);
+      if (!product) return false;
+      const rawCrops = product.crops;
+      const pCropsStr = typeof rawCrops === 'string' ? rawCrops.toLowerCase() : '';
+      const pCropsEn = (rawCrops?.en || '').toLowerCase();
+      const pCropsMr = (rawCrops?.mr || '').toLowerCase();
+
+      return pCropsEn.includes(cropNameEn) || 
+             pCropsMr.includes(cropNameMr) || 
+             pCropsStr.includes(cropNameEn) || 
+             pCropsStr.includes(cropNameMr) ||
+             pCropsStr.includes(cropId);
     });
     
     setFilteredProducts(matched.slice(0, 4));

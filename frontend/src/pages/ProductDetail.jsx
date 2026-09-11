@@ -323,21 +323,29 @@ const ProductDetail = () => {
                 </p>
               </div>
 
-              {product.benefits && (
-                <div>
-                  <h3 className="font-extrabold text-slate-800 text-sm uppercase tracking-wider mb-3.5 border-l-3 border-brand-green-dark pl-2">
-                    मुख्य फायदे (Key Benefits)
-                  </h3>
-                  <ul className="flex flex-col gap-2">
-                    {t(product.benefits).map((benefit, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-slate-600 text-sm leading-relaxed">
-                        <span className="w-1.5 h-1.5 rounded-full bg-brand-green-bright mt-2 flex-shrink-0" />
-                        <span>{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              {product.benefits && (() => {
+                const rawBenefits = t(product.benefits);
+                const benefitItems = Array.isArray(rawBenefits)
+                  ? rawBenefits
+                  : (typeof rawBenefits === 'string' && rawBenefits.trim() ? [rawBenefits] : []);
+                
+                if (benefitItems.length === 0) return null;
+                return (
+                  <div>
+                    <h3 className="font-extrabold text-slate-800 text-sm uppercase tracking-wider mb-3.5 border-l-3 border-brand-green-dark pl-2">
+                      मुख्य फायदे (Key Benefits)
+                    </h3>
+                    <ul className="flex flex-col gap-2">
+                      {benefitItems.map((benefit, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-slate-600 text-sm leading-relaxed">
+                          <span className="w-1.5 h-1.5 rounded-full bg-brand-green-bright mt-2 flex-shrink-0" />
+                          <span>{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })()}
             </div>
           )}
 

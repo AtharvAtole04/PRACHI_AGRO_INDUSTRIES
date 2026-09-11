@@ -59,6 +59,13 @@ const Products = () => {
     setSelectedCategory(searchParams.get('category') || '');
   }, [searchParams]);
 
+  // Keep maxPrice aligned with actual products catalog upper bound
+  useEffect(() => {
+    if (highestProductPrice > maxPrice) {
+      setMaxPrice(highestProductPrice);
+    }
+  }, [highestProductPrice]);
+
   // Handle resetting filters
   const resetFilters = () => {
     setSearchQuery('');

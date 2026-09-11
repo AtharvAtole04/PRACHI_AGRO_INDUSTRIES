@@ -10,15 +10,20 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
   const { addToCart } = useCart();
   const { isFarmer, isDealer, user } = useAuth();
   
+  // Safe fallback for packSizes
+  const safePackSizes = (product.packSizes && product.packSizes.length > 0)
+    ? product.packSizes
+    : [{ size: 'Standard', price: Number(product.basePrice) || 0 }];
+
   // State for selected pack size, defaulting to the first option
-  const [selectedPack, setSelectedPack] = useState(product.packSizes[0]);
+  const [selectedPack, setSelectedPack] = useState(safePackSizes[0]);
   const [quantity, setQuantity] = useState(1);
 
   // Dealer wholesale margin (default 25%)
   const dealerMargin = user?.dealerDiscountPercent || 25;
 
   // Active pricing calculation based on user role
-  let displayPrice = selectedPack.price;
+  let displayPrice = selectedPack?.price || Number(product.basePrice) || 0;
   let memberBadge = null;
 
   if (isDealer) {
@@ -50,8 +55,8 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
 
   const handlePackChange = (e) => {
     const packSizeStr = e.target.value;
-    const pack = product.packSizes.find(p => p.size === packSizeStr);
-    setSelectedPack(pack);
+    const pack = safePackSizes.find(p => p.size === packSizeStr);
+    if (pack) setSelectedPack(pack);
   };
 
   const handleWhatsAppOrder = () => {
@@ -135,7 +140,7 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
             onChange={handlePackChange}
             className="text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-brand-green-dark cursor-pointer"
           >
-            {product.packSizes.map((pack) => (
+            {safePackSizes.map((pack) => (
               <option key={pack.size} value={pack.size}>
                 {pack.size}
               </option>

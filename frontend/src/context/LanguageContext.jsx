@@ -121,9 +121,11 @@ export const LanguageProvider = ({ children }) => {
   // Translation helper function
   const t = (key) => {
     if (!key) return '';
-    // If it's a localized object e.g. { mr: "मुख्यपृष्ठ", en: "Home" }
+    if (Array.isArray(key)) return key;
+    // If it's a localized object e.g. { mr: "मुख्यपृष्ठ", en: "Home" } or { mr: [...], en: [...] }
     if (typeof key === 'object') {
-      return key[language] || key['mr'] || '';
+      const val = key[language] !== undefined ? key[language] : (key['mr'] !== undefined ? key['mr'] : (key['en'] !== undefined ? key['en'] : ''));
+      return val;
     }
     // If it's a string, look up in translations dictionary
     return translations[language]?.[key] || translations['mr']?.[key] || key;
