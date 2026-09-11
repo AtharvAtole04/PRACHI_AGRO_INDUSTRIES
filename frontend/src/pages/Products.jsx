@@ -72,14 +72,40 @@ const Products = () => {
   // Filter and Sort Logic
   const filteredProducts = productsList
     .filter((product) => {
+      if (!product) return false;
+
       // 1. Search Query Match
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        const nameMatch = product.name.toLowerCase().includes(query);
-        const descMatch = (product.shortDescription[language] || '').toLowerCase().includes(query);
-        const catMatch = product.category.toLowerCase().includes(query);
-        const tagMatch = (product.tagline[language] || '').toLowerCase().includes(query);
-        if (!nameMatch && !descMatch && !catMatch && !tagMatch) return false;
+      if (searchQuery && searchQuery.trim()) {
+        const q = searchQuery.trim().toLowerCase();
+        
+        const name = (product.name || '').toLowerCase();
+        
+        const taglineMr = (product.tagline?.mr || (typeof product.tagline === 'string' ? product.tagline : '') || '').toLowerCase();
+        const taglineEn = (product.tagline?.en || '').toLowerCase();
+
+        const shortDescMr = (product.shortDescription?.mr || (typeof product.shortDescription === 'string' ? product.shortDescription : '') || '').toLowerCase();
+        const shortDescEn = (product.shortDescription?.en || '').toLowerCase();
+
+        const descMr = (product.description?.mr || (typeof product.description === 'string' ? product.description : '') || '').toLowerCase();
+        const descEn = (product.description?.en || '').toLowerCase();
+
+        const cropsMr = (product.crops?.mr || (typeof product.crops === 'string' ? product.crops : '') || '').toLowerCase();
+        const cropsEn = (product.crops?.en || '').toLowerCase();
+
+        const category = (product.category || '').toLowerCase();
+
+        const isMatch = name.includes(q) || 
+                        taglineMr.includes(q) || 
+                        taglineEn.includes(q) || 
+                        shortDescMr.includes(q) || 
+                        shortDescEn.includes(q) || 
+                        descMr.includes(q) || 
+                        descEn.includes(q) || 
+                        cropsMr.includes(q) || 
+                        cropsEn.includes(q) || 
+                        category.includes(q);
+
+        if (!isMatch) return false;
       }
       
       // 2. Category Match
@@ -88,7 +114,7 @@ const Products = () => {
       }
 
       // 3. Price Filter (checking basePrice)
-      if (product.basePrice > maxPrice) {
+      if (maxPrice > 0 && product.basePrice > maxPrice) {
         return false;
       }
 
