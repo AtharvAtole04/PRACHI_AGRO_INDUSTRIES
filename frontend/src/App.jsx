@@ -6,7 +6,8 @@ import { LanguageProvider } from './context/LanguageContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 
-// Layout Skeleton
+// Components & Error Boundary
+import ErrorBoundary from './components/ErrorBoundary';
 import MainLayout from './layouts/MainLayout';
 
 // Pages
@@ -31,46 +32,53 @@ import DealerDashboard from './pages/DealerDashboard';
 
 function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <MainLayout>
-              <Routes>
-                {/* Core Page Routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetail />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:id" element={<BlogDetail />} />
-                <Route path="/videos" element={<Videos />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/reviews" element={<Reviews />} />
-                <Route path="/admin" element={<Admin />} />
-                
-                {/* Auth & Role Portals */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/account" element={<CustomerDashboard />} />
-                <Route path="/orders" element={<CustomerDashboard />} />
-                <Route path="/dealer-portal" element={<DealerDashboard />} />
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AuthProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <MainLayout>
+                <ErrorBoundary>
+                  <Routes>
+                    {/* Core Page Routes */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/product" element={<Products />} />
+                    <Route path="/products/:id" element={<ProductDetail />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/blog/:id" element={<BlogDetail />} />
+                    <Route path="/blogs/:id" element={<BlogDetail />} />
+                    <Route path="/videos" element={<Videos />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/reviews" element={<Reviews />} />
+                    <Route path="/admin" element={<Admin />} />
+                    
+                    {/* Auth & Role Portals */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/account" element={<CustomerDashboard />} />
+                    <Route path="/orders" element={<CustomerDashboard />} />
+                    <Route path="/dealer-portal" element={<DealerDashboard />} />
 
-                {/* Static / Policy routes */}
-                <Route path="/privacy" element={<Home />} />
-                <Route path="/terms" element={<Home />} />
+                    {/* Static / Policy routes */}
+                    <Route path="/privacy" element={<Home />} />
+                    <Route path="/terms" element={<Home />} />
 
-                {/* 404 Fallback Route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </MainLayout>
-          </BrowserRouter>
-        </CartProvider>
-      </AuthProvider>
-    </LanguageProvider>
+                    {/* 404 Fallback Route */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </ErrorBoundary>
+              </MainLayout>
+            </BrowserRouter>
+          </CartProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 }
 

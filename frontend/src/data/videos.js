@@ -108,15 +108,17 @@ export const getVideos = async () => {
     const res = await fetch(apiUrl('/api/videos'));
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        return data.map(v => ({
+      const rawList = Array.isArray(data) ? data : (Array.isArray(data.videos) ? data.videos : []);
+      if (rawList.length > 0) {
+        return rawList.map(v => ({
           ...v,
-          embedId: v.embedId || extractEmbedId(v.youtubeUrl)
+          embedId: v.embedId || v.id || v.videoId || extractEmbedId(v.youtubeUrl),
+          youtubeUrl: v.youtubeUrl || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/@prachiagroindustries03')
         }));
       }
     }
   } catch (err) {
-    console.warn("Backend offline. Falling back to default YouTube videos.");
+    console.warn("Backend offline. Falling back to cached YouTube videos.");
   }
   const data = localStorage.getItem('prachi_videos');
   if (!data) {

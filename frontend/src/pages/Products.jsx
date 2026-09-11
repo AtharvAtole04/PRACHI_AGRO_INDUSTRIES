@@ -11,8 +11,28 @@ import ProductComparison from '../components/ProductComparison';
 
 const Products = () => {
   const [productsList, setProductsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  const fetchProds = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      const data = await getProducts();
+      if (Array.isArray(data)) {
+        setProductsList(data);
+      } else {
+        setIsError(true);
+      }
+    } catch (err) {
+      console.error("Failed to load products:", err);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProds = () => getProducts().then(data => setProductsList(data));
     fetchProds();
     window.addEventListener('prachi_products_updated', fetchProds);
     return () => window.removeEventListener('prachi_products_updated', fetchProds);
@@ -310,7 +330,34 @@ const Products = () => {
 
         {/* Product Grid Area */}
         <div className="flex-1 flex flex-col gap-8">
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-white border border-slate-100 rounded-2xl p-6 h-80 animate-pulse flex flex-col justify-between">
+                  <div className="bg-slate-100 rounded-xl h-44 w-full" />
+                  <div className="space-y-2">
+                    <div className="bg-slate-100 rounded h-4 w-3/4" />
+                    <div className="bg-slate-100 rounded h-4 w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="bg-white border border-slate-100 rounded-2xl p-12 text-center shadow-sm flex flex-col items-center gap-3">
+              <h3 className="font-extrabold text-slate-800 text-lg">
+                उत्पादने लोड करण्यात अडचण आली (Unable to load products)
+              </h3>
+              <p className="text-sm text-slate-400 max-w-sm">
+                Please check your network connection and try again.
+              </p>
+              <button
+                onClick={fetchProds}
+                className="mt-2 bg-brand-green-dark hover:bg-brand-green-light text-white font-bold text-sm px-6 py-2.5 rounded-full cursor-pointer transition-all active:scale-95 shadow-md"
+              >
+                पुन्हा प्रयत्न करा (Try Again)
+              </button>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="bg-white border border-slate-100 rounded-2xl p-12 text-center shadow-sm">
               <h3 className="font-extrabold text-slate-800 text-lg mb-2">
                 कोणतीही उत्पादने आढळली नाहीत!
@@ -332,9 +379,9 @@ const Products = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.slice(0, visibleCount).map((product) => (
                   <ProductCard 
-                    key={product.id} 
+                    key={product.id || product._id} 
                     product={product} 
-                    isInCompare={compareList.some(p => p.id === product.id)}
+                    isInCompare={compareList.some(p => p.id === product.id || p._id === product._id)}
                     onCompare={handleCompare}
                   />
                 ))}

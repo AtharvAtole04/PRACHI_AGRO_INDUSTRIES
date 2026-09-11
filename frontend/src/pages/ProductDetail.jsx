@@ -15,8 +15,14 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  // Find product by id or _id
-  const product = productsList.find(p => p.id === id || p._id === id);
+  // Find product by id, _id, or slugified name
+  const product = productsList.find(p => 
+    p && (p.id === id || p._id === id || (p.name && p.name.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim()))
+  );
+
+  const safePackSizes = (product?.packSizes && Array.isArray(product.packSizes) && product.packSizes.length > 0)
+    ? product.packSizes
+    : [{ size: 'Standard', price: Number(product?.basePrice) || 0 }];
 
   // States
   const [selectedPack, setSelectedPack] = useState(null);
@@ -26,7 +32,7 @@ const ProductDetail = () => {
   // Initialize selected pack size once product is loaded
   useEffect(() => {
     if (product) {
-      setSelectedPack(product.packSizes[0]);
+      setSelectedPack(safePackSizes[0]);
     }
   }, [product]);
 
@@ -159,7 +165,7 @@ const ProductDetail = () => {
                 पॅक निवडा ({t('packSize')}):
               </span>
               <div className="flex flex-wrap gap-2.5">
-                {product.packSizes.map((pack) => (
+                {safePackSizes.map((pack) => (
                   <button
                     key={pack.size}
                     onClick={() => handlePackSelect(pack)}

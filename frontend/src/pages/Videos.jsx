@@ -17,7 +17,12 @@ const Videos = () => {
   const [activeVideoModal, setActiveVideoModal] = useState(null);
 
   useEffect(() => {
-    getVideos().then(data => setVideosList(data));
+    getVideos()
+      .then(data => setVideosList(Array.isArray(data) ? data : (Array.isArray(data?.videos) ? data.videos : [])))
+      .catch(err => {
+        console.warn('Failed to load videos:', err);
+        setVideosList([]);
+      });
   }, []);
 
   const handlePlayClick = (video) => {
@@ -29,17 +34,20 @@ const Videos = () => {
   };
 
   // Filtered videos based on category and search query
-  const filteredVideos = videosList.filter((video) => {
-    const titleText = typeof video.title === 'object' ? (video.title[language] || video.title.mr || '') : (video.title || '');
-    const cropText = typeof video.crop === 'object' ? (video.crop[language] || video.crop.mr || '') : (video.crop || '');
-    const categoryText = typeof video.category === 'object' ? (video.category[language] || video.category.mr || '') : (video.category || '');
+  const filteredVideos = (Array.isArray(videosList) ? videosList : []).filter((video) => {
+    if (!video) return false;
+    const titleText = typeof video.title === 'object' ? (video.title[language] || video.title.mr || video.title.en || '') : (video.title || '');
+    const cropText = typeof video.crop === 'object' ? (video.crop[language] || video.crop.mr || video.crop.en || '') : (video.crop || '');
+    const categoryText = typeof video.category === 'object' ? (video.category[language] || video.category.mr || video.category.en || '') : (video.category || '');
 
     const matchesSearch = titleText.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           cropText.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           categoryText.toLowerCase().includes(searchQuery.toLowerCase());
 
     if (activeCategory === 'all') return matchesSearch;
-    return matchesSearch && (video.category?.en?.toLowerCase().replace(/\s+/g, '-') === activeCategory || video.category?.mr === activeCategory);
+    const catEn = (video.category?.en || (typeof video.category === 'string' ? video.category : '')).toLowerCase().replace(/\s+/g, '-');
+    const catMr = video.category?.mr || '';
+    return matchesSearch && (catEn === activeCategory || catMr === activeCategory);
   });
 
   return (

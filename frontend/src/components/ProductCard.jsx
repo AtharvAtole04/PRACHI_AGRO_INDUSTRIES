@@ -6,12 +6,15 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 const ProductCard = ({ product, isInCompare, onCompare }) => {
+  if (!product) return null;
+  const productId = product.id || product._id || (product.name ? product.name.toLowerCase().trim().replace(/\s+/g, '-') : '');
+
   const { t, language } = useLanguage();
   const { addToCart } = useCart();
   const { isFarmer, isDealer, user } = useAuth();
   
   // Safe fallback for packSizes
-  const safePackSizes = (product.packSizes && product.packSizes.length > 0)
+  const safePackSizes = (product.packSizes && Array.isArray(product.packSizes) && product.packSizes.length > 0)
     ? product.packSizes
     : [{ size: 'Standard', price: Number(product.basePrice) || 0 }];
 
@@ -91,7 +94,7 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
           </span>
         )}
         
-        <Link to={`/products/${product.id}`} className="w-full h-full flex items-center justify-center">
+        <Link to={`/products/${productId}`} className="w-full h-full flex items-center justify-center">
           <img
             src={product.image}
             alt={product.name}
@@ -102,7 +105,7 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
         
         {/* Quick View Overlay Button */}
         <Link 
-          to={`/products/${product.id}`} 
+          to={`/products/${productId}`} 
           className="absolute right-3 bottom-3 bg-white/90 hover:bg-white text-slate-700 hover:text-brand-green-dark p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           aria-label="View details"
         >
@@ -119,7 +122,7 @@ const ProductCard = ({ product, isInCompare, onCompare }) => {
         </span>
         
         {/* Product Name */}
-        <Link to={`/products/${product.id}`} className="hover:text-brand-green-dark transition-colors">
+        <Link to={`/products/${productId}`} className="hover:text-brand-green-dark transition-colors">
           <h3 className="font-extrabold text-slate-800 text-base md:text-lg tracking-tight leading-snug">
             {product.name}
           </h3>

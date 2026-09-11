@@ -107,7 +107,7 @@ const Home = () => {
         description="Manufacturer of premium plant growth promoters, crop tonics, and granular fertilizers."
       />
 
-      {/* 1. Popular Products Grid (Displayed First on Home Page) */}
+      {/* 1. Popular Products Grid (Displayed First) */}
       <section>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div className="text-left">
@@ -133,12 +133,12 @@ const Home = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {popularProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id || product._id} product={product} />
           ))}
         </div>
       </section>
 
-      {/* 2. Hero Section Banner Slider (Ads & Product Promotions - Placed After Products) */}
+      {/* 2. Hero Section Banner Slider (Ads & Product Promotions - Placed Just After Products) */}
       <section aria-label="Hero Banner">
         <HeroSlider />
       </section>

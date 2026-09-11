@@ -251,17 +251,22 @@ const Admin = () => {
       }
     };
 
-    if (isEditingProduct) {
-      await updateProduct(productForm.id, formattedProduct);
-      setSuccessMsg(language === 'mr' ? 'उत्पादन यशस्वीरित्या सुधारित केले!' : 'Product updated successfully!');
-    } else {
-      await addProduct(formattedProduct);
-      setSuccessMsg(language === 'mr' ? 'नवीन उत्पादन यशस्वीरित्या जोडले!' : 'Product added successfully!');
-    }
+    try {
+      if (isEditingProduct) {
+        await updateProduct(productForm.id, formattedProduct);
+        setSuccessMsg(language === 'mr' ? 'उत्पादन यशस्वीरित्या सुधारित केले!' : 'Product updated successfully!');
+      } else {
+        await addProduct(formattedProduct);
+        setSuccessMsg(language === 'mr' ? 'नवीन उत्पादन यशस्वीरित्या जोडले!' : 'Product added successfully!');
+      }
 
-    resetProductForm();
-    loadAllData();
-    setTimeout(() => setSuccessMsg(''), 4000);
+      resetProductForm();
+      loadAllData();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      console.error("Admin product submission error:", err);
+      alert(language === 'mr' ? 'उत्पादन जतन करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.' : 'Failed to save product. Please try again.');
+    }
   };
 
   const handleEditProduct = (prod) => {
@@ -270,23 +275,23 @@ const Admin = () => {
       ? prod.packSizes.map(p => ({
           size: p.size || '',
           price: p.price !== undefined ? p.price : '',
-          originalPrice: p.originalPrice !== undefined ? p.originalPrice : ''
+          originalPrice: p.originalPrice || ''
         }))
-      : [{ size: '250 ml', price: prod.basePrice || '', originalPrice: prod.originalPrice || '' }];
+      : [{ size: '', price: '', originalPrice: '' }];
 
     setProductForm({
       id: prod.id || prod._id,
-      name: prod.name,
-      category: prod.category,
-      tagline_mr: prod.tagline?.mr || '', tagline_en: prod.tagline?.en || '',
-      shortDesc_mr: prod.shortDescription?.mr || '', shortDesc_en: prod.shortDescription?.en || '',
-      desc_mr: prod.description?.mr || '', desc_en: prod.description?.en || '',
-      basePrice: prod.basePrice || '',
+      name: prod.name || '',
+      category: prod.category || 'fungicides',
+      tagline_mr: prod.tagline?.mr || (typeof prod.tagline === 'string' ? prod.tagline : '') || '',
+      tagline_en: prod.tagline?.en || '',
+      shortDesc_mr: prod.shortDescription?.mr || (typeof prod.shortDescription === 'string' ? prod.shortDescription : '') || '',
+      shortDesc_en: prod.shortDescription?.en || '',
+      desc_mr: prod.description?.mr || (typeof prod.description === 'string' ? prod.description : '') || '',
+      desc_en: prod.description?.en || '',
+      basePrice: prod.basePrice !== undefined ? prod.basePrice : '',
       originalPrice: prod.originalPrice || '',
       packSizes: loadedPacks,
-      crops_mr: prod.crops?.mr || '', crops_en: prod.crops?.en || '',
-      benefit1_mr: prod.benefits?.mr?.[0] || '', benefit1_en: prod.benefits?.en?.[0] || '',
-      benefit2_mr: prod.benefits?.mr?.[1] || '', benefit2_en: prod.benefits?.en?.[1] || '',
       usage_mr: prod.usage?.mr || '', usage_en: prod.usage?.en || '',
       image: prod.image
     });

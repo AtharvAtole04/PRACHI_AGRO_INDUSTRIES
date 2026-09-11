@@ -759,9 +759,15 @@ export const saveProducts = async (array) => {
 export const getProducts = async () => {
   let backendData = null;
   try {
-    const res = await fetch(apiUrl('/api/products'));
+    const res = await fetch(apiUrl('/api/products'), {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' }
+    });
     if (res.ok) {
-      backendData = await res.json();
+      const json = await res.json();
+      if (Array.isArray(json)) {
+        backendData = json;
+      }
     }
   } catch (err) {
     console.warn("Backend offline. Falling back to localStorage for products.");
@@ -770,17 +776,23 @@ export const getProducts = async () => {
   const localData = getLocalProducts();
 
   if (Array.isArray(backendData) && backendData.length > 0) {
-    const backendIds = new Set(backendData.map(p => p.id || p._id));
-    const backendNames = new Set(backendData.map(p => (p.name || '').toLowerCase()));
-    
-    // Merge any locally added products not yet in backend
-    const extraLocal = localData.filter(p => !backendIds.has(p.id) && !backendIds.has(p._id) && !backendNames.has((p.name || '').toLowerCase()));
-    const merged = [...extraLocal, ...backendData];
-    saveProducts(merged);
-    return merged;
+    // Normalize backend data to guarantee both id and _id fields exist
+    const normalizedBackend = backendData.map(p => ({
+      ...p,
+      id: p.id || p._id,
+      _id: p._id || p.id
+    }));
+
+    // Save authoritative backend data to local cache
+    saveProducts(normalizedBackend);
+    return normalizedBackend;
   }
 
-  return localData;
+  return localData.map(p => ({
+    ...p,
+    id: p.id || p._id,
+    _id: p._id || p.id
+  }));
 };
 
 export const addProduct = async (product) => {
@@ -791,16 +803,10 @@ export const addProduct = async (product) => {
     isNew: product.isNew !== undefined ? product.isNew : true
   };
 
-  // 1. Immediately save to localStorage at top of list
-  const localList = getLocalProducts();
-  localList.unshift(newProduct);
-  await saveProducts(localList);
-
-  // 2. Sync to backend if online
   try {
     const res = await fetch(apiUrl('/api/products'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
       body: JSON.stringify(newProduct)
     });
     if (res.ok) {
@@ -810,23 +816,17 @@ export const addProduct = async (product) => {
     console.warn("Backend offline. Saved to localStorage.");
   }
 
+  const localList = getLocalProducts();
+  localList.unshift(newProduct);
+  await saveProducts(localList);
   return localList;
 };
 
 export const updateProduct = async (id, updatedProduct) => {
-  // 1. Update in localStorage immediately
-  const localList = getLocalProducts();
-  const index = localList.findIndex(p => p.id === id || p._id === id);
-  if (index > -1) {
-    localList[index] = { ...localList[index], ...updatedProduct };
-    await saveProducts(localList);
-  }
-
-  // 2. Sync to backend if online
   try {
     const res = await fetch(apiUrl(`/api/products/${id}`), {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
       body: JSON.stringify(updatedProduct)
     });
     if (res.ok) {
@@ -836,19 +836,20 @@ export const updateProduct = async (id, updatedProduct) => {
     console.warn("Backend offline. Updated in localStorage.");
   }
 
+  const localList = getLocalProducts();
+  const index = localList.findIndex(p => p.id === id || p._id === id);
+  if (index > -1) {
+    localList[index] = { ...localList[index], ...updatedProduct };
+    await saveProducts(localList);
+  }
   return localList;
 };
 
 export const deleteProduct = async (id) => {
-  // 1. Remove from localStorage immediately
-  const localList = getLocalProducts();
-  const filtered = localList.filter(p => p.id !== id && p._id !== id);
-  await saveProducts(filtered);
-
-  // 2. Sync delete to backend if online
   try {
     const res = await fetch(apiUrl(`/api/products/${id}`), {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: { 'Cache-Control': 'no-cache' }
     });
     if (res.ok) {
       return await getProducts();
@@ -857,5 +858,8 @@ export const deleteProduct = async (id) => {
     console.warn("Backend offline. Removed from localStorage.");
   }
 
+  const localList = getLocalProducts();
+  const filtered = localList.filter(p => p.id !== id && p._id !== id);
+  await saveProducts(filtered);
   return filtered;
 };

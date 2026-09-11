@@ -4,6 +4,14 @@ import Product from '../models/Product.js';
 
 const router = express.Router();
 
+// Middleware to prevent stale HTTP caching on product API endpoints
+router.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
 const getQueryForId = (idParam) => {
   return mongoose.Types.ObjectId.isValid(idParam)
     ? { $or: [{ id: idParam }, { _id: idParam }] }
@@ -68,3 +76,4 @@ router.delete('/:id', async (req, res) => {
 });
 
 export default router;
+

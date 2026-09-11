@@ -4,14 +4,17 @@ import { YoutubeIcon } from './BrandIcons';
 import { useLanguage } from '../context/LanguageContext';
 
 const VideoCard = ({ video, onPlayClick }) => {
+  if (!video) return null;
   const { t, language } = useLanguage();
+
+  const videoId = video.embedId || video.id || video.videoId;
+  const directYoutubeUrl = video.youtubeUrl && video.youtubeUrl.includes('watch?v=')
+    ? video.youtubeUrl
+    : (videoId ? `https://www.youtube.com/watch?v=${videoId}` : `https://www.youtube.com/@prachiagroindustries03`);
 
   const handleOpenYouTube = (e) => {
     if (e) e.stopPropagation();
-    const url = video.youtubeUrl && video.youtubeUrl.includes('youtube.com/watch')
-      ? video.youtubeUrl
-      : `https://www.youtube.com/@prachiagroindustries03`;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(directYoutubeUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handlePlay = (e) => {
@@ -22,6 +25,10 @@ const VideoCard = ({ video, onPlayClick }) => {
     }
   };
 
+  const videoTitleStr = typeof video.title === 'object' ? (video.title[language] || video.title.mr || video.title.en || '') : (video.title || '');
+  const categoryStr = video.category ? t(video.category) : 'YouTube';
+  const cropStr = video.crop ? t(video.crop) : 'Agri';
+
   return (
     <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full group hover:-translate-y-1">
       
@@ -31,11 +38,15 @@ const VideoCard = ({ video, onPlayClick }) => {
         className="relative aspect-video bg-slate-900 cursor-pointer overflow-hidden group-hover:opacity-95 transition-opacity"
       >
         <img 
-          src={video.thumbnail} 
-          alt={typeof video.title === 'object' ? (video.title[language] || video.title.mr) : video.title} 
+          src={video.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '')} 
+          alt={videoTitleStr} 
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           onError={(e) => { 
-            e.target.src = 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400';
+            if (videoId && !e.target.src.includes('hqdefault.jpg')) {
+              e.target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+            } else {
+              e.target.src = 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400';
+            }
           }}
         />
         
@@ -68,11 +79,11 @@ const VideoCard = ({ video, onPlayClick }) => {
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-1.5 mb-2">
             <span className="bg-emerald-50 text-brand-green-dark text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full border border-emerald-100">
-              {t(video.category)}
+              {categoryStr}
             </span>
             <span className="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
               <Tag size={9} />
-              {t(video.crop)}
+              {cropStr}
             </span>
           </div>
 
@@ -81,7 +92,7 @@ const VideoCard = ({ video, onPlayClick }) => {
             onClick={handlePlay}
             className="font-bold text-slate-800 text-sm sm:text-base leading-snug cursor-pointer hover:text-brand-green-dark transition-colors line-clamp-2"
           >
-            {t(video.title)}
+            {videoTitleStr || t('videoTitle')}
           </h4>
         </div>
 
