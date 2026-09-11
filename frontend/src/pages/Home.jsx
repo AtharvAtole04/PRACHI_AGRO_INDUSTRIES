@@ -107,12 +107,43 @@ const Home = () => {
         description="Manufacturer of premium plant growth promoters, crop tonics, and granular fertilizers."
       />
 
-      {/* 1. Hero Section Banner Slider with Commercial Product Ads */}
+      {/* 1. Popular Products Grid (Displayed First on Home Page) */}
+      <section>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+          <div className="text-left">
+            <span className="bg-emerald-50 text-brand-green-dark text-[10px] sm:text-xs font-extrabold uppercase tracking-widest px-3.5 py-1 rounded-full mb-2 inline-block">
+              मुख्य उत्पादने (Featured Products)
+            </span>
+            <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight flex items-center gap-1.5 mt-1">
+              <span>लोकप्रिय उत्पादने</span>
+            </h2>
+            <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
+            <p className="text-slate-500 text-xs md:text-sm mt-3 font-semibold">
+              {language === 'mr' ? 'शेतकऱ्यांनी सर्वात जास्त खरेदी केलेली उत्पादने' : 'Our highest rated, top-selling agricultural solutions'}
+            </p>
+          </div>
+          <Link 
+            to="/products" 
+            className="bg-brand-green-dark hover:bg-brand-green-light text-white font-black text-xs sm:text-sm px-5 py-2.5 rounded-xl flex items-center gap-1.5 hover:gap-2 self-start sm:self-auto transition-all shadow-md"
+          >
+            <span>सर्व उत्पादने पहा (View All)</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {popularProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+
+      {/* 2. Hero Section Banner Slider (Ads & Product Promotions - Placed After Products) */}
       <section aria-label="Hero Banner">
         <HeroSlider />
       </section>
 
-      {/* 2. USP / Trust Feature Strip */}
+      {/* 3. USP / Trust Feature Strip */}
       <section aria-label="Our Strengths" className="-mt-4 md:-mt-8 relative z-10">
         <FeatureStrip />
       </section>
@@ -122,7 +153,7 @@ const Home = () => {
         <MemberBanner />
       </section>
 
-      {/* 3. Focused 6 Product Categories Grid (Bolder & Sharper) */}
+      {/* 4. Focused 6 Product Categories Grid */}
       <section className="text-center">
         <div className="flex flex-col items-center mb-8">
           <span className="bg-emerald-50 text-brand-green-dark text-[10px] sm:text-xs font-extrabold uppercase tracking-widest px-3.5 py-1 rounded-full mb-2">
@@ -171,7 +202,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. Special Crop Focus Spotlight (कांदा, ऊस, टोमॅटो, पपई, मिरची) */}
+      {/* 5. Special Crop Focus Spotlight (कांदा, ऊस, टोमॅटो, पपई, मिरची) */}
       <section className="bg-gradient-to-br from-slate-900 via-emerald-950 to-brand-green-dark text-white rounded-3xl p-6 sm:p-10 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
@@ -231,37 +262,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 5. Interactive Crop Finder Widget */}
+      {/* 6. Interactive Crop Finder Widget */}
       <section aria-label="Crop Finder">
         <CropFinder />
-      </section>
-
-      {/* 6. Popular Products Grid */}
-      <section>
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-          <div className="text-left">
-            <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight flex items-center gap-1.5">
-              <span>लोकप्रिय उत्पादने</span>
-            </h2>
-            <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
-            <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-              {language === 'mr' ? 'शेतकऱ्यांनी सर्वात जास्त खरेदी केलेली उत्पादने' : 'Our highest rated, top-selling agricultural solutions'}
-            </p>
-          </div>
-          <Link 
-            to="/products" 
-            className="text-brand-green-dark hover:text-brand-green-light font-black text-xs sm:text-sm flex items-center gap-1 hover:gap-2 self-start sm:self-auto transition-all"
-          >
-            <span>सर्व उत्पादने पहा (View All)</span>
-            <ArrowRight size={16} />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {popularProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
       </section>
 
       {/* 7. Special Offers Strip banner */}
