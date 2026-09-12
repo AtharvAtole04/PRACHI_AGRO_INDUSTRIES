@@ -698,11 +698,13 @@ const defaultProducts = [
 
 export async function seedIfEmpty() {
   try {
-    const productCount = await Product.countDocuments();
-    if (productCount === 0) {
-      console.log('🌱 Product collection is empty. Auto-seeding default products into MongoDB...');
-      await Product.insertMany(defaultProducts);
-      console.log(`✅ Successfully seeded ${defaultProducts.length} default products into MongoDB.`);
+    if (process.env.AUTO_SEED === 'true') {
+      const productCount = await Product.countDocuments();
+      if (productCount === 0) {
+        console.log('🌱 Product collection is empty. Auto-seeding default products into MongoDB...');
+        await Product.insertMany(defaultProducts);
+        console.log(`✅ Successfully seeded ${defaultProducts.length} default products into MongoDB.`);
+      }
     }
   } catch (err) {
     console.error('❌ Error during auto-seeding:', err.message);
