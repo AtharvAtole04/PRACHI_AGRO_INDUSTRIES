@@ -55,6 +55,7 @@ const Admin = () => {
     image: '/assets/products/placeholder.svg'
   });
   const [isEditingProduct, setIsEditingProduct] = useState(false);
+  const [isSubmittingProduct, setIsSubmittingProduct] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
 
   // Form states for Videos
@@ -204,6 +205,13 @@ const Admin = () => {
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     
+    if (!productForm.name || !productForm.name.trim()) {
+      alert(language === 'mr' ? 'कृपया उत्पादनाचे नाव प्रविष्ट करा.' : 'Please enter product name.');
+      return;
+    }
+
+    setIsSubmittingProduct(true);
+
     // Parse dynamic packSizes
     const packSizes = (productForm.packSizes || [])
       .filter(p => p.size && p.size.trim() !== '' && p.price !== '' && p.price !== null && !isNaN(Number(p.price)))
@@ -230,7 +238,7 @@ const Admin = () => {
     const cropsEn = productForm.crops_en || productForm.crops_mr || 'Soybean, Cotton, Tomato, Onion, Chilli and all crops.';
 
     const formattedProduct = {
-      name: productForm.name,
+      name: productForm.name.trim(),
       category: productForm.category,
       tagline: { mr: taglineMr, en: taglineEn },
       shortDescription: { mr: shortDescMr, en: shortDescEn },
@@ -265,10 +273,13 @@ const Admin = () => {
 
       resetProductForm();
       loadAllData();
+      window.scrollTo({ top: 100, behavior: 'smooth' });
       setTimeout(() => setSuccessMsg(''), 4000);
     } catch (err) {
       console.error("Admin product submission error:", err);
       alert(err.message || (language === 'mr' ? 'उत्पादन जतन करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.' : 'Failed to save product. Please try again.'));
+    } finally {
+      setIsSubmittingProduct(false);
     }
   };
 
@@ -1233,8 +1244,16 @@ const Admin = () => {
 
               {/* Form Buttons */}
               <div className="flex gap-2 mt-2">
-                <button type="submit" className="flex-1 bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer transition-colors shadow">
-                  {isEditingProduct ? 'सुधारणा सेव्ह करा (Update)' : 'उत्पादन जोडा (Save Product)'}
+                <button
+                  type="submit"
+                  disabled={isSubmittingProduct}
+                  className="flex-1 bg-brand-green-dark hover:bg-brand-green-light disabled:bg-slate-400 text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer transition-colors shadow flex items-center justify-center gap-2"
+                >
+                  {isSubmittingProduct ? (
+                    <span>{language === 'mr' ? 'जतन करत आहे...' : 'Saving to Database...'}</span>
+                  ) : (
+                    <span>{isEditingProduct ? 'सुधारणा सेव्ह करा (Update)' : 'उत्पादन जोडा (Save Product)'}</span>
+                  )}
                 </button>
                 {isEditingProduct && (
                   <button type="button" onClick={resetProductForm} className="bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs px-3 rounded-lg font-bold cursor-pointer">
