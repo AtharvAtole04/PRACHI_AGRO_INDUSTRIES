@@ -734,6 +734,14 @@ const defaultProducts = [
   }
 ];
 
+// Invalidate legacy cached localStorage entries
+if (typeof window !== 'undefined' && !localStorage.getItem('prachi_v3_synced')) {
+  try {
+    localStorage.removeItem('prachi_products');
+    localStorage.setItem('prachi_v3_synced', 'true');
+  } catch (e) {}
+}
+
 export const getLocalProducts = () => {
   const data = localStorage.getItem('prachi_products');
   if (!data) {
