@@ -6,12 +6,13 @@ const getApiBase = () => {
   }
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    // Fallback to deployed Render production backend if running on an external static domain (e.g. Vercel)
-    if (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.includes('onrender.com')) {
-      return 'https://prachi-agro-industries.onrender.com';
+    // On local dev server, use relative path (proxied by Vite to local Express backend)
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return '';
     }
   }
-  return '';
+  // For all production hostnames (Render, Vercel, prachiagroindustries.in), target live Render backend
+  return 'https://prachi-agro-industries.onrender.com';
 };
 
 export const API_BASE = getApiBase();

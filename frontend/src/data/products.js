@@ -737,13 +737,12 @@ const defaultProducts = [
 export const getLocalProducts = () => {
   const data = localStorage.getItem('prachi_products');
   if (!data) {
-    localStorage.setItem('prachi_products', JSON.stringify(defaultProducts));
-    return [...defaultProducts];
+    return [];
   }
   try {
     return JSON.parse(data);
   } catch (e) {
-    return [...defaultProducts];
+    return [];
   }
 };
 
@@ -776,7 +775,7 @@ export const getProducts = async () => {
       }
     }
   } catch (err) {
-    console.warn("Backend API offline. Falling back to cached local products:", err);
+    console.warn("Backend API offline. Returning cached local products:", err);
   }
 
   const localData = getLocalProducts();
