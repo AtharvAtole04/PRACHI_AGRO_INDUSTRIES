@@ -37,9 +37,14 @@ app.use((req, res, next) => {
   next();
 });
 
+import { seedIfEmpty } from './seedIfEmpty.js';
+
 // Database Connection
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Successfully connected to MongoDB database.'))
+  .then(async () => {
+    console.log('Successfully connected to MongoDB database.');
+    await seedIfEmpty();
+  })
   .catch((err) => {
     console.error('MongoDB database connection error:', err.message);
     console.log('Ensure MongoDB service is running locally or check your connection string in .env file.');

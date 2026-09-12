@@ -41,11 +41,32 @@ router.get('/:id', async (req, res) => {
 
 // POST create product
 router.post('/', async (req, res) => {
-  const product = new Product(req.body);
   try {
+    const productData = { ...req.body };
+    delete productData._id;
+
+    if (!productData.id && productData.name) {
+      productData.id = productData.name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    if (!productData.id) {
+      productData.id = `prod-${Date.now()}`;
+    }
+
+    const existing = await Product.findOne({ id: productData.id });
+    if (existing) {
+      productData.id = `${productData.id}-${Date.now()}`;
+    }
+
+    const product = new Product(productData);
     const newProduct = await product.save();
     res.status(201).json(newProduct);
   } catch (err) {
+    console.error("Error creating product:", err.message);
     res.status(400).json({ message: err.message });
   }
 });
@@ -53,13 +74,17 @@ router.post('/', async (req, res) => {
 // PUT update product
 router.put('/:id', async (req, res) => {
   try {
+    const updateData = { ...req.body };
+    delete updateData._id; // Remove immutable _id field before update
+
     const updatedProduct = await Product.findOneAndUpdate(
       getQueryForId(req.params.id),
-      req.body,
+      updateData,
       { new: true, upsert: true, runValidators: true }
     );
     res.json(updatedProduct);
   } catch (err) {
+    console.error("Error updating product:", err.message);
     res.status(400).json({ message: err.message });
   }
 });

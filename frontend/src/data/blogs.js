@@ -121,8 +121,13 @@ Yellowing of leaves, dry vegetative buds, and heavy flower drop indicate a lack 
 export const getBlogs = async () => {
   try {
     const res = await fetch(apiUrl('/api/blogs'));
-    if (res.ok) {
-      return await res.json();
+    const contentType = res.headers.get('content-type') || '';
+    if (res.ok && contentType.includes('application/json')) {
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        saveBlogs(data);
+        return data;
+      }
     }
   } catch (err) {
     console.warn("Backend offline. Falling back to localStorage for blogs.");
@@ -142,46 +147,41 @@ export const saveBlogs = async (array) => {
 };
 
 export const addBlog = async (blog) => {
+  let res;
   try {
-    const res = await fetch(apiUrl('/api/blogs'), {
+    res = await fetch(apiUrl('/api/blogs'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(blog)
     });
-    if (res.ok) {
-      return await getBlogs();
-    }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    throw new Error(`Failed to connect to backend server: ${err.message}`);
   }
-  const list = await getBlogs();
-  const newBlog = {
-    ...blog,
-    id: blog.id || blog.title.en.toLowerCase().replace(/\s+/g, '-'),
-    date: new Date().toISOString().split('T')[0]
-  };
-  list.push(newBlog);
-  await saveBlogs(list);
-  return list;
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to add blog (HTTP ${res.status})`);
+  }
+
+  return await getBlogs();
 };
 
 export const deleteBlog = async (id) => {
+  let res;
   try {
-    const res = await fetch(apiUrl(`/api/blogs/${id}`), {
+    res = await fetch(apiUrl(`/api/blogs/${id}`), {
       method: 'DELETE'
     });
-    if (res.ok) {
-      return await getBlogs();
-    } else {
-      const errData = await res.json().catch(() => ({}));
-      console.error(`Failed to delete blog from backend (${res.status}):`, errData);
-      return await getBlogs();
-    }
   } catch (err) {
-    console.warn("Backend offline. Removing from localStorage fallback.");
-    const list = await getBlogs();
-    const filtered = list.filter(b => b.id !== id && b._id !== id);
-    await saveBlogs(filtered);
-    return filtered;
+    throw new Error(`Failed to connect to backend server: ${err.message}`);
   }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to delete blog (HTTP ${res.status})`);
+  }
+
+  return await getBlogs();
 };

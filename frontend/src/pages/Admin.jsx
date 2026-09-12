@@ -112,10 +112,13 @@ const Admin = () => {
   const loadUsers = async () => {
     try {
       const res = await fetch(apiUrl('/api/auth/users'));
-      if (res.ok) {
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
         const data = await res.json();
-        setUsersList(data);
-        return;
+        if (Array.isArray(data)) {
+          setUsersList(data);
+          return;
+        }
       }
     } catch (err) {
       console.warn('Backend users API offline, loading from localStorage...');
@@ -265,7 +268,7 @@ const Admin = () => {
       setTimeout(() => setSuccessMsg(''), 4000);
     } catch (err) {
       console.error("Admin product submission error:", err);
-      alert(language === 'mr' ? 'उत्पादन जतन करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.' : 'Failed to save product. Please try again.');
+      alert(err.message || (language === 'mr' ? 'उत्पादन जतन करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.' : 'Failed to save product. Please try again.'));
     }
   };
 
@@ -301,8 +304,13 @@ const Admin = () => {
   const handleDeleteProduct = async (id) => {
     if (!id) return;
     if (window.confirm(language === 'mr' ? 'हे उत्पादन हटवायचे आहे का?' : 'Delete this product?')) {
-      await deleteProduct(id);
-      loadAllData();
+      try {
+        await deleteProduct(id);
+        loadAllData();
+      } catch (err) {
+        console.error("Admin product deletion error:", err);
+        alert(err.message || (language === 'mr' ? 'उत्पादन हटवताना त्रुटी आली.' : 'Failed to delete product.'));
+      }
     }
   };
 

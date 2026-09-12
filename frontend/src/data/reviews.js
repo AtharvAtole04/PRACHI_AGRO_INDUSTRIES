@@ -54,8 +54,13 @@ const defaultReviews = [
 export const getReviews = async () => {
   try {
     const res = await fetch(apiUrl('/api/reviews'));
-    if (res.ok) {
-      return await res.json();
+    const contentType = res.headers.get('content-type') || '';
+    if (res.ok && contentType.includes('application/json')) {
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        saveReviews(data);
+        return data;
+      }
     }
   } catch (err) {
     console.warn("Backend offline. Falling back to localStorage for reviews.");
@@ -75,46 +80,41 @@ export const saveReviews = async (array) => {
 };
 
 export const addReview = async (review) => {
+  let res;
   try {
-    const res = await fetch(apiUrl('/api/reviews'), {
+    res = await fetch(apiUrl('/api/reviews'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(review)
     });
-    if (res.ok) {
-      return await getReviews();
-    }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    throw new Error(`Failed to connect to backend server: ${err.message}`);
   }
-  const list = await getReviews();
-  const newReview = {
-    ...review,
-    id: review.id || Math.floor(1000 + Math.random() * 9000),
-    photo: review.photo || "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100"
-  };
-  list.push(newReview);
-  await saveReviews(list);
-  return list;
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to add review (HTTP ${res.status})`);
+  }
+
+  return await getReviews();
 };
 
 export const deleteReview = async (id) => {
+  let res;
   try {
-    const res = await fetch(apiUrl(`/api/reviews/${id}`), {
+    res = await fetch(apiUrl(`/api/reviews/${id}`), {
       method: 'DELETE'
     });
-    if (res.ok) {
-      return await getReviews();
-    } else {
-      const errData = await res.json().catch(() => ({}));
-      console.error(`Failed to delete review from backend (${res.status}):`, errData);
-      return await getReviews();
-    }
   } catch (err) {
-    console.warn("Backend offline. Removing from localStorage fallback.");
-    const list = await getReviews();
-    const filtered = list.filter(r => String(r.id) !== String(id) && String(r._id) !== String(id));
-    await saveReviews(filtered);
-    return filtered;
+    throw new Error(`Failed to connect to backend server: ${err.message}`);
   }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to delete review (HTTP ${res.status})`);
+  }
+
+  return await getReviews();
 };

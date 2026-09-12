@@ -1,4 +1,4 @@
-import { apiUrl } from '../config';
+import Product from './models/Product.js';
 
 const defaultProducts = [
   {
@@ -17,13 +17,11 @@ const defaultProducts = [
     basePrice: 320,
     originalPrice: 420,
     packSizes: [
-      { size: "250 ml", price: 320, originalPrice: 420 },
-      { size: "500 ml", price: 580, originalPrice: 750 },
-      { size: "1 L", price: 1050, originalPrice: 1350 }
+      { size: "250 ml", price: 320 },
+      { size: "500 ml", price: 580 },
+      { size: "1 L", price: 1050 }
     ],
     image: "/assets/products/nice_png.png",
-    isPopular: true,
-    isNew: false,
     rating: 4.8,
     reviewsCount: 142,
     crops: {
@@ -61,13 +59,11 @@ const defaultProducts = [
     basePrice: 280,
     originalPrice: 350,
     packSizes: [
-      { size: "250 ml", price: 280, originalPrice: 350 },
-      { size: "500 ml", price: 500, originalPrice: 620 },
-      { size: "1 L", price: 900, originalPrice: 1100 }
+      { size: "250 ml", price: 280 },
+      { size: "500 ml", price: 500 },
+      { size: "1 L", price: 900 }
     ],
     image: "/assets/products/magic_gold_500.png",
-    isPopular: true,
-    isNew: true,
     rating: 4.9,
     reviewsCount: 198,
     crops: {
@@ -110,12 +106,10 @@ const defaultProducts = [
       { size: "1 kg", price: 700 }
     ],
     image: "/assets/products/microdefence-front.jpg",
-    isPopular: true,
-    isNew: false,
     rating: 4.7,
     reviewsCount: 95,
     crops: {
-      mr: "ऊस, हळद, केळी, द्राक्षे, डाळिंब, लिंबूवर्गीय फळे आणि भाजीपाला पिके.",
+      mr: "ऊश, हळद, केळी, द्राक्षे, डाळिंब, लिंबूवर्गीय फळे आणि भाजीपाला पिके.",
       en: "Sugarcane, Turmeric, Banana, Grapes, Pomegranate, Citrus and Vegetables."
     },
     benefits: {
@@ -153,8 +147,6 @@ const defaultProducts = [
       { size: "500 ml", price: 650 }
     ],
     image: "/assets/products/srpf.png",
-    isPopular: false,
-    isNew: true,
     rating: 4.6,
     reviewsCount: 78,
     crops: {
@@ -196,8 +188,6 @@ const defaultProducts = [
       { size: "1 kg", price: 450 }
     ],
     image: "/assets/products/nutri_grow.png",
-    isPopular: true,
-    isNew: false,
     rating: 4.8,
     reviewsCount: 110,
     crops: {
@@ -233,8 +223,6 @@ const defaultProducts = [
       { size: "20 kg", price: 900 }
     ],
     image: "/assets/products/bhooratna_mockup.png",
-    isPopular: true,
-    isNew: false,
     rating: 4.9,
     reviewsCount: 165,
     crops: {
@@ -242,7 +230,7 @@ const defaultProducts = [
       en: "Sugarcane, Cotton, Soybean, Vegetables, Fruit Orchards."
     },
     benefits: {
-      mr: ["जमिनीची जलधारण क्षमता वाढते.", "सेंद्रिय कर्बाचे प्रमाण वाढवून पांढऱ्या मुळीची वाढ निरोगी होते."],
+      mr: ["जमिनीची जलधारणा क्षमता वाढते.", "सेंद्रिय कर्बाचे प्रमाण वाढवून पांढऱ्या मुळीची वाढ निरोगी होते."],
       en: ["Improves soil water-retention capacity.", "Increases organic carbon and beneficial soil microbes."]
     },
     usage: {
@@ -270,8 +258,6 @@ const defaultProducts = [
       { size: "5 L", price: 1750 }
     ],
     image: "/assets/products/bhusavardhan_(2).png",
-    isPopular: false,
-    isNew: false,
     rating: 4.8,
     reviewsCount: 112,
     crops: {
@@ -307,8 +293,6 @@ const defaultProducts = [
       { size: "500 ml", price: 620 }
     ],
     image: "/assets/products/cotton.png",
-    isPopular: true,
-    isNew: false,
     rating: 4.9,
     reviewsCount: 220,
     crops: {
@@ -344,8 +328,6 @@ const defaultProducts = [
       { size: "500 ml", price: 580 }
     ],
     image: "/assets/products/corn.png",
-    isPopular: false,
-    isNew: false,
     rating: 4.7,
     reviewsCount: 88,
     crops: {
@@ -381,8 +363,6 @@ const defaultProducts = [
       { size: "5 L", price: 2900 }
     ],
     image: "/assets/products/fast_5ltr.png",
-    isPopular: true,
-    isNew: true,
     rating: 4.9,
     reviewsCount: 310,
     crops: {
@@ -418,8 +398,6 @@ const defaultProducts = [
       { size: "500 ml", price: 520 }
     ],
     image: "/assets/products/krushi_kranti_moc.png",
-    isPopular: false,
-    isNew: false,
     rating: 4.8,
     reviewsCount: 125,
     crops: {
@@ -455,12 +433,10 @@ const defaultProducts = [
       { size: "500 ml", price: 560 }
     ],
     image: "/assets/products/krushivardan.png",
-    isPopular: false,
-    isNew: false,
     rating: 4.7,
     reviewsCount: 94,
     crops: {
-      mr: "कापूस, मिरची, टोमॅटो, फळे and भाजीपाला पिके.",
+      mr: "कापूस, मिरची, टोमॅटो, फळे आणि भाजीपाला पिके.",
       en: "Cotton, Chilli, Tomato, Fruits and all vegetable varieties."
     },
     benefits: {
@@ -493,8 +469,6 @@ const defaultProducts = [
       { size: "1 L", price: 850 }
     ],
     image: "/assets/products/neem_new.png",
-    isPopular: false,
-    isNew: true,
     rating: 4.8,
     reviewsCount: 140,
     crops: {
@@ -530,8 +504,6 @@ const defaultProducts = [
       { size: "500 ml", price: 600 }
     ],
     image: "/assets/products/pnd_kanda.png",
-    isPopular: true,
-    isNew: false,
     rating: 4.9,
     reviewsCount: 185,
     crops: {
@@ -567,8 +539,6 @@ const defaultProducts = [
       { size: "500 ml", price: 780 }
     ],
     image: "/assets/products/png_kuber.png",
-    isPopular: false,
-    isNew: false,
     rating: 4.8,
     reviewsCount: 104,
     crops: {
@@ -577,7 +547,7 @@ const defaultProducts = [
     },
     benefits: {
       mr: ["पिकांची वाढ निरोगी आणि सुदृढ होते.", "फळांची फुगवण आणि प्रत उत्तम सुधारते."],
-      en: ["Promotes deep green and disease-resistant vocabulary.", "Enhances crop sizing, uniformity, and premium weight."]
+      en: ["Promotes deep green and disease-resistant foliage.", "Enhances crop sizing, uniformity, and premium weight."]
     },
     usage: {
       mr: "१.५ ते २ मिली प्रति लिटर पाण्यात मिसळून फवारणी करावी.",
@@ -604,8 +574,6 @@ const defaultProducts = [
       { size: "1 kg", price: 350 }
     ],
     image: "/assets/products/agri_salf.png",
-    isPopular: false,
-    isNew: false,
     rating: 4.7,
     reviewsCount: 76,
     crops: {
@@ -641,8 +609,6 @@ const defaultProducts = [
       { size: "500 ml", price: 680 }
     ],
     image: "/assets/products/balram-mock_(1).png",
-    isPopular: false,
-    isNew: false,
     rating: 4.9,
     reviewsCount: 115,
     crops: {
@@ -678,8 +644,6 @@ const defaultProducts = [
       { size: "500 ml", price: 900 }
     ],
     image: "/assets/products/white_kill.png",
-    isPopular: true,
-    isNew: true,
     rating: 4.8,
     reviewsCount: 130,
     crops: {
@@ -715,8 +679,6 @@ const defaultProducts = [
       { size: "500 ml", price: 720 }
     ],
     image: "/assets/products/top_10.png",
-    isPopular: false,
-    isNew: true,
     rating: 4.9,
     reviewsCount: 205,
     crops: {
@@ -734,134 +696,15 @@ const defaultProducts = [
   }
 ];
 
-export const getLocalProducts = () => {
-  const data = localStorage.getItem('prachi_products');
-  if (!data) {
-    localStorage.setItem('prachi_products', JSON.stringify(defaultProducts));
-    return [...defaultProducts];
-  }
+export async function seedIfEmpty() {
   try {
-    return JSON.parse(data);
-  } catch (e) {
-    return [...defaultProducts];
-  }
-};
-
-export const saveProducts = async (array) => {
-  try {
-    localStorage.setItem('prachi_products', JSON.stringify(array));
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('prachi_products_updated'));
-    }
-  } catch (err) {}
-};
-
-export const getProducts = async () => {
-  try {
-    const res = await fetch(apiUrl('/api/products'), {
-      cache: 'no-store',
-      headers: { 'Cache-Control': 'no-cache' }
-    });
-    const contentType = res.headers.get('content-type') || '';
-    if (res.ok && contentType.includes('application/json')) {
-      const json = await res.json();
-      if (Array.isArray(json)) {
-        const normalizedBackend = json.map(p => ({
-          ...p,
-          id: p.id || p._id,
-          _id: p._id || p.id
-        }));
-        saveProducts(normalizedBackend);
-        return normalizedBackend;
-      }
+    const productCount = await Product.countDocuments();
+    if (productCount === 0) {
+      console.log('🌱 Product collection is empty. Auto-seeding default products into MongoDB...');
+      await Product.insertMany(defaultProducts);
+      console.log(`✅ Successfully seeded ${defaultProducts.length} default products into MongoDB.`);
     }
   } catch (err) {
-    console.warn("Backend API offline. Falling back to cached local products:", err);
+    console.error('❌ Error during auto-seeding:', err.message);
   }
-
-  const localData = getLocalProducts();
-  return localData.map(p => ({
-    ...p,
-    id: p.id || p._id,
-    _id: p._id || p.id
-  }));
-};
-
-export const addProduct = async (product) => {
-  const cleanId = (product.name || 'product')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '') || `prod-${Date.now()}`;
-
-  const newProduct = {
-    ...product,
-    id: product.id || cleanId,
-    isPopular: product.isPopular !== undefined ? product.isPopular : true,
-    isNew: product.isNew !== undefined ? product.isNew : true
-  };
-  delete newProduct._id;
-
-  let res;
-  try {
-    res = await fetch(apiUrl('/api/products'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
-      body: JSON.stringify(newProduct)
-    });
-  } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
-  }
-
-  const contentType = res.headers.get('content-type') || '';
-  if (!res.ok || !contentType.includes('application/json')) {
-    const errorData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errorData.message || `Failed to save product in database (HTTP ${res.status})`);
-  }
-
-  return await getProducts();
-};
-
-export const updateProduct = async (id, updatedProduct) => {
-  const updatePayload = { ...updatedProduct };
-  delete updatePayload._id;
-
-  let res;
-  try {
-    res = await fetch(apiUrl(`/api/products/${id}`), {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
-      body: JSON.stringify(updatePayload)
-    });
-  } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
-  }
-
-  const contentType = res.headers.get('content-type') || '';
-  if (!res.ok || !contentType.includes('application/json')) {
-    const errorData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errorData.message || `Failed to update product in database (HTTP ${res.status})`);
-  }
-
-  return await getProducts();
-};
-
-export const deleteProduct = async (id) => {
-  let res;
-  try {
-    res = await fetch(apiUrl(`/api/products/${id}`), {
-      method: 'DELETE',
-      headers: { 'Cache-Control': 'no-cache' }
-    });
-  } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
-  }
-
-  const contentType = res.headers.get('content-type') || '';
-  if (!res.ok || !contentType.includes('application/json')) {
-    const errorData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errorData.message || `Failed to delete product from database (HTTP ${res.status})`);
-  }
-
-  return await getProducts();
-};
+}

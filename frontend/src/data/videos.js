@@ -106,16 +106,17 @@ export const videoCategories = [
 export const getVideos = async () => {
   try {
     const res = await fetch(apiUrl('/api/videos'));
-    if (res.ok) {
+    const contentType = res.headers.get('content-type') || '';
+    if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
-      const rawList = Array.isArray(data) ? data : (Array.isArray(data.videos) ? data.videos : []);
-      if (rawList.length > 0) {
-        return rawList.map(v => ({
-          ...v,
-          embedId: v.embedId || v.id || v.videoId || extractEmbedId(v.youtubeUrl),
-          youtubeUrl: v.youtubeUrl || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/@prachiagroindustries03')
-        }));
-      }
+      const rawList = Array.isArray(data) ? data : (Array.isArray(data?.videos) ? data.videos : []);
+      const formatted = rawList.map(v => ({
+        ...v,
+        embedId: v.embedId || v.id || v.videoId || extractEmbedId(v.youtubeUrl),
+        youtubeUrl: v.youtubeUrl || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/@prachiagroindustries03')
+      }));
+      saveVideos(formatted);
+      return formatted;
     }
   } catch (err) {
     console.warn("Backend offline. Falling back to cached YouTube videos.");
@@ -127,12 +128,11 @@ export const getVideos = async () => {
   }
   try {
     let parsed = JSON.parse(data);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      parsed = parsed.map(v => ({
+    if (Array.isArray(parsed)) {
+      return parsed.map(v => ({
         ...v,
         embedId: v.embedId || extractEmbedId(v.youtubeUrl)
       }));
-      return parsed;
     }
     return defaultVideos;
   } catch {
@@ -153,47 +153,43 @@ export const addVideo = async (video) => {
     embedId: embedId
   };
 
+  let res;
   try {
-    const res = await fetch(apiUrl('/api/videos'), {
+    res = await fetch(apiUrl('/api/videos'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formattedVideo)
     });
-    if (res.ok) {
-      return await getVideos();
-    }
   } catch (err) {
-    console.warn("Backend offline. Saving to localStorage.");
+    throw new Error(`Failed to connect to backend server: ${err.message}`);
   }
-  const list = await getVideos();
-  const newVideo = {
-    ...formattedVideo,
-    id: video.id || (typeof video.title === 'string' ? video.title : video.title?.en || 'video').toLowerCase().replace(/\s+/g, '-'),
-  };
-  list.push(newVideo);
-  await saveVideos(list);
-  return list;
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to add video (HTTP ${res.status})`);
+  }
+
+  return await getVideos();
 };
 
 export const deleteVideo = async (id) => {
+  let res;
   try {
-    const res = await fetch(apiUrl(`/api/videos/${id}`), {
+    res = await fetch(apiUrl(`/api/videos/${id}`), {
       method: 'DELETE'
     });
-    if (res.ok) {
-      return await getVideos();
-    } else {
-      const errData = await res.json().catch(() => ({}));
-      console.error(`Failed to delete video from backend (${res.status}):`, errData);
-      return await getVideos();
-    }
   } catch (err) {
-    console.warn("Backend offline. Removing from localStorage fallback.");
-    const list = await getVideos();
-    const filtered = list.filter(v => v.id !== id && v._id !== id);
-    await saveVideos(filtered);
-    return filtered;
+    throw new Error(`Failed to connect to backend server: ${err.message}`);
   }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to delete video (HTTP ${res.status})`);
+  }
+
+  return await getVideos();
 };
 
 export function extractEmbedId(url) {

@@ -34,7 +34,8 @@ export const defaultSiteContent = {
 export const getSiteContent = async () => {
   try {
     const res = await fetch(apiUrl('/api/content'));
-    if (res.ok) {
+    const contentType = res.headers.get('content-type') || '';
+    if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
       if (data && data.publicAnnouncement) {
         return data;
@@ -55,23 +56,25 @@ export const getSiteContent = async () => {
 };
 
 export const updateSiteContent = async (newContent) => {
+  let res;
   try {
-    const res = await fetch(apiUrl('/api/content'), {
+    res = await fetch(apiUrl('/api/content'), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newContent)
     });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.content) {
-        localStorage.setItem('prachi_site_content', JSON.stringify(data.content));
-        return data.content;
-      }
-    }
   } catch (err) {
-    console.warn('Backend offline, saving content locally.');
+    throw new Error(`Failed to connect to backend server: ${err.message}`);
   }
 
-  localStorage.setItem('prachi_site_content', JSON.stringify(newContent));
-  return newContent;
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to update site content (HTTP ${res.status})`);
+  }
+
+  const data = await res.json();
+  const savedContent = data.content || newContent;
+  localStorage.setItem('prachi_site_content', JSON.stringify(savedContent));
+  return savedContent;
 };
