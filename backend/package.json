@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
+    "build": "npm install --prefix ../frontend && npm run build --prefix ../frontend",
     "dev": "nodemon server.js",
     "seed": "node seed.js",
     "clear": "node clear.js"
