@@ -84,8 +84,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Serve static assets from the React build folder in production if present
-const frontendBuildPath = path.join(__dirname, '../frontend/dist');
-if (fs.existsSync(frontendBuildPath)) {
+const possibleBuildPaths = [
+  path.join(__dirname, '../frontend/dist'),
+  path.join(process.cwd(), 'frontend/dist'),
+  path.join(process.cwd(), 'dist')
+];
+
+const frontendBuildPath = possibleBuildPaths.find(p => fs.existsSync(p));
+
+if (frontendBuildPath) {
+  console.log(`Serving React frontend from: ${frontendBuildPath}`);
   app.use(express.static(frontendBuildPath));
   
   // Fallback all other routing paths to index.html (React Router SPA Navigation)
@@ -96,7 +104,7 @@ if (fs.existsSync(frontendBuildPath)) {
     res.sendFile(path.join(frontendBuildPath, 'index.html'));
   });
 } else {
-  // If backend is run as standalone API service (e.g. Render standalone backend)
+  console.warn('Frontend build folder not found. Serving API status fallback.');
   app.get('/', (req, res) => {
     res.json({
       message: 'Prachi Agro API Server is running.',
