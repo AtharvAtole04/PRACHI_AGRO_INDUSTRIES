@@ -193,9 +193,37 @@ const Admin = () => {
   const handleImageFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert(language === 'mr' ? 'कृपया एक वैध प्रतिमा फाइल निवडा.' : 'Please select a valid image file.');
+        return;
+      }
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setProductForm(prev => ({ ...prev, image: reader.result }));
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800; // max dimension px
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          setProductForm(prev => ({ ...prev, image: compressedBase64 }));
+        };
+        img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     }
