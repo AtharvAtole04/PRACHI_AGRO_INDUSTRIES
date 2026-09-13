@@ -3,12 +3,12 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, MessageCircle, Star, Shield, HelpCircle, Truck, HeartHandshake } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
-import { getProducts } from '../data/products';
+import { getProducts, getLocalProducts } from '../data/products';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [productsList, setProductsList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [productsList, setProductsList] = useState(() => getLocalProducts());
+  const [isLoading, setIsLoading] = useState(() => getLocalProducts().length === 0);
 
   useEffect(() => {
     let isMounted = true;
@@ -21,7 +21,7 @@ const ProductDetail = () => {
       if (isMounted) setIsLoading(false);
     });
     return () => { isMounted = false; };
-  }, []);
+  }, [id]);
 
   const { t, language } = useLanguage();
   const { addToCart } = useCart();

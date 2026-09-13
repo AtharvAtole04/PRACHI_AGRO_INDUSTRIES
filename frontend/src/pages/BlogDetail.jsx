@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Tag, MessageCircle, Share2, Copy, Check } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { getBlogs } from '../data/blogs';
+import { getBlogs, getLocalBlogs } from '../data/blogs';
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const [blogsList, setBlogsList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [blogsList, setBlogsList] = useState(() => getLocalBlogs());
+  const [isLoading, setIsLoading] = useState(() => getLocalBlogs().length === 0);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const BlogDetail = () => {
       if (isMounted) setIsLoading(false);
     });
     return () => { isMounted = false; };
-  }, []);
+  }, [id]);
 
   const { t, language } = useLanguage();
 

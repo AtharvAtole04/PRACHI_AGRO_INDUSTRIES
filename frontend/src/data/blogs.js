@@ -118,6 +118,16 @@ Yellowing of leaves, dry vegetative buds, and heavy flower drop indicate a lack 
   }
 ];
 
+export const getLocalBlogs = () => {
+  const data = localStorage.getItem('prachi_blogs');
+  if (!data) return defaultBlogs;
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return defaultBlogs;
+  }
+};
+
 export const getBlogs = async () => {
   try {
     const res = await fetch(apiUrl('/api/blogs'));
@@ -132,12 +142,7 @@ export const getBlogs = async () => {
   } catch (err) {
     console.warn("Backend offline. Falling back to localStorage for blogs.");
   }
-  const data = localStorage.getItem('prachi_blogs');
-  if (!data) {
-    localStorage.setItem('prachi_blogs', JSON.stringify(defaultBlogs));
-    return defaultBlogs;
-  }
-  return JSON.parse(data);
+  return getLocalBlogs();
 };
 
 export const saveBlogs = async (array) => {
