@@ -229,6 +229,45 @@ const Admin = () => {
     }
   };
 
+  const handleBlogImageFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert(language === 'mr' ? 'कृपया एक वैध प्रतिमा फाइल निवडा.' : 'Please select a valid image file.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          setBlogForm(prev => ({ ...prev, image: compressedBase64 }));
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Product CRUD
   const handleProductSubmit = async (e) => {
     e.preventDefault();
@@ -1383,15 +1422,83 @@ const Admin = () => {
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Blog Title (English)</label>
                 <input type="text" required value={blogForm.title_en} onChange={(e) => setBlogForm({...blogForm, title_en: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
               </div>
+
+              {/* Blog Cover Image Section */}
+              <div className="flex flex-col gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                <label className="text-[11px] font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                  <span>🖼️</span>
+                  <span>ब्लॉगचा फोटो (Blog Cover Image)</span>
+                </label>
+
+                {/* Option 1: File Upload */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-500">
+                    १. संगणक किंवा मोबाईलवरून फोटो निवडा (Choose File):
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleBlogImageFileUpload}
+                    className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-brand-green-dark file:text-white hover:file:bg-brand-green-light cursor-pointer border border-slate-200 rounded-lg bg-white p-1"
+                  />
+                </div>
+
+                <div className="relative flex py-0.5 items-center">
+                  <div className="flex-grow border-t border-slate-200"></div>
+                  <span className="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">किंवा (OR)</span>
+                  <div className="flex-grow border-t border-slate-200"></div>
+                </div>
+
+                {/* Option 2: Image URL Path */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-500">
+                    २. फोटोची वेब URL किंवा पाथ (Image URL / Path):
+                  </label>
+                  <input
+                    type="text"
+                    value={blogForm.image}
+                    onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
+                    placeholder="https://images.unsplash.com/..."
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-brand-green-dark"
+                  />
+                </div>
+
+                {/* Live Image Preview */}
+                {blogForm.image && (
+                  <div className="flex items-center gap-3 mt-1 p-2 bg-white rounded-xl border border-slate-200 shadow-xs">
+                    <div className="w-14 h-14 rounded-lg bg-slate-50 p-1 flex items-center justify-center border border-slate-200 flex-shrink-0 overflow-hidden">
+                      <img
+                        src={blogForm.image}
+                        alt="Blog Preview"
+                        className="max-w-full max-h-full object-cover rounded"
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400'; }}
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-black text-brand-green-dark uppercase">फोटो प्रिव्ह्यू (Live Preview)</p>
+                      <p className="text-[10px] text-slate-500 truncate max-w-[210px]">{blogForm.image}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Excerpt (Marathi)</label>
                 <textarea rows="2" required value={blogForm.excerpt_mr} onChange={(e) => setBlogForm({...blogForm, excerpt_mr: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
               </div>
               <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Excerpt (English)</label>
+                <textarea rows="2" value={blogForm.excerpt_en} onChange={(e) => setBlogForm({...blogForm, excerpt_en: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
+              </div>
+              <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Full Content (Marathi)</label>
                 <textarea rows="4" required value={blogForm.content_mr} onChange={(e) => setBlogForm({...blogForm, content_mr: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
               </div>
-              <button type="submit" className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer">ब्लॉग सेव्ह करा (Save Blog)</button>
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Full Content (English)</label>
+                <textarea rows="4" value={blogForm.content_en} onChange={(e) => setBlogForm({...blogForm, content_en: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
+              </div>
+              <button type="submit" className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer transition-all shadow-md">ब्लॉग सेव्ह करा (Save Blog Post)</button>
             </form>
           </div>
 
