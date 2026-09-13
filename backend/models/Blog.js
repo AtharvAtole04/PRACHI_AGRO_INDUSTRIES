@@ -11,6 +11,7 @@ const blogSchema = new mongoose.Schema({
   category: { type: localizedStringSchema, default: {} },
   date: { type: String, default: () => new Date().toISOString().split('T')[0] },
   readTime: { type: String, default: '5 min read' },
+  youtubeUrl: { type: String, default: '' },
   image: { type: String, default: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400' },
   excerpt: { type: localizedStringSchema, default: {} },
   content: { type: localizedStringSchema, default: {} }

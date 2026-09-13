@@ -73,6 +73,7 @@ const Admin = () => {
     title_mr: '', title_en: '',
     category_mr: 'पीक मार्गदर्शन', category_en: 'Crop Guidance',
     readTime: '5 min read',
+    youtubeUrl: '',
     excerpt_mr: '', excerpt_en: '',
     content_mr: '', content_en: '',
     image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400'
@@ -450,6 +451,7 @@ const Admin = () => {
       title: { mr: blogForm.title_mr, en: blogForm.title_en },
       category: { mr: blogForm.category_mr, en: blogForm.category_en },
       readTime: blogForm.readTime,
+      youtubeUrl: blogForm.youtubeUrl,
       excerpt: { mr: blogForm.excerpt_mr, en: blogForm.excerpt_en },
       content: { mr: blogForm.content_mr, en: blogForm.content_en },
       image: blogForm.image,
@@ -461,6 +463,7 @@ const Admin = () => {
       title_mr: '', title_en: '',
       category_mr: 'पीक मार्गदर्शन', category_en: 'Crop Guidance',
       readTime: '5 min read',
+      youtubeUrl: '',
       excerpt_mr: '', excerpt_en: '',
       content_mr: '', content_en: '',
       image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400'
@@ -1474,6 +1477,24 @@ const Admin = () => {
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* YouTube Video Link Field */}
+              <div className="flex flex-col gap-1.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                <label className="text-[11px] font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                  <span>🎥</span>
+                  <span>युट्युब व्हिडिओ लिंक (YouTube Video Link - Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={blogForm.youtubeUrl}
+                  onChange={(e) => setBlogForm({ ...blogForm, youtubeUrl: e.target.value })}
+                  placeholder="उदा. https://www.youtube.com/watch?v=5jVj-wppI5E किंवा <iframe...>"
+                  className="border border-slate-200 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-brand-green-dark font-medium"
+                />
+                <p className="text-[10px] text-slate-400 font-bold">
+                  ही लिंक टाकल्यास ब्लॉग वाचताना सर्वात शेवटी युट्युब व्हिडिओ प्लेअर दिसेल.
+                </p>
               </div>
 
               <div className="flex flex-col gap-1">
