@@ -7,15 +7,34 @@ import { getBlogs } from '../data/blogs';
 const BlogDetail = () => {
   const { id } = useParams();
   const [blogsList, setBlogsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    getBlogs().then(data => setBlogsList(data));
+    let isMounted = true;
+    getBlogs().then(data => {
+      if (isMounted) {
+        setBlogsList(data);
+        setIsLoading(false);
+      }
+    }).catch(() => {
+      if (isMounted) setIsLoading(false);
+    });
+    return () => { isMounted = false; };
   }, []);
+
   const { t, language } = useLanguage();
 
   // Find blog by id or _id
   const blog = blogsList.find(b => b.id === id || b._id === id);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[400px] w-full flex items-center justify-center p-12">
+        <div className="w-12 h-12 border-4 border-brand-green-dark border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (!blog) {
     return (

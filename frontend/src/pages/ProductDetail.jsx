@@ -8,9 +8,21 @@ import { getProducts } from '../data/products';
 const ProductDetail = () => {
   const { id } = useParams();
   const [productsList, setProductsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    getProducts().then(data => setProductsList(data));
+    let isMounted = true;
+    getProducts().then(data => {
+      if (isMounted) {
+        setProductsList(data);
+        setIsLoading(false);
+      }
+    }).catch(() => {
+      if (isMounted) setIsLoading(false);
+    });
+    return () => { isMounted = false; };
   }, []);
+
   const { t, language } = useLanguage();
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -35,6 +47,14 @@ const ProductDetail = () => {
       setSelectedPack(safePackSizes[0]);
     }
   }, [product]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[400px] w-full flex items-center justify-center p-12">
+        <div className="w-12 h-12 border-4 border-brand-green-dark border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
