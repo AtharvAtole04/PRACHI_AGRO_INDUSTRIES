@@ -150,7 +150,10 @@ export const addVideo = async (video) => {
   const embedId = video.embedId || extractEmbedId(video.youtubeUrl);
   const formattedVideo = {
     ...video,
-    embedId: embedId
+    embedId: embedId,
+    thumbnail: video.thumbnail && !video.thumbnail.includes('photo-1592982537447') 
+      ? video.thumbnail 
+      : (embedId ? `https://i.ytimg.com/vi/${embedId}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=600')
   };
 
   let res;
@@ -196,7 +199,17 @@ export const deleteVideo = async (id) => {
 
 export function extractEmbedId(url) {
   if (!url) return '';
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2] && match[2].length === 11) ? match[2] : '';
+  const str = String(url).trim();
+  const matchSrc = str.match(/src=["']([^"']+)["']/i);
+  const targetUrl = matchSrc ? matchSrc[1] : str;
+
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/i;
+  const match = targetUrl.match(regExp);
+  if (match && match[2] && match[2].length === 11) {
+    return match[2];
+  }
+  if (targetUrl.length === 11) {
+    return targetUrl;
+  }
+  return '';
 }

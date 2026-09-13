@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag } from 'lucide-react';
+import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag, PlayCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../data/products';
@@ -585,7 +585,7 @@ const Admin = () => {
       )}
 
       {/* Quick Dashboard Stats Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div 
           onClick={() => setActiveTab('products')} 
           className={`p-4 rounded-2xl border transition-all cursor-pointer ${
@@ -617,6 +617,19 @@ const Admin = () => {
               </span>
             )}
           </div>
+        </div>
+
+        <div 
+          onClick={() => setActiveTab('videos')} 
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            activeTab === 'videos' ? 'bg-red-900 text-white border-red-800 shadow-md' : 'bg-white border-slate-200/80 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-red-300">व्हिडिऑज (Videos)</span>
+            <span className="text-lg">🎥</span>
+          </div>
+          <p className="text-2xl font-black mt-1">{videosList.length}</p>
         </div>
 
         <div 
@@ -657,7 +670,7 @@ const Admin = () => {
           }`}
         >
           <PlusCircle size={16} />
-          <span>१. उत्पादने मॅनेज करा (Products: {productsList.length})</span>
+          <span>१. उत्पादने (Products: {productsList.length})</span>
         </button>
 
         {/* Tab 2: Users & Dealers */}
@@ -671,7 +684,18 @@ const Admin = () => {
           <span>२. डीलर मंजुरी (Dealers: {usersList.length})</span>
         </button>
 
-        {/* Tab 3: Blogs */}
+        {/* Tab 3: Videos */}
+        <button
+          onClick={() => setActiveTab('videos')}
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'videos' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <Video size={16} />
+          <span>३. व्हिडिऑज (Videos: {videosList.length})</span>
+        </button>
+
+        {/* Tab 4: Blogs */}
         <button
           onClick={() => setActiveTab('blogs')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -679,10 +703,10 @@ const Admin = () => {
           }`}
         >
           <BookOpen size={16} />
-          <span>३. शेती सल्ला ब्लॉग्स (Blogs: {blogsList.length})</span>
+          <span>४. शेती सल्ला ब्लॉग्स (Blogs: {blogsList.length})</span>
         </button>
 
-        {/* Tab 4: Reviews */}
+        {/* Tab 5: Reviews */}
         <button
           onClick={() => setActiveTab('reviews')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -690,10 +714,10 @@ const Admin = () => {
           }`}
         >
           <Users size={16} />
-          <span>४. शेतकरी अभिप्राय (Reviews: {reviewsList.length})</span>
+          <span>५. शेतकरी अभिप्राय (Reviews: {reviewsList.length})</span>
         </button>
 
-        {/* Tab 5: CMS Content Settings */}
+        {/* Tab 6: CMS Content Settings */}
         <button
           onClick={() => setActiveTab('content')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -701,7 +725,7 @@ const Admin = () => {
           }`}
         >
           <Sparkles size={16} />
-          <span>५. साइट नोटीस सेटिंग्ज (Site Content)</span>
+          <span>६. साइट नोटीस (Site Content)</span>
         </button>
       </div>
 
@@ -1398,6 +1422,171 @@ const Admin = () => {
             </div>
           </div>
 
+        </div>
+      )}
+
+
+
+      {/* ============================================================ */}
+      {/* 5. Tab Contents: VIDEOS                                       */}
+      {/* ============================================================ */}
+      {activeTab === 'videos' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Add Video Form */}
+          <div className="lg:col-span-5 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center gap-2">
+              <Video className="text-red-600" size={18} />
+              <span>नवीन युट्युब व्हिडिओ जोडा (Add YouTube Video)</span>
+            </h2>
+            
+            <form onSubmit={handleVideoSubmit} className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Video Title (Marathi)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="उदा. AGRISULF सल्फर २०% चे फायदे"
+                  value={videoForm.title_mr}
+                  onChange={(e) => setVideoForm({ ...videoForm, title_mr: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Video Title (English)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. AGRISULF Sulphur 20% Benefits Guide"
+                  value={videoForm.title_en}
+                  onChange={(e) => setVideoForm({ ...videoForm, title_en: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crop (Marathi)</label>
+                  <input
+                    type="text"
+                    placeholder="उदा. सोयाबीन, कांदा"
+                    value={videoForm.crop_mr}
+                    onChange={(e) => setVideoForm({ ...videoForm, crop_mr: e.target.value })}
+                    className="border border-slate-200 rounded p-2 text-xs"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crop (English)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Soybean, Onion"
+                    value={videoForm.crop_en}
+                    onChange={(e) => setVideoForm({ ...videoForm, crop_en: e.target.value })}
+                    className="border border-slate-200 rounded p-2 text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Category</label>
+                  <select
+                    value={videoForm.category_mr}
+                    onChange={(e) => setVideoForm({ ...videoForm, category_mr: e.target.value, category_en: e.target.value === 'उत्पादन माहिती' ? 'Product Info' : 'Crop Guidance' })}
+                    className="border border-slate-200 rounded p-2 text-xs bg-white"
+                  >
+                    <option value="पीक मार्गदर्शन">पीक मार्गदर्शन (Crop Guidance)</option>
+                    <option value="उत्पादन माहिती">उत्पादन माहिती (Product Info)</option>
+                    <option value="शेतकरी मार्गदर्शन">शेतकरी मार्गदर्शन (Farmer Guidance)</option>
+                    <option value="कीड व रोग व्यवस्थापन">कीड व रोग व्यवस्थापन (Pest & Disease)</option>
+                    <option value="खत व्यवस्थापन">खत व्यवस्थापन (Fertilizer)</option>
+                    <option value="प्राची अॅग्रो उत्पादने">प्राची अॅग्रो उत्पादने (Prachi Products)</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Duration (e.g. 08:15)</label>
+                  <input
+                    type="text"
+                    placeholder="08:15"
+                    value={videoForm.duration}
+                    onChange={(e) => setVideoForm({ ...videoForm, duration: e.target.value })}
+                    className="border border-slate-200 rounded p-2 text-xs"
+                  />
+                </div>
+              </div>
+
+              {/* YouTube Video Link Input */}
+              <div className="flex flex-col gap-1.5 bg-red-50/50 p-3.5 rounded-2xl border border-red-200/60">
+                <label className="text-[11px] font-black text-red-700 uppercase tracking-wide flex items-center gap-1.5">
+                  <span>🎥</span>
+                  <span>युट्युब व्हिडिओ लिंक (YouTube URL or Embed Code)</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={videoForm.youtubeUrl}
+                  onChange={(e) => setVideoForm({ ...videoForm, youtubeUrl: e.target.value })}
+                  placeholder="https://www.youtube.com/watch?v=ScMzIvxBSi4 किंवा <iframe...>"
+                  className="border border-slate-200 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-red-500 font-medium"
+                />
+                <p className="text-[10px] text-slate-500 font-bold">
+                  युट्युब वरील कोणतीही व्हिडिओ लिंक अथवा embed कोड येथे पेस्ट करा. व्हिडिओ गॅलरीमध्ये आपोआप प्ले होईल.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs py-2.5 rounded-xl cursor-pointer transition-all shadow-md flex items-center justify-center gap-1.5 mt-1"
+              >
+                <Video size={15} />
+                <span>व्हिडिओ जोडा (Save Video)</span>
+              </button>
+            </form>
+          </div>
+
+          {/* Videos Directory */}
+          <div className="lg:col-span-7 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center justify-between">
+              <span>व्हिडिओ सूची (Videos Directory: {videosList.length})</span>
+            </h2>
+            <div className="flex flex-col gap-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
+              {videosList.map((v) => {
+                const titleText = typeof v.title === 'object' ? (v.title[language] || v.title.mr || v.title.en) : v.title;
+                const embedId = v.embedId || extractEmbedId(v.youtubeUrl);
+
+                return (
+                  <div key={v.id || v._id} className="flex items-center justify-between p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center gap-3 min-w-0 pr-2">
+                      <div className="w-16 h-12 bg-slate-900 rounded-xl overflow-hidden flex-shrink-0 relative border border-slate-200">
+                        <img
+                          src={v.thumbnail || (embedId ? `https://i.ytimg.com/vi/${embedId}/hqdefault.jpg` : '')}
+                          alt={titleText}
+                          className="w-full h-full object-cover"
+                          onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400'; }}
+                        />
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <PlayCircle size={16} className="text-white fill-red-600" />
+                        </div>
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="font-black text-slate-800 text-xs truncate">{titleText}</h4>
+                        <p className="text-[10px] text-slate-400 font-bold mt-0.5">
+                          {typeof v.category === 'object' ? v.category[language] : v.category} • {typeof v.crop === 'object' ? v.crop[language] : v.crop}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteVideo(v.id || v._id)}
+                      className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer transition-colors flex-shrink-0"
+                      title="Delete Video"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 
