@@ -14,8 +14,8 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  const fetchProds = async () => {
-    setIsLoading(true);
+  const fetchProds = async (showLoading = true) => {
+    if (showLoading) setIsLoading(true);
     setIsError(false);
     try {
       const data = await getProducts();
@@ -28,14 +28,15 @@ const Products = () => {
       console.error("Failed to load products:", err);
       setIsError(true);
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProds();
-    window.addEventListener('prachi_products_updated', fetchProds);
-    return () => window.removeEventListener('prachi_products_updated', fetchProds);
+    fetchProds(true);
+    const handleUpdate = () => fetchProds(false);
+    window.addEventListener('prachi_products_updated', handleUpdate);
+    return () => window.removeEventListener('prachi_products_updated', handleUpdate);
   }, []);
   const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();

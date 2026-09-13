@@ -754,10 +754,10 @@ export const getLocalProducts = () => {
   }
 };
 
-export const saveProducts = async (array) => {
+export const saveProducts = async (array, triggerEvent = false) => {
   try {
     localStorage.setItem('prachi_products', JSON.stringify(array));
-    if (typeof window !== 'undefined') {
+    if (triggerEvent && typeof window !== 'undefined') {
       window.dispatchEvent(new Event('prachi_products_updated'));
     }
   } catch (err) {}
@@ -778,7 +778,7 @@ export const getProducts = async () => {
           id: p.id || p._id,
           _id: p._id || p.id
         }));
-        saveProducts(normalizedBackend);
+        saveProducts(normalizedBackend, false);
         return normalizedBackend;
       }
     }
@@ -827,7 +827,11 @@ export const addProduct = async (product) => {
     throw new Error(errorData.message || `Failed to save product in database (HTTP ${res.status})`);
   }
 
-  return await getProducts();
+  const updatedProds = await getProducts();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('prachi_products_updated'));
+  }
+  return updatedProds;
 };
 
 export const updateProduct = async (id, updatedProduct) => {
@@ -852,7 +856,11 @@ export const updateProduct = async (id, updatedProduct) => {
     throw new Error(errorData.message || `Failed to update product in database (HTTP ${res.status})`);
   }
 
-  return await getProducts();
+  const updatedProds = await getProducts();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('prachi_products_updated'));
+  }
+  return updatedProds;
 };
 
 export const deleteProduct = async (id) => {
@@ -873,5 +881,9 @@ export const deleteProduct = async (id) => {
     throw new Error(errorData.message || `Failed to delete product from database (HTTP ${res.status})`);
   }
 
-  return await getProducts();
+  const updatedProds = await getProducts();
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('prachi_products_updated'));
+  }
+  return updatedProds;
 };
