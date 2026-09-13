@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Play, X, Percent, Sparkles, Sprout, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { getProducts } from '../data/products';
+import { getProducts, getLocalProducts } from '../data/products';
 import { categories } from '../data/categories';
 import { getReviews } from '../data/reviews';
 import { getVideos } from '../data/videos';
-import { getBlogs } from '../data/blogs';
+import { getBlogs, getLocalBlogs } from '../data/blogs';
 
 // Shared Components
 import HeroSlider from '../components/HeroSlider';
@@ -73,11 +73,11 @@ const Home = () => {
   const navigate = useNavigate();
   const [selectedVideo, setSelectedVideo] = useState(null);
 
-  // Dynamic States for localStorage datasets
-  const [productsList, setProductsList] = useState([]);
+  // Dynamic States initialized from local cache for instant 0ms page rendering
+  const [productsList, setProductsList] = useState(() => getLocalProducts());
   const [reviewsList, setReviewsList] = useState([]);
   const [videosList, setVideosList] = useState([]);
-  const [blogsList, setBlogsList] = useState([]);
+  const [blogsList, setBlogsList] = useState(() => getLocalBlogs());
 
   useEffect(() => {
     const fetchProds = () => getProducts().then(data => setProductsList(data));

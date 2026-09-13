@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Filter, X, Grid, List, SlidersHorizontal } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { getProducts } from '../data/products';
+import { getProducts, getLocalProducts } from '../data/products';
 import { categories } from '../data/categories';
 import ProductCard from '../components/ProductCard';
 import SEOHead from '../components/SEOHead';
@@ -10,8 +10,8 @@ import CropFinder from '../components/CropFinder';
 import ProductComparison from '../components/ProductComparison';
 
 const Products = () => {
-  const [productsList, setProductsList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [productsList, setProductsList] = useState(() => getLocalProducts());
+  const [isLoading, setIsLoading] = useState(() => getLocalProducts().length === 0);
   const [isError, setIsError] = useState(false);
 
   const fetchProds = async (showLoading = true) => {
@@ -33,7 +33,7 @@ const Products = () => {
   };
 
   useEffect(() => {
-    fetchProds(true);
+    fetchProds(getLocalProducts().length === 0);
     const handleUpdate = () => fetchProds(false);
     window.addEventListener('prachi_products_updated', handleUpdate);
     return () => window.removeEventListener('prachi_products_updated', handleUpdate);
