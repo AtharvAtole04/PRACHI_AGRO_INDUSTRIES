@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Tag, MessageCircle, Share2, Copy, Check } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, MessageCircle, Share2, Copy, Check, PlayCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getBlogs, getLocalBlogs } from '../data/blogs';
 import { apiUrl } from '../config';
+
+const getYouTubeEmbedUrl = (input) => {
+  if (!input || typeof input !== 'string') return null;
+  const matchSrc = input.match(/src=["']([^"']+)["']/i);
+  let url = matchSrc ? matchSrc[1] : input.trim();
+
+  const watchMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/i);
+  if (watchMatch && watchMatch[1]) {
+    return `https://www.youtube.com/embed/${watchMatch[1]}`;
+  }
+  if (url.includes('youtube.com/embed/')) return url;
+  return null;
+};
 
 const findMatchingBlog = (list, targetId) => {
   if (!list || !Array.isArray(list) || !targetId) return null;
@@ -267,6 +280,34 @@ const BlogDetail = () => {
           <div className="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line mt-4 flex flex-col gap-4">
             {t(blog.content)}
           </div>
+
+          {/* YouTube Video Player Embed */}
+          {(() => {
+            const youtubeEmbedUrl = getYouTubeEmbedUrl(
+              blog.youtubeUrl || blog.videoUrl || blog.embedUrl || (typeof blog.content === 'string' ? blog.content : blog.content?.mr || blog.content?.en || '')
+            );
+
+            if (!youtubeEmbedUrl) return null;
+
+            return (
+              <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-3">
+                <div className="flex items-center gap-2 text-slate-800 font-extrabold text-base sm:text-lg">
+                  <PlayCircle className="text-brand-magenta fill-brand-magenta/10" size={22} />
+                  <span>{language === 'mr' ? 'विशेष मार्गदर्शन व्हिडिओ (Watch Video):' : 'Featured Video Guide:'}</span>
+                </div>
+                <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-slate-900">
+                  <iframe
+                    src={youtubeEmbedUrl}
+                    title={t(blog.title)}
+                    className="w-full h-full border-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Bottom Share Bar */}
           <div className="pt-6 border-t border-slate-100 mt-6">

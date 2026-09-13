@@ -10,6 +10,7 @@ const defaultBlogs = [
     category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
     date: "2026-08-10",
     readTime: "5 min read",
+    youtubeUrl: "https://www.youtube.com/embed/5jVj-wppI5E?si=G42TSQT88dcqB_kU",
     image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400",
     excerpt: {
       mr: "पिकांवर बुरशीजन्य रोग आल्यास पानांवर डाग पडणे, पाने पिवळी पडणे किंवा वाळणे अशी लक्षणे दिसतात. या लेखात आपण बुरशीजन्य रोगांचे वेळेवर निदान कसे करावे हे पाहू.",
