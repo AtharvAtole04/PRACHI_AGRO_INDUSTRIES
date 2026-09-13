@@ -521,12 +521,6 @@ const Admin = () => {
             </p>
           </div>
 
-          <div className="bg-amber-50 border border-amber-100 p-3 rounded-lg text-left">
-            <p className="text-[10px] sm:text-xs text-amber-700 font-bold">
-              🔑 Demonstration Passcode: <span className="underline font-black text-sm">admin123</span>
-            </p>
-          </div>
-
           {loginError && (
             <div className="p-3 bg-red-50 text-red-600 rounded-lg text-xs font-bold">
               {loginError}
@@ -538,8 +532,8 @@ const Admin = () => {
               type="password"
               value={passcode}
               onChange={(e) => setPasscode(e.target.value)}
-              placeholder="पासकोड प्रविष्ट करा (e.g. admin123)..."
-              className="w-full text-center border border-slate-200 rounded-xl p-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-green-dark bg-slate-50/50"
+              placeholder={language === 'mr' ? 'पासकोड प्रविष्ट करा...' : 'Enter passcode...'}
+              className="w-full text-center border border-slate-200 rounded-xl p-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-green-dark bg-slate-50/50 font-bold"
             />
             <button
               type="submit"

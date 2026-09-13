@@ -29,16 +29,6 @@ const Login = () => {
     }
   };
 
-  const handleQuickAdminLogin = async () => {
-    setPasscode('admin123');
-    setLoading(true);
-    const res = await login('info@prachiagroindustries.in', 'admin123', 'admin');
-    setLoading(false);
-    if (res.success) {
-      navigate('/admin', { replace: true });
-    }
-  };
-
   return (
     <div className="flex flex-col items-center justify-center py-10 px-3 text-left max-w-md mx-auto">
       <SEOHead 
@@ -118,17 +108,6 @@ const Login = () => {
             </button>
 
           </form>
-
-          {/* Quick Demo Login Button */}
-          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-            <button
-              type="button"
-              onClick={handleQuickAdminLogin}
-              className="w-full bg-emerald-50 hover:bg-emerald-100 text-brand-green-dark border border-emerald-200 text-xs font-extrabold py-2.5 px-4 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-2"
-            >
-              <span>👑 1-Click Demo Admin Login (passcode: admin123)</span>
-            </button>
-          </div>
 
         </div>
 
