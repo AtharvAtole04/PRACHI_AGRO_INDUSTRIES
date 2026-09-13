@@ -39,10 +39,20 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+const normalizeLocalizedFields = (data) => {
+  const fields = ['tagline', 'shortDescription', 'description', 'crops', 'usage'];
+  fields.forEach(field => {
+    if (typeof data[field] === 'string') {
+      data[field] = { mr: data[field], en: data[field] };
+    }
+  });
+  return data;
+};
+
 // POST create product
 router.post('/', async (req, res) => {
   try {
-    const productData = { ...req.body };
+    const productData = normalizeLocalizedFields({ ...req.body });
     delete productData._id;
 
     if (!productData.id && productData.name) {
@@ -74,7 +84,7 @@ router.post('/', async (req, res) => {
 // PUT update product
 router.put('/:id', async (req, res) => {
   try {
-    const updateData = { ...req.body };
+    const updateData = normalizeLocalizedFields({ ...req.body });
     delete updateData._id; // Remove immutable _id field before update
 
     const updatedProduct = await Product.findOneAndUpdate(

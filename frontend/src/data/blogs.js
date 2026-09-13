@@ -155,7 +155,8 @@ export const addBlog = async (blog) => {
       body: JSON.stringify(blog)
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Blog API Error - Add Blog]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';
@@ -174,7 +175,8 @@ export const deleteBlog = async (id) => {
       method: 'DELETE'
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Blog API Error - Delete Blog]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';

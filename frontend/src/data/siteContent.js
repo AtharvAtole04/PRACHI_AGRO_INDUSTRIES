@@ -64,7 +64,8 @@ export const updateSiteContent = async (newContent) => {
       body: JSON.stringify(newContent)
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[SiteContent API Error - Update Content]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';

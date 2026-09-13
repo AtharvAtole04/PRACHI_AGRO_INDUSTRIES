@@ -20,12 +20,30 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/prachi_agro';
 
+// Allowed origins list
+const allowedOrigins = [
+  'https://www.prachiagroindustries.in',
+  'https://prachiagroindustries.in',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000'
+];
+
 // Middlewares
 app.use(cors({
-  origin: '*',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || origin.endsWith('.onrender.com')) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'X-Requested-With', 'Accept', 'Origin'],
+  credentials: true
 }));
+app.options('*', cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -71,6 +89,11 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
+// Healthcheck endpoint (Render / Uptime monitoring)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Root API Healthcheck status
 app.get('/api/status', (req, res) => {
   res.json({
@@ -99,7 +122,7 @@ if (frontendBuildPath) {
   
   // Fallback all other routing paths to index.html (React Router SPA Navigation)
   app.get('*', (req, res) => {
-    if (req.url.startsWith('/api')) {
+    if (req.url.startsWith('/api') || req.url.startsWith('/health')) {
       return res.status(404).json({ error: 'API endpoint not found' });
     }
     res.sendFile(path.join(frontendBuildPath, 'index.html'));
@@ -109,6 +132,7 @@ if (frontendBuildPath) {
   app.get('/', (req, res) => {
     res.json({
       message: 'Prachi Agro API Server is running.',
+      health: '/health',
       apiDocs: '/api/status',
       products: '/api/products',
       videos: '/api/videos'
@@ -116,7 +140,7 @@ if (frontendBuildPath) {
   });
 }
 
-// Boot listening
-app.listen(PORT, () => {
-  console.log(`Prachi Agro server is running and listening on http://localhost:${PORT}`);
+// Boot listening on 0.0.0.0 (Render requirement)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Prachi Agro server is running and listening on 0.0.0.0:${PORT}`);
 });

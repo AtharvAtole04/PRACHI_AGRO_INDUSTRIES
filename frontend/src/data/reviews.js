@@ -88,7 +88,8 @@ export const addReview = async (review) => {
       body: JSON.stringify(review)
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Review API Error - Add Review]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';
@@ -107,7 +108,8 @@ export const deleteReview = async (id) => {
       method: 'DELETE'
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Review API Error - Delete Review]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';

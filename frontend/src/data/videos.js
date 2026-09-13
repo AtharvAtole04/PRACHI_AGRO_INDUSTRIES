@@ -161,7 +161,8 @@ export const addVideo = async (video) => {
       body: JSON.stringify(formattedVideo)
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Video API Error - Add Video]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';
@@ -180,7 +181,8 @@ export const deleteVideo = async (id) => {
       method: 'DELETE'
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Video API Error - Delete Video]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';

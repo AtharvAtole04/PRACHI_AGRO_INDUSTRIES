@@ -817,7 +817,8 @@ export const addProduct = async (product) => {
       body: JSON.stringify(newProduct)
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Product API Error - Add Product]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';
@@ -841,7 +842,8 @@ export const updateProduct = async (id, updatedProduct) => {
       body: JSON.stringify(updatePayload)
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Product API Error - Update Product]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';
@@ -861,7 +863,8 @@ export const deleteProduct = async (id) => {
       headers: { 'Cache-Control': 'no-cache' }
     });
   } catch (err) {
-    throw new Error(`Failed to connect to backend server: ${err.message}`);
+    console.error('[Product API Error - Delete Product]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
   }
 
   const contentType = res.headers.get('content-type') || '';
