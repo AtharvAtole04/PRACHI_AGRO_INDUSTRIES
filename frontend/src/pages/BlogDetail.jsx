@@ -18,6 +18,15 @@ const getYouTubeEmbedUrl = (input) => {
   return null;
 };
 
+const cleanArticleContent = (text) => {
+  if (!text || typeof text !== 'string') return text;
+  return text
+    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+    .replace(/https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s\n<]+/gi, '')
+    .replace(/\n\s*\n\s*\n/g, '\n\n')
+    .trim();
+};
+
 const findMatchingBlog = (list, targetId) => {
   if (!list || !Array.isArray(list) || !targetId) return null;
   const rawTarget = String(targetId).trim();
@@ -278,7 +287,7 @@ const BlogDetail = () => {
 
           {/* Article Main Body */}
           <div className="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line mt-4 flex flex-col gap-4">
-            {t(blog.content)}
+            {cleanArticleContent(t(blog.content))}
           </div>
 
           {/* YouTube Video Player Embed */}
