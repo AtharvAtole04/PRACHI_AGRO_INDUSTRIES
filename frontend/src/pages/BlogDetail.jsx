@@ -25,10 +25,18 @@ const BlogDetail = () => {
 
   const { t, language } = useLanguage();
 
-  // Find blog by id or _id
-  const blog = blogsList.find(b => b.id === id || b._id === id);
+  // Find blog by id, _id, or slugified title (Marathi or English)
+  const blog = blogsList.find(b => 
+    b && (
+      b.id === id || 
+      b._id === id || 
+      (typeof b.title === 'string' && b.title.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim()) ||
+      (b.title?.en && b.title.en.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim()) ||
+      (b.title?.mr && b.title.mr.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim())
+    )
+  );
 
-  if (isLoading) {
+  if (isLoading && !blog) {
     return (
       <div className="min-h-[400px] w-full flex items-center justify-center p-12">
         <div className="w-12 h-12 border-4 border-brand-green-dark border-t-transparent rounded-full animate-spin"></div>
