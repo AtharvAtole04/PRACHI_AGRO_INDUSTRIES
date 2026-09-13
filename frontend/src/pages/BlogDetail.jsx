@@ -3,38 +3,82 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Tag, MessageCircle, Share2, Copy, Check } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getBlogs, getLocalBlogs } from '../data/blogs';
+import { apiUrl } from '../config';
+
+const findMatchingBlog = (list, targetId) => {
+  if (!list || !Array.isArray(list) || !targetId) return null;
+  const rawTarget = String(targetId).trim();
+  let decodedId = rawTarget;
+  try {
+    decodedId = decodeURIComponent(rawTarget).trim();
+  } catch (e) {}
+
+  const clean = (str) => String(str || '').toLowerCase().trim().replace(/[^a-z0-9\u0900-\u097F]+/g, '-').replace(/^-+|-+$/g, '');
+  const cleanTarget = clean(decodedId);
+
+  return list.find(b => {
+    if (!b) return false;
+    const bId = b.id ? String(b.id).trim() : '';
+    const bObjId = b._id ? String(b._id).trim() : '';
+
+    if (bId && (bId === rawTarget || bId === decodedId || bId.toLowerCase() === rawTarget.toLowerCase() || bId.toLowerCase() === decodedId.toLowerCase())) return true;
+    if (bObjId && (bObjId === rawTarget || bObjId === decodedId)) return true;
+
+    if (cleanTarget) {
+      if (bId && clean(bId) === cleanTarget) return true;
+      if (typeof b.title === 'string' && clean(b.title) === cleanTarget) return true;
+      if (b.title?.en && clean(b.title.en) === cleanTarget) return true;
+      if (b.title?.mr && clean(b.title.mr) === cleanTarget) return true;
+    }
+    return false;
+  });
+};
 
 const BlogDetail = () => {
   const { id } = useParams();
   const [blogsList, setBlogsList] = useState(() => getLocalBlogs());
-  const [isLoading, setIsLoading] = useState(() => getLocalBlogs().length === 0);
+  const initialFound = findMatchingBlog(getLocalBlogs(), id);
+  const [fetchedBlog, setFetchedBlog] = useState(null);
+  const [isLoading, setIsLoading] = useState(!initialFound);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
+    const foundInLocal = findMatchingBlog(blogsList, id);
+    if (!foundInLocal && !fetchedBlog) {
+      setIsLoading(true);
+    }
+
     getBlogs().then(data => {
-      if (isMounted) {
-        setBlogsList(data);
+      if (!isMounted) return;
+      setBlogsList(data);
+      const foundInApi = findMatchingBlog(data, id);
+      if (foundInApi) {
         setIsLoading(false);
+      } else {
+        // Fallback: fetch single blog by ID endpoint from backend
+        fetch(apiUrl(`/api/blogs/${encodeURIComponent(id)}`))
+          .then(res => res.ok ? res.json() : null)
+          .then(singleBlog => {
+            if (isMounted) {
+              if (singleBlog) setFetchedBlog(singleBlog);
+              setIsLoading(false);
+            }
+          })
+          .catch(() => {
+            if (isMounted) setIsLoading(false);
+          });
       }
     }).catch(() => {
       if (isMounted) setIsLoading(false);
     });
+
     return () => { isMounted = false; };
   }, [id]);
 
   const { t, language } = useLanguage();
 
-  // Find blog by id, _id, or slugified title (Marathi or English)
-  const blog = blogsList.find(b => 
-    b && (
-      b.id === id || 
-      b._id === id || 
-      (typeof b.title === 'string' && b.title.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim()) ||
-      (b.title?.en && b.title.en.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim()) ||
-      (b.title?.mr && b.title.mr.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim())
-    )
-  );
+  const blog = findMatchingBlog(blogsList, id) || fetchedBlog;
 
   if (isLoading && !blog) {
     return (

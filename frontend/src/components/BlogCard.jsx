@@ -5,7 +5,8 @@ import { useLanguage } from '../context/LanguageContext';
 
 const BlogCard = ({ blog }) => {
   const { t, language } = useLanguage();
-  const blogId = blog.id || blog._id;
+  const rawId = blog.id || blog._id || (typeof blog.title === 'string' ? blog.title : blog.title?.en || blog.title?.mr || 'post');
+  const blogId = encodeURIComponent(String(rawId).trim());
 
   return (
     <div className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group text-left">

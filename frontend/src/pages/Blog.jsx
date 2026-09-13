@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { getBlogs } from '../data/blogs';
+import { getBlogs, getLocalBlogs } from '../data/blogs';
 import BlogCard from '../components/BlogCard';
 
 const Blog = () => {
-  const [blogsList, setBlogsList] = useState([]);
+  const [blogsList, setBlogsList] = useState(() => getLocalBlogs());
+  const [isLoading, setIsLoading] = useState(() => getLocalBlogs().length === 0);
+
   useEffect(() => {
-    getBlogs().then(data => setBlogsList(data));
+    let isMounted = true;
+    getBlogs().then(data => {
+      if (isMounted) {
+        setBlogsList(data);
+        setIsLoading(false);
+      }
+    }).catch(() => {
+      if (isMounted) setIsLoading(false);
+    });
+    return () => { isMounted = false; };
   }, []);
   const { language } = useLanguage();
 
