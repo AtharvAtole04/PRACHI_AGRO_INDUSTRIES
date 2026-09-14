@@ -92,9 +92,39 @@ const Home = () => {
     return () => window.removeEventListener('prachi_products_updated', fetchProds);
   }, []);
 
-  // Filter popular and new products with fallback to list top items
-  const popularFiltered = productsList.filter(p => p.isPopular);
-  const popularProducts = popularFiltered.length >= 3 ? popularFiltered.slice(0, 6) : productsList.slice(0, 6);
+  // Home page featured product order: 1. Slurry Kit, 2. Fast Result, 3. Ok, 4. Top 10, 5. Kuber
+  const getHomeFeaturedProducts = (products) => {
+    if (!Array.isArray(products) || products.length === 0) return [];
+    const targets = ['slurry-kit', 'fast-result', 'ok', 'top-10', 'kuber'];
+    const featured = [];
+
+    targets.forEach(targetId => {
+      const found = products.find(p => {
+        const pId = (p.id || p._id || '').toLowerCase();
+        const pName = (p.name || '').toLowerCase();
+        if (targetId === 'slurry-kit') return pId.includes('slurry') || pName.includes('slurry');
+        if (targetId === 'fast-result') return pId.includes('fast-result') || pName.includes('fast result');
+        if (targetId === 'ok') return pId === 'ok' || pName.toLowerCase().startsWith('ok');
+        if (targetId === 'top-10') return pId.includes('top-10') || pName.includes('top 10');
+        if (targetId === 'kuber') return pId.includes('kuber') || pName.includes('kuber');
+        return pId === targetId;
+      });
+      if (found && !featured.some(f => (f.id || f._id) === (found.id || found._id))) {
+        featured.push(found);
+      }
+    });
+
+    products.forEach(p => {
+      const pKey = p.id || p._id;
+      if (!featured.some(f => (f.id || f._id) === pKey)) {
+        featured.push(p);
+      }
+    });
+
+    return featured;
+  };
+
+  const popularProducts = getHomeFeaturedProducts(productsList).slice(0, 6);
   const newProducts = productsList.filter(p => p.isNew).slice(0, 4);
   const specialOffers = productsList.filter(p => p.originalPrice > p.basePrice).slice(0, 3);
 
