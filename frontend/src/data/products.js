@@ -1,4 +1,4 @@
-import { apiUrl } from '../config';
+import { apiUrl, adminApiUrl } from '../config';
 
 const defaultProducts = [
   {
@@ -2525,7 +2525,7 @@ export const addProduct = async (product) => {
 
   let res;
   try {
-    res = await fetch(apiUrl('/api/products'), {
+    res = await fetch(adminApiUrl('/api/products'), {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json', 
@@ -2558,7 +2558,8 @@ export const updateProduct = async (id, updatedProduct) => {
 
   let res;
   try {
-    res = await fetch(apiUrl(`/api/products/${id}`), {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/products/${cleanId}`), {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json', 
@@ -2588,7 +2589,8 @@ export const updateProduct = async (id, updatedProduct) => {
 export const deleteProduct = async (id) => {
   let res;
   try {
-    res = await fetch(apiUrl(`/api/products/${id}`), {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/products/${cleanId}`), {
       method: 'DELETE',
       headers: { 
         'Cache-Control': 'no-cache',

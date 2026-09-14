@@ -1,4 +1,4 @@
-import { apiUrl } from '../config';
+import { apiUrl, adminApiUrl } from '../config';
 
 export const categories = [
   {
@@ -87,7 +87,7 @@ const getAuthHeaders = () => {
 export const addCategory = async (categoryData) => {
   let res;
   try {
-    res = await fetch(apiUrl('/api/categories'), {
+    res = await fetch(adminApiUrl('/api/categories'), {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -112,7 +112,8 @@ export const addCategory = async (categoryData) => {
 export const updateCategory = async (id, categoryData) => {
   let res;
   try {
-    res = await fetch(apiUrl(`/api/categories/${id}`), {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/categories/${cleanId}`), {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
@@ -137,7 +138,8 @@ export const updateCategory = async (id, categoryData) => {
 export const deleteCategory = async (id) => {
   let res;
   try {
-    res = await fetch(apiUrl(`/api/categories/${id}`), {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/categories/${cleanId}`), {
       method: 'DELETE',
       headers: {
         ...getAuthHeaders()
