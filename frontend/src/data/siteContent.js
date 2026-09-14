@@ -3,8 +3,8 @@ import { apiUrl } from '../config';
 export const defaultSiteContent = {
   key: 'main_content',
   publicAnnouncement: {
-    mr: '🌾 विशेष शेतकरी व डीलर सवलतींसाठी आजच लॉगिन करा! भरघोस उत्पादनाची हमी.',
-    en: '🌾 Login now for exclusive Farmer seasonal offers and Dealer wholesale discounts!',
+    mr: '🌾 विशेष शेतकरी व डीलर सवलतींसाठी आजच ऑर्डर करा! भरघोस उत्पादनाची हमी.',
+    en: '🌾 Order now for exclusive Farmer seasonal offers and Dealer wholesale discounts!',
     isActive: true
   },
   farmerNotice: {
