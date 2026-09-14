@@ -4,6 +4,10 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/api/products",
+      "destination": "/api/products"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://prachi-agro-industries.onrender.com/api/:path*"
     },
