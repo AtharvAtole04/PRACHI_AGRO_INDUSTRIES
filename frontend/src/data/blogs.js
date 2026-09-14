@@ -98,7 +98,14 @@ export const getLocalBlogs = () => {
   if (!data) return defaultBlogs;
   try {
     const parsed = JSON.parse(data);
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed.map(b => ({
+        ...b,
+        date: b.date || b.createdAt || new Date().toISOString(),
+        readTime: b.readTime || '5 min read',
+        image: b.image || 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=600'
+      }));
+    }
   } catch (e) {}
   return defaultBlogs;
 };
@@ -110,8 +117,14 @@ export const getBlogs = async () => {
     if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        saveBlogs(data);
-        return data;
+        const formatted = data.map(b => ({
+          ...b,
+          date: b.date || b.createdAt || new Date().toISOString(),
+          readTime: b.readTime || '5 min read',
+          image: b.image || 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=600'
+        }));
+        saveBlogs(formatted);
+        return formatted;
       }
     }
   } catch (err) {

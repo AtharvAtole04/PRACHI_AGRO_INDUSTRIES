@@ -259,11 +259,14 @@ const BlogDetail = () => {
           <div className="flex items-center gap-4 text-slate-400 text-xs sm:text-sm font-medium">
             <span className="flex items-center gap-1.5">
               <Calendar size={14} className="text-brand-magenta" />
-              {new Date(blog.date).toLocaleDateString(language === 'mr' ? 'mr-IN' : 'en-US', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-              })}
+              {(() => {
+                try {
+                  const d = new Date(blog.date || blog.createdAt || Date.now());
+                  return isNaN(d.getTime()) ? '14 सप्टेंबर २०२६' : d.toLocaleDateString(language === 'mr' ? 'mr-IN' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+                } catch {
+                  return '14 सप्टेंबर २०२६';
+                }
+              })()}
             </span>
             <span className="text-slate-200">|</span>
             <span className="flex items-center gap-1.5">

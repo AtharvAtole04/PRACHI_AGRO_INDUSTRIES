@@ -35,11 +35,14 @@ const BlogCard = ({ blog }) => {
         <div className="flex items-center gap-4 text-slate-400 text-xs mb-3 font-medium">
           <span className="flex items-center gap-1">
             <Calendar size={12} />
-            {new Date(blog.date).toLocaleDateString(language === 'mr' ? 'mr-IN' : 'en-US', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric'
-            })}
+            {(() => {
+              try {
+                const d = new Date(blog.date || blog.createdAt || Date.now());
+                return isNaN(d.getTime()) ? '14 Sep 2026' : d.toLocaleDateString(language === 'mr' ? 'mr-IN' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+              } catch {
+                return '14 Sep 2026';
+              }
+            })()}
           </span>
           <span className="flex items-center gap-1">
             <Clock size={12} />
