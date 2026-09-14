@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Play, X, Percent, Sparkles, Sprout, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Play, X, Percent, Sparkles, Sprout, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getProducts, getLocalProducts } from '../data/products';
 import { getCategories, getLocalCategories } from '../data/categories';
@@ -357,21 +357,52 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 10. Farmer Testimonials */}
+      {/* 10. Farmer Testimonials (Horizontally Slidable Carousel) */}
       <section>
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
-            {t('farmerTrust')}
-          </h2>
-          <div className="h-1 w-16 bg-brand-magenta mx-auto mt-2.5 rounded-full" />
-          <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-            {language === 'mr' ? 'प्राची अॅग्रो उत्पादने वापरणाऱ्या समाधानी शेतकऱ्यांचे अनुभव' : 'Verified testimonials from progressive farmers'}
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div className="text-left">
+            <h2 className="text-2xl md:text-3xl font-black text-brand-green-dark tracking-tight">
+              {t('farmerTrust')}
+            </h2>
+            <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
+            <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
+              {language === 'mr' ? 'प्राची अॅग्रो उत्पादने वापरणाऱ्या समाधानी शेतकऱ्यांचे अनुभव (स्वाइप करा)' : 'Verified testimonials from progressive farmers (Slide to view)'}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <button
+              onClick={() => {
+                document.getElementById('home-reviews-carousel')?.scrollBy({ left: -320, behavior: 'smooth' });
+              }}
+              className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-emerald-50 hover:text-brand-green-dark shadow-xs cursor-pointer transition-all"
+              title="मागे सरकवा (Slide Left)"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={() => {
+                document.getElementById('home-reviews-carousel')?.scrollBy({ left: 320, behavior: 'smooth' });
+              }}
+              className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-emerald-50 hover:text-brand-green-dark shadow-xs cursor-pointer transition-all"
+              title="पुढे सरकवा (Slide Right)"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviewsList.slice(0, 3).map((review) => (
-            <FarmerReviewCard key={review.id} review={review} />
+        <div 
+          id="home-reviews-carousel" 
+          className="flex overflow-x-auto gap-5 pb-4 pt-1 snap-x snap-mandatory scroll-smooth touch-pan-x custom-scrollbar"
+        >
+          {reviewsList.map((review) => (
+            <div 
+              key={review.id || review._id} 
+              className="min-w-[280px] sm:min-w-[340px] md:min-w-[380px] flex-shrink-0 snap-start flex flex-col"
+            >
+              <FarmerReviewCard review={review} />
+            </div>
           ))}
         </div>
       </section>
