@@ -25,6 +25,7 @@ const productSchema = new mongoose.Schema({
   rating: { type: Number, default: 4.8 },
   reviewsCount: { type: Number, default: 12 },
   crops: { type: localizedStringSchema, default: {} },
+  associatedCrops: { type: [String], default: [] },
   benefits: {
     mr: { type: [String], default: [] },
     en: { type: [String], default: [] }

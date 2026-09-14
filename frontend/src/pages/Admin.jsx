@@ -9,6 +9,7 @@ import { getVideos, addVideo, deleteVideo } from '../data/videos';
 import { getBlogs, addBlog, deleteBlog } from '../data/blogs';
 import { getReviews, addReview, deleteReview } from '../data/reviews';
 import { getSiteContent, updateSiteContent, defaultSiteContent } from '../data/siteContent';
+import { getCrops, addCrop, deleteCrop } from '../data/crops';
 import { apiUrl } from '../config';
 import SEOHead from '../components/SEOHead';
 
@@ -38,6 +39,7 @@ const Admin = () => {
   // Database lists
   const [productsList, setProductsList] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
+  const [cropsList, setCropsList] = useState([]);
   const [videosList, setVideosList] = useState([]);
   const [blogsList, setBlogsList] = useState([]);
   const [reviewsList, setReviewsList] = useState([]);
@@ -45,6 +47,13 @@ const Admin = () => {
 
   // CMS Content state
   const [siteContent, setSiteContent] = useState(defaultSiteContent);
+
+  // Form states for Crops
+  const [cropForm, setCropForm] = useState({
+    name_mr: '', name_en: '',
+    logo: '🧅',
+    tag_mr: '', tag_en: ''
+  });
 
   // Form states for Categories
   const [categoryForm, setCategoryForm] = useState({
@@ -68,6 +77,7 @@ const Admin = () => {
       { size: '250 ml', price: '', originalPrice: '' }
     ],
     crops_mr: '', crops_en: '',
+    associatedCrops: [],
     benefit1_mr: '', benefit1_en: '',
     benefit2_mr: '', benefit2_en: '',
     usage_mr: '', usage_en: '',
@@ -124,11 +134,44 @@ const Admin = () => {
   const loadAllData = () => {
     getProducts().then(data => setProductsList(data));
     getCategories().then(data => setCategoriesList(data));
+    getCrops().then(data => setCropsList(data));
     getVideos().then(data => setVideosList(data));
     getBlogs().then(data => setBlogsList(data));
     getReviews().then(data => setReviewsList(data));
     getSiteContent().then(data => setSiteContent(data));
     loadUsers();
+  };
+
+  // Crop CRUD Handlers
+  const handleCropSubmit = async (e) => {
+    e.preventDefault();
+    if (!cropForm.name_mr && !cropForm.name_en) {
+      alert(language === 'mr' ? 'कृपया पिकाचे नाव प्रविष्ट करा.' : 'Please enter crop name.');
+      return;
+    }
+
+    const cropData = {
+      name: { mr: cropForm.name_mr || cropForm.name_en, en: cropForm.name_en || cropForm.name_mr },
+      logo: cropForm.logo || '🌱',
+      tag: { mr: cropForm.tag_mr || '', en: cropForm.tag_en || '' }
+    };
+
+    try {
+      await addCrop(cropData);
+      setSuccessMsg(language === 'mr' ? 'नवीन पीक यशस्वीरित्या जोडले!' : 'Crop added successfully!');
+      setCropForm({ name_mr: '', name_en: '', logo: '🧅', tag_mr: '', tag_en: '' });
+      loadAllData();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      alert(err.message || 'Failed to save crop');
+    }
+  };
+
+  const handleDeleteCrop = async (id) => {
+    if (window.confirm(language === 'mr' ? 'हे पीक हटवायचे आहे का?' : 'Delete this crop?')) {
+      await deleteCrop(id);
+      loadAllData();
+    }
   };
 
   // Category CRUD Handlers
@@ -465,6 +508,7 @@ const Admin = () => {
       rating: 4.8,
       reviewsCount: 12,
       crops: { mr: cropsMr, en: cropsEn },
+      associatedCrops: Array.isArray(productForm.associatedCrops) ? productForm.associatedCrops : [],
       benefits: {
         mr: [productForm.benefit1_mr, productForm.benefit2_mr].filter(Boolean),
         en: [productForm.benefit1_en, productForm.benefit2_en].filter(Boolean)
@@ -519,6 +563,9 @@ const Admin = () => {
       basePrice: prod.basePrice !== undefined ? prod.basePrice : '',
       originalPrice: prod.originalPrice || '',
       packSizes: loadedPacks,
+      crops_mr: prod.crops?.mr || (typeof prod.crops === 'string' ? prod.crops : '') || '',
+      crops_en: prod.crops?.en || '',
+      associatedCrops: Array.isArray(prod.associatedCrops) ? prod.associatedCrops : [],
       usage_mr: prod.usage?.mr || '', usage_en: prod.usage?.en || '',
       image: prod.image
     });
@@ -550,6 +597,7 @@ const Admin = () => {
         { size: '250 ml', price: '', originalPrice: '' }
       ],
       crops_mr: '', crops_en: '',
+      associatedCrops: [],
       benefit1_mr: '', benefit1_en: '',
       benefit2_mr: '', benefit2_en: '',
       usage_mr: '', usage_en: '',
@@ -867,7 +915,7 @@ const Admin = () => {
       )}
 
       {/* Quick Dashboard Stats Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-7 gap-3">
         <div 
           onClick={() => setActiveTab('products')} 
           className={`p-4 rounded-2xl border transition-all cursor-pointer ${
@@ -892,6 +940,19 @@ const Admin = () => {
             <span className="text-lg">🏷️</span>
           </div>
           <p className="text-2xl font-black mt-1">{categoriesList.length}</p>
+        </div>
+
+        <div 
+          onClick={() => setActiveTab('crops')} 
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            activeTab === 'crops' ? 'bg-green-900 text-white border-green-800 shadow-md' : 'bg-white border-slate-200/80 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-green-300">पिके (Crops)</span>
+            <span className="text-lg">🌾</span>
+          </div>
+          <p className="text-2xl font-black mt-1">{cropsList.length}</p>
         </div>
 
         <div 
@@ -979,7 +1040,18 @@ const Admin = () => {
           <span>२. श्रेण्या (Categories: {categoriesList.length})</span>
         </button>
 
-        {/* Tab 3: Users & Dealers */}
+        {/* Tab 3: Crops Management */}
+        <button
+          onClick={() => setActiveTab('crops')}
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'crops' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <Sparkles size={16} />
+          <span>३. पीक व्यवस्थापन (Crops: {cropsList.length})</span>
+        </button>
+
+        {/* Tab 4: Users & Dealers */}
         <button
           onClick={() => setActiveTab('users')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -987,10 +1059,10 @@ const Admin = () => {
           }`}
         >
           <UserCheck size={16} />
-          <span>३. डीलर मंजुरी (Dealers: {usersList.length})</span>
+          <span>४. डीलर मंजुरी (Dealers: {usersList.length})</span>
         </button>
 
-        {/* Tab 4: Videos */}
+        {/* Tab 5: Videos */}
         <button
           onClick={() => setActiveTab('videos')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -998,10 +1070,10 @@ const Admin = () => {
           }`}
         >
           <Video size={16} />
-          <span>४. व्हिडिऑज (Videos: {videosList.length})</span>
+          <span>५. व्हिडिऑज (Videos: {videosList.length})</span>
         </button>
 
-        {/* Tab 5: Blogs */}
+        {/* Tab 6: Blogs */}
         <button
           onClick={() => setActiveTab('blogs')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -1009,10 +1081,10 @@ const Admin = () => {
           }`}
         >
           <BookOpen size={16} />
-          <span>५. ब्लॉग्स (Blogs: {blogsList.length})</span>
+          <span>६. ब्लॉग्स (Blogs: {blogsList.length})</span>
         </button>
 
-        {/* Tab 6: Reviews */}
+        {/* Tab 7: Reviews */}
         <button
           onClick={() => setActiveTab('reviews')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -1020,10 +1092,10 @@ const Admin = () => {
           }`}
         >
           <Users size={16} />
-          <span>६. अभिप्राय (Reviews: {reviewsList.length})</span>
+          <span>७. अभिप्राय (Reviews: {reviewsList.length})</span>
         </button>
 
-        {/* Tab 7: CMS Content Settings */}
+        {/* Tab 8: CMS Content Settings */}
         <button
           onClick={() => setActiveTab('content')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -1031,7 +1103,7 @@ const Admin = () => {
           }`}
         >
           <Sparkles size={16} />
-          <span>७. साइट नोटीस व अबाउट (Content CMS)</span>
+          <span>८. साइट नोटीस व अबाउट (Content CMS)</span>
         </button>
       </div>
 
@@ -2356,14 +2428,56 @@ const Admin = () => {
                 ))}
               </div>
 
-              {/* Crops */}
+              {/* Associated Crops Multi-Select */}
+              <div className="flex flex-col gap-2 bg-emerald-50/60 p-3.5 rounded-2xl border border-emerald-200">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                    <span>🌾</span>
+                    <span>उपयुक्त पिके (Select Multiple Associated Crops)</span>
+                  </label>
+                  <span className="text-[10px] bg-emerald-100 text-brand-green-dark font-extrabold px-2 py-0.5 rounded-full">
+                    {(productForm.associatedCrops || []).length} पिके निवडलेली
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-500 font-bold">
+                  या उत्पादनासाठी एक किंवा एकापेक्षा जास्त पिके निवडा. ग्राहक पिकांवर क्लिक केल्यावर हे उत्पादन दिसेल.
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-44 overflow-y-auto custom-scrollbar p-1">
+                  {cropsList.map(c => {
+                    const cropKey = c.id || c.tag?.en || c.name?.en || c.name?.mr;
+                    const isChecked = (productForm.associatedCrops || []).includes(cropKey);
+                    const cropName = c.name?.[language] || c.name?.mr || c.name?.en || c.id;
+                    return (
+                      <label key={c.id || c._id} className={`flex items-center gap-2 p-2 rounded-xl border text-xs font-bold cursor-pointer transition-colors ${isChecked ? 'bg-emerald-100 border-emerald-400 text-brand-green-dark' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const current = productForm.associatedCrops || [];
+                            if (e.target.checked) {
+                              setProductForm({ ...productForm, associatedCrops: [...current, cropKey] });
+                            } else {
+                              setProductForm({ ...productForm, associatedCrops: current.filter(k => k !== cropKey) });
+                            }
+                          }}
+                          className="rounded text-brand-green-dark focus:ring-emerald-500 cursor-pointer"
+                        />
+                        <span className="text-sm flex-shrink-0">{c.logo || '🌱'}</span>
+                        <span className="truncate">{cropName}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Crops Description Text */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops (Marathi - ऐच्छिक)</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops Detail Text (Marathi - ऐच्छिक)</label>
                   <input type="text" value={productForm.crops_mr} onChange={(e) => setProductForm({ ...productForm, crops_mr: e.target.value })} placeholder="कापूस, सोयाबीन, कांदा" className="border border-slate-200 rounded p-2 text-xs" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops (English - Optional)</label>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crops Detail Text (English - Optional)</label>
                   <input type="text" value={productForm.crops_en} onChange={(e) => setProductForm({ ...productForm, crops_en: e.target.value })} placeholder="Cotton, Soybean, Onion" className="border border-slate-200 rounded p-2 text-xs" />
                 </div>
               </div>
@@ -2670,6 +2784,142 @@ const Admin = () => {
                         <Trash2 size={15} />
                       </button>
                     </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* 3. Tab Contents: CROPS MANAGEMENT                            */}
+      {/* ============================================================ */}
+      {activeTab === 'crops' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Add Crop Form */}
+          <div className="lg:col-span-5 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center gap-2">
+              <Sparkles className="text-emerald-600" size={18} />
+              <span>नवीन पीक जोडा (Add New Crop)</span>
+            </h2>
+
+            <form onSubmit={handleCropSubmit} className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Crop Name (Marathi)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="उदा. सोयाबीन (Soybean)"
+                  value={cropForm.name_mr}
+                  onChange={(e) => setCropForm({ ...cropForm, name_mr: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Crop Name (English)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Soybean"
+                  value={cropForm.name_en}
+                  onChange={(e) => setCropForm({ ...cropForm, name_en: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Crop Logo Emoji / Icon</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    required
+                    placeholder="उदा. 🫘, 🧅, 🎋, 🌾"
+                    value={cropForm.logo}
+                    onChange={(e) => setCropForm({ ...cropForm, logo: e.target.value })}
+                    className="border border-slate-200 rounded p-2 text-xs flex-1 font-extrabold text-center text-lg"
+                  />
+                  <div className="flex items-center justify-center border border-slate-200 rounded p-2 text-xl bg-slate-50 w-12">
+                    {cropForm.logo || '🌱'}
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {['🧅', '🎋', '🍅', '🍈', '🌶️', '🌿', '🫘', '🍎', '🍌', '🍇', '🌾', '🌽', '🥭'].map(emoji => (
+                    <button
+                      key={emoji}
+                      type="button"
+                      onClick={() => setCropForm({ ...cropForm, logo: emoji })}
+                      className="p-1 text-sm bg-slate-50 hover:bg-emerald-100 rounded border border-slate-200 cursor-pointer"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Feature Tag / Solution (Marathi)</label>
+                <input
+                  type="text"
+                  placeholder="उदा. शेंगांची संख्या व दाणे भरणी"
+                  value={cropForm.tag_mr}
+                  onChange={(e) => setCropForm({ ...cropForm, tag_mr: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Feature Tag / Solution (English)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Pod formation & grain filling"
+                  value={cropForm.tag_en}
+                  onChange={(e) => setCropForm({ ...cropForm, tag_en: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-xl cursor-pointer transition-all shadow-md flex items-center justify-center gap-1.5 mt-2"
+              >
+                <Plus size={15} />
+                <span>पीक जोडा (Save Crop)</span>
+              </button>
+            </form>
+          </div>
+
+          {/* Crops Directory */}
+          <div className="lg:col-span-7 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center justify-between">
+              <span>उपलब्ध पिके (Crops Directory: {cropsList.length})</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
+              {cropsList.map((crop) => {
+                const nameText = crop.name?.[language] || crop.name?.mr || crop.name?.en || crop.id;
+                const tagText = crop.tag?.[language] || crop.tag?.mr || crop.tag?.en;
+
+                return (
+                  <div key={crop.id || crop._id} className="flex items-center justify-between p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors bg-white shadow-xs">
+                    <div className="flex items-center gap-3 min-w-0 pr-2">
+                      <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0 border border-emerald-100 text-xl">
+                        {crop.logo || '🌱'}
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="font-black text-slate-800 text-xs truncate">{nameText}</h4>
+                        {tagText && (
+                          <p className="text-[10px] text-brand-magenta font-bold truncate max-w-xs mt-0.5">{tagText}</p>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteCrop(crop.id || crop._id)}
+                      className="p-1.5 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
+                      title="Delete Crop"
+                    >
+                      <Trash2 size={15} />
+                    </button>
                   </div>
                 );
               })}

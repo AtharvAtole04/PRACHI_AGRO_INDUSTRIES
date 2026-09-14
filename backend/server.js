@@ -14,6 +14,7 @@ import reviewRouter from './routes/reviews.js';
 import authRouter from './routes/auth.js';
 import contentRouter from './routes/content.js';
 import categoryRouter from './routes/categories.js';
+import cropRouter from './routes/crops.js';
 
 dotenv.config();
 
@@ -74,6 +75,7 @@ mongoose.connect(MONGODB_URI)
 app.use('/api/auth', authRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/crops', cropRouter);
 app.use('/api/products', productRouter);
 app.use('/api/videos', videoRouter);
 app.use('/api/blogs', blogRouter);

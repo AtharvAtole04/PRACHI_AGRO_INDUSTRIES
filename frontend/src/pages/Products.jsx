@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Filter, X, Grid, List, SlidersHorizontal } from 'lucide-react';
+import { Filter, X, Grid, List, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getProducts, getLocalProducts } from '../data/products';
 import { getCategories, getLocalCategories } from '../data/categories';
+import { getCrops, getLocalCrops } from '../data/crops';
 import ProductCard from '../components/ProductCard';
 import SEOHead from '../components/SEOHead';
 import CropFinder from '../components/CropFinder';
@@ -12,6 +13,7 @@ import ProductComparison from '../components/ProductComparison';
 const Products = () => {
   const [productsList, setProductsList] = useState(() => getLocalProducts());
   const [categoriesList, setCategoriesList] = useState(() => getLocalCategories());
+  const [cropsList, setCropsList] = useState(() => getLocalCrops());
   const [isLoading, setIsLoading] = useState(() => getLocalProducts().length === 0);
   const [isError, setIsError] = useState(false);
 
@@ -38,25 +40,33 @@ const Products = () => {
     getCategories().then(data => {
       if (Array.isArray(data)) setCategoriesList(data);
     });
+    getCrops().then(data => {
+      if (Array.isArray(data)) setCropsList(data);
+    });
+
     const handleUpdate = () => fetchProds(false);
+    const handleCropsUpdate = () => getCrops().then(data => setCropsList(data));
     window.addEventListener('prachi_products_updated', handleUpdate);
-    return () => window.removeEventListener('prachi_products_updated', handleUpdate);
+    window.addEventListener('prachi_crops_updated', handleCropsUpdate);
+    return () => {
+      window.removeEventListener('prachi_products_updated', handleUpdate);
+      window.removeEventListener('prachi_crops_updated', handleCropsUpdate);
+    };
   }, []);
+
   const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   
   // URL queries
   const initialSearch = searchParams.get('search') || '';
   const initialCategory = searchParams.get('category') || '';
+  const initialCrop = searchParams.get('crop') || '';
   const initialFilter = searchParams.get('filter') || ''; // 'popular', 'new', 'offers'
-
-  // Calculate dynamic highest price limit across all products (default minimum 50,000)
-  const highestProductPrice = Math.max(50000, ...productsList.map(p => Number(p.basePrice) || 0));
 
   // Local state
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [maxPrice, setMaxPrice] = useState(50000);
+  const [selectedCrop, setSelectedCrop] = useState(initialCrop);
   const [sortBy, setSortBy] = useState('popularity');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
@@ -82,23 +92,29 @@ const Products = () => {
   useEffect(() => {
     setSearchQuery(searchParams.get('search') || '');
     setSelectedCategory(searchParams.get('category') || '');
+    setSelectedCrop(searchParams.get('crop') || '');
   }, [searchParams]);
-
-  // Keep maxPrice aligned with actual products catalog upper bound
-  useEffect(() => {
-    if (highestProductPrice > maxPrice) {
-      setMaxPrice(highestProductPrice);
-    }
-  }, [highestProductPrice]);
 
   // Handle resetting filters
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedCategory('');
-    setMaxPrice(highestProductPrice);
+    setSelectedCrop('');
     setSortBy('popularity');
     setVisibleCount(12);
     setSearchParams({});
+  };
+
+  const handleCropSelect = (cropId) => {
+    setSelectedCrop(cropId);
+    setSearchParams(params => {
+      if (cropId) {
+        params.set('crop', cropId);
+      } else {
+        params.delete('crop');
+      }
+      return params;
+    });
   };
 
   // Filter and Sort Logic
@@ -111,19 +127,14 @@ const Products = () => {
         const q = searchQuery.trim().toLowerCase();
         
         const name = (product.name || '').toLowerCase();
-        
         const taglineMr = (product.tagline?.mr || (typeof product.tagline === 'string' ? product.tagline : '') || '').toLowerCase();
         const taglineEn = (product.tagline?.en || '').toLowerCase();
-
         const shortDescMr = (product.shortDescription?.mr || (typeof product.shortDescription === 'string' ? product.shortDescription : '') || '').toLowerCase();
         const shortDescEn = (product.shortDescription?.en || '').toLowerCase();
-
         const descMr = (product.description?.mr || (typeof product.description === 'string' ? product.description : '') || '').toLowerCase();
         const descEn = (product.description?.en || '').toLowerCase();
-
         const cropsMr = (product.crops?.mr || (typeof product.crops === 'string' ? product.crops : '') || '').toLowerCase();
         const cropsEn = (product.crops?.en || '').toLowerCase();
-
         const category = (product.category || '').toLowerCase();
 
         const isMatch = name.includes(q) || 
@@ -145,9 +156,23 @@ const Products = () => {
         return false;
       }
 
-      // 3. Price Filter (checking basePrice)
-      if (maxPrice > 0 && product.basePrice > maxPrice) {
-        return false;
+      // 3. Crop Match
+      if (selectedCrop) {
+        const cTarget = selectedCrop.toLowerCase();
+        
+        // Check associatedCrops array first
+        const hasAssociatedMatch = Array.isArray(product.associatedCrops) && product.associatedCrops.some(ac => {
+          const k = String(ac).toLowerCase();
+          return k === cTarget || cTarget.includes(k) || k.includes(cTarget);
+        });
+
+        const cropsMr = (product.crops?.mr || (typeof product.crops === 'string' ? product.crops : '') || '').toLowerCase();
+        const cropsEn = (product.crops?.en || '').toLowerCase();
+        const textMatch = cropsMr.includes(cTarget) || cropsEn.includes(cTarget);
+
+        if (!hasAssociatedMatch && !textMatch) {
+          return false;
+        }
       }
 
       // 4. Special Promo filter (from URL)
@@ -310,24 +335,47 @@ const Products = () => {
             </div>
           </div>
 
-          {/* Price Range Slider */}
+          {/* Crops filter */}
           <div>
-            <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 flex justify-between">
-              <span>किंमत (Max Price)</span>
-              <span className="text-brand-green-dark">₹{maxPrice}</span>
+            <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 flex items-center justify-between">
+              <span>पिकानुसार फिल्टर (Crops)</span>
+              {selectedCrop && (
+                <button onClick={() => handleCropSelect('')} className="text-[10px] text-red-500 font-extrabold cursor-pointer">
+                  Clear
+                </button>
+              )}
             </h4>
-            <input
-              type="range"
-              min="50"
-              max={highestProductPrice}
-              step="50"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-green-dark"
-            />
-            <div className="flex justify-between text-[10px] text-slate-400 font-bold mt-2">
-              <span>₹50</span>
-              <span>₹{highestProductPrice}</span>
+            <div className="flex flex-col gap-1.5 max-h-56 overflow-y-auto custom-scrollbar pr-1">
+              <button
+                onClick={() => handleCropSelect('')}
+                className={`w-full text-left text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer ${
+                  selectedCrop === ''
+                    ? 'bg-brand-green-dark text-white'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                }`}
+              >
+                {language === 'mr' ? 'सर्व पिके (All Crops)' : 'All Crops'}
+              </button>
+              {cropsList.map((crop) => {
+                const cropKey = crop.id || crop.tag?.en || crop.name?.en || crop.name?.mr;
+                const isSelected = selectedCrop === cropKey;
+                const cropName = crop.name?.[language] || crop.name?.mr || crop.name?.en || crop.id;
+
+                return (
+                  <button
+                    key={crop.id || crop._id}
+                    onClick={() => handleCropSelect(cropKey)}
+                    className={`w-full text-left text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 truncate ${
+                      isSelected
+                        ? 'bg-brand-green-dark text-white'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                    }`}
+                  >
+                    <span className="text-sm flex-shrink-0">{crop.logo || '🌱'}</span>
+                    <span className="truncate">{cropName}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -486,24 +534,48 @@ const Products = () => {
                 </div>
               </div>
 
-              {/* Price range */}
+              {/* Crops */}
               <div className="mb-6">
-                <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 flex justify-between">
-                  <span>किंमत (Max Price)</span>
-                  <span className="text-brand-green-dark">₹{maxPrice}</span>
+                <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3">
+                  पिकानुसार फिल्टर (Crops)
                 </h4>
-                <input
-                  type="range"
-                  min="150"
-                  max="2500"
-                  step="50"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-green-dark"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400 font-bold mt-2">
-                  <span>₹150</span>
-                  <span>₹2500</span>
+                <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto custom-scrollbar">
+                  <button
+                    onClick={() => {
+                      handleCropSelect('');
+                      setShowMobileFilters(false);
+                    }}
+                    className={`w-full text-left text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer ${
+                      selectedCrop === ''
+                        ? 'bg-brand-green-dark text-white'
+                        : 'text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    सर्व पिके (All Crops)
+                  </button>
+                  {cropsList.map((crop) => {
+                    const cropKey = crop.id || crop.tag?.en || crop.name?.en || crop.name?.mr;
+                    const isSelected = selectedCrop === cropKey;
+                    const cropName = crop.name?.[language] || crop.name?.mr || crop.name?.en || crop.id;
+
+                    return (
+                      <button
+                        key={crop.id || crop._id}
+                        onClick={() => {
+                          handleCropSelect(cropKey);
+                          setShowMobileFilters(false);
+                        }}
+                        className={`w-full text-left text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-2 truncate ${
+                          isSelected
+                            ? 'bg-brand-green-dark text-white'
+                            : 'text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="text-sm flex-shrink-0">{crop.logo || '🌱'}</span>
+                        <span className="truncate">{cropName}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
