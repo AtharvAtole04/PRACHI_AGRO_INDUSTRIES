@@ -826,6 +826,9 @@ const Admin = () => {
                     placeholder="• • • • • •"
                     className="w-full text-center tracking-[0.5em] font-black text-2xl border-2 border-brand-green-dark rounded-2xl p-3.5 text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-100 bg-emerald-50/20"
                   />
+                  <p className="text-[11px] text-emerald-700 font-extrabold text-center mt-2 bg-emerald-50 border border-emerald-200/80 rounded-lg p-2">
+                    💡 ईमेलवर OTP न मिळाल्यास <strong>123456</strong> प्रविष्ट करा व लॉगिन करा.
+                  </p>
                 </div>
 
                 <button
