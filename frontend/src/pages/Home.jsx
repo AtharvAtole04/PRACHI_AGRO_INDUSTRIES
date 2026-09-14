@@ -11,7 +11,6 @@ import { getBlogs, getLocalBlogs } from '../data/blogs';
 // Shared Components
 import HeroSlider from '../components/HeroSlider';
 import FeatureStrip from '../components/FeatureStrip';
-import CropFinder from '../components/CropFinder';
 import ProductCard from '../components/ProductCard';
 import FarmerReviewCard from '../components/FarmerReviewCard';
 import VideoCard from '../components/VideoCard';
@@ -294,10 +293,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 6. Interactive Crop Finder Widget */}
-      <section aria-label="Crop Finder">
-        <CropFinder />
-      </section>
+
 
       {/* 7. Special Offers Strip banner */}
       {specialOffers.length > 0 && (
