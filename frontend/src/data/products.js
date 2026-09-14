@@ -763,9 +763,10 @@ export const saveProducts = async (array, triggerEvent = false) => {
   } catch (err) {}
 };
 
-export const getProducts = async () => {
+export const getProducts = async (forceFresh = false) => {
   try {
-    const res = await fetch(apiUrl('/api/products'), {
+    const url = forceFresh ? apiUrl(`/api/products?t=${Date.now()}`) : apiUrl('/api/products');
+    const res = await fetch(url, {
       cache: 'no-store',
       headers: { 'Cache-Control': 'no-cache' }
     });
@@ -836,7 +837,7 @@ export const addProduct = async (product) => {
     throw new Error(errorData.message || errorData.error || `Failed to save product in database (HTTP ${res.status})`);
   }
 
-  const updatedProds = await getProducts();
+  const updatedProds = await getProducts(true);
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('prachi_products_updated'));
   }
@@ -869,7 +870,7 @@ export const updateProduct = async (id, updatedProduct) => {
     throw new Error(errorData.message || errorData.error || `Failed to update product in database (HTTP ${res.status})`);
   }
 
-  const updatedProds = await getProducts();
+  const updatedProds = await getProducts(true);
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('prachi_products_updated'));
   }
@@ -897,7 +898,7 @@ export const deleteProduct = async (id) => {
     throw new Error(errorData.message || errorData.error || `Failed to delete product from database (HTTP ${res.status})`);
   }
 
-  const updatedProds = await getProducts();
+  const updatedProds = await getProducts(true);
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('prachi_products_updated'));
   }
