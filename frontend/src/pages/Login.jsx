@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, ShieldCheck, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import { Lock, Mail, ShieldCheck, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import SEOHead from '../components/SEOHead';
 
 const Login = () => {
   const { language } = useLanguage();
-  const { login } = useAuth();
+  const { adminLoginStep1, login } = useAuth();
   const navigate = useNavigate();
 
+  const [email, setEmail] = useState('prachiagroindustris9696@gmail.com');
   const [passcode, setPasscode] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -19,13 +20,22 @@ const Login = () => {
     setErrorMsg('');
     setLoading(true);
 
-    const res = await login('info@prachiagroindustries.in', passcode, 'admin');
+    // First try standard login
+    const stdRes = await login(email, passcode, 'admin');
+    if (stdRes.success) {
+      setLoading(false);
+      navigate('/admin', { replace: true });
+      return;
+    }
+
+    // Try 2FA Step 1 (triggers 6-digit OTP email)
+    const res = await adminLoginStep1(email, passcode);
     setLoading(false);
 
-    if (res.success && res.user && res.user.role === 'admin') {
+    if (res.success) {
       navigate('/admin', { replace: true });
     } else {
-      setErrorMsg(language === 'mr' ? 'चुकीचा अ‍ॅडमिन पासवर्ड! कृपया पुन्हा प्रयत्न करा.' : 'Incorrect admin passcode. Try again.');
+      setErrorMsg(res.error || (language === 'mr' ? 'चुकीचा अ‍ॅडमिन ईमेल किंवा पासवर्ड! कृपया पुन्हा प्रयत्न करा.' : 'Incorrect admin email or password. Try again.'));
     }
   };
 
@@ -48,7 +58,7 @@ const Login = () => {
             {language === 'mr' ? 'अ‍ॅडमिन पोर्टल लॉगिन' : 'Admin Portal Login'}
           </h1>
           <p className="text-xs text-emerald-200 mt-1 font-medium">
-            {language === 'mr' ? 'वेबसाईट व्यवस्थापनासाठी अ‍ॅडमिन पासवर्ड टाका' : 'Enter passcode to access website admin dashboard'}
+            {language === 'mr' ? 'वेबसाईट व्यवस्थापनासाठी अ‍ॅडमिन आयडी व पासवर्ड टाका' : 'Enter email and password to access admin dashboard'}
           </p>
         </div>
 
@@ -75,11 +85,27 @@ const Login = () => {
 
           <form onSubmit={handleAdminLoginSubmit} className="flex flex-col gap-4">
             
+            {/* Admin Email */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wide flex items-center gap-1.5">
+                <Mail size={14} className="text-brand-green-dark" />
+                <span>{language === 'mr' ? 'अ‍ॅडमिन ईमेल (Admin Email)' : 'Admin Email'}</span>
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="prachiagroindustris9696@gmail.com"
+                className="w-full border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-green-dark bg-slate-50/50 font-bold text-slate-800"
+              />
+            </div>
+
             {/* Admin Passcode */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wide flex items-center gap-1.5">
                 <Lock size={14} className="text-brand-green-dark" />
-                <span>{language === 'mr' ? 'अ‍ॅडमिन पासवर्ड (Admin Passcode)' : 'Admin Passcode'}</span>
+                <span>{language === 'mr' ? 'अ‍ॅडमिन पासवर्ड (Admin Password)' : 'Admin Password'}</span>
               </label>
               <input
                 type="password"
