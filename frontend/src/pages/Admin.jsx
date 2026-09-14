@@ -443,7 +443,7 @@ const Admin = () => {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const maxDim = 800; // max dimension px
+          const maxDim = 600; // max dimension px
           let width = img.width;
           let height = img.height;
           if (width > height) {
@@ -461,7 +461,7 @@ const Admin = () => {
           canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.65);
 
           setProductForm(prev => {
             const currentImages = prev.images || [];

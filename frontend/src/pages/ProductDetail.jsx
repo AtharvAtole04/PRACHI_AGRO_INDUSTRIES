@@ -7,8 +7,16 @@ import { getProducts, getLocalProducts } from '../data/products';
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { t, language } = useLanguage();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
   const [productsList, setProductsList] = useState(() => getLocalProducts());
   const [isLoading, setIsLoading] = useState(() => getLocalProducts().length === 0);
+  const [selectedPack, setSelectedPack] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState('details');
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -23,10 +31,6 @@ const ProductDetail = () => {
     return () => { isMounted = false; };
   }, [id]);
 
-  const { t, language } = useLanguage();
-  const { addToCart } = useCart();
-  const navigate = useNavigate();
-
   // Find product by id, _id, or slugified name
   const product = productsList.find(p => 
     p && (p.id === id || p._id === id || (p.name && p.name.toLowerCase().trim().replace(/\s+/g, '-') === (id || '').toLowerCase().trim()))
@@ -36,17 +40,25 @@ const ProductDetail = () => {
     ? product.packSizes
     : [{ size: 'Standard', price: Number(product?.basePrice) || 0 }];
 
-  // States
-  const [selectedPack, setSelectedPack] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState('details');
-
-  // Initialize selected pack size once product is loaded
+  // Initialize selected pack size & reset active image index when product/id changes
   useEffect(() => {
     if (product) {
       setSelectedPack(safePackSizes[0]);
     }
-  }, [product]);
+    setActiveImageIndex(0);
+  }, [product, id]);
+
+  // Gallery Images List - ONLY show real product images added by admin
+  const rawGalleryImages = Array.from(new Set([
+    product?.image,
+    ...(Array.isArray(product?.images) ? product.images : [])
+  ].filter(img => img && typeof img === 'string' && img.trim() !== '' && img !== '/assets/products/placeholder.svg')));
+
+  const galleryImages = rawGalleryImages.length > 0
+    ? rawGalleryImages
+    : [product?.image || '/assets/products/placeholder.svg'];
+
+  const currentDisplayImage = galleryImages[activeImageIndex] || galleryImages[0];
 
   if (isLoading) {
     return (
@@ -102,15 +114,6 @@ const ProductDetail = () => {
   const relatedProducts = productsList
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 3);
-
-  // Gallery Images List
-  const galleryImages = Array.from(new Set([
-    product?.image,
-    ...(Array.isArray(product?.images) ? product.images : [])
-  ].filter(Boolean)));
-  
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const currentDisplayImage = galleryImages[activeImageIndex] || product?.image || '/assets/products/placeholder.svg';
 
   return (
     <div className="flex flex-col gap-10 text-left">
