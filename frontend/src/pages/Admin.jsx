@@ -901,13 +901,27 @@ const Admin = () => {
           </div>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="bg-slate-50 hover:bg-slate-100 hover:text-brand-magenta text-slate-600 px-4 py-2 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 cursor-pointer transition-colors"
-        >
-          <LogOut size={14} />
-          <span>लॉगआउट (Log Out)</span>
-        </button>
+        <div className="flex items-center gap-2 self-end sm:self-auto">
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-black border transition-all cursor-pointer flex items-center gap-1.5 shadow-xs ${
+              activeTab === 'content'
+                ? 'bg-purple-900 text-white border-purple-800'
+                : 'bg-purple-50 text-purple-900 border-purple-200 hover:bg-purple-100'
+            }`}
+          >
+            <Sparkles size={14} className="text-purple-600" />
+            <span>कन्टेन्ट CMS (Site Content & Map)</span>
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="bg-slate-50 hover:bg-slate-100 hover:text-brand-magenta text-slate-600 px-3.5 py-2 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 cursor-pointer transition-colors"
+          >
+            <LogOut size={14} />
+            <span>लॉगआउट (Log Out)</span>
+          </button>
+        </div>
       </div>
 
       {successMsg && (
@@ -1017,6 +1031,19 @@ const Admin = () => {
             </div>
             <p className="text-2xl font-black mt-1">{reviewsList.length}</p>
           </div>
+
+          <div 
+            onClick={() => setActiveTab('content')} 
+            className={`p-4 rounded-2xl border transition-all cursor-pointer min-w-[165px] sm:min-w-[185px] flex-1 flex-shrink-0 snap-start ${
+              activeTab === 'content' ? 'bg-purple-900 text-white border-purple-800 shadow-md ring-2 ring-purple-400' : 'bg-purple-50/80 border-purple-200 hover:bg-purple-100 text-purple-950 font-extrabold'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black uppercase tracking-wider text-purple-700">कन्टेन्ट CMS (Content)</span>
+              <span className="text-lg">✨</span>
+            </div>
+            <p className="text-xs font-black mt-2 truncate">नोटीस, अबाउट व मॅप</p>
+          </div>
         </div>
       </div>
 
@@ -1115,11 +1142,11 @@ const Admin = () => {
           <button
             onClick={() => setActiveTab('content')}
             className={`px-4 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs flex-shrink-0 ${
-              activeTab === 'content' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+              activeTab === 'content' ? 'bg-purple-900 text-white ring-2 ring-purple-400' : 'bg-purple-50 border border-purple-300 text-purple-950 hover:bg-purple-100 font-extrabold'
             }`}
           >
-            <Sparkles size={16} />
-            <span>८. साइट नोटीस व अबाउट (Content CMS)</span>
+            <Sparkles size={16} className="text-purple-600" />
+            <span>८. साइट नोटीस, अबाउट व मॅप (Content CMS)</span>
           </button>
 
         </div>
