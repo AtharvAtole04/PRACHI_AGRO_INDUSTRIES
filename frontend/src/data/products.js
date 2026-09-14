@@ -788,7 +788,8 @@ export const getProducts = async (forceFresh = false) => {
   }
 
   const localData = getLocalProducts();
-  return localData.map(p => ({
+  const fallbackData = (localData && localData.length > 0) ? localData : defaultProducts;
+  return fallbackData.map(p => ({
     ...p,
     id: p.id || p._id,
     _id: p._id || p.id
