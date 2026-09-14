@@ -6,7 +6,7 @@ let isConnected = false;
 
 async function connectDb() {
   if (isConnected && mongoose.connection.readyState === 1) return;
-  await mongoose.connect(MONGODB_URI, { bufferCommands: false });
+  await mongoose.connect(MONGODB_URI, { dbName: 'test', bufferCommands: false });
   isConnected = true;
 }
 

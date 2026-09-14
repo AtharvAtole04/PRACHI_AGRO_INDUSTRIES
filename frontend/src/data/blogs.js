@@ -1,120 +1,94 @@
-import { apiUrl } from '../config';
+import { apiUrl, adminApiUrl } from '../config';
 
 const defaultBlogs = [
   {
-    id: "identifying-crop-diseases",
+    id: "how-to-ensure-a-strong-start-for-the-onion-crop?-key-tips-for-a-good-yield-per-acre.",
     title: {
-      mr: "पिकांवरील बुरशीजन्य रोग ओळखण्याची सोपी पद्धत",
-      en: "Easy Ways to Identify Fungal Diseases in Crops"
+      mr: "कांदा पिकाची सुरुवात मजबूत कशी करावी? एकरी चांगल्या उत्पादनासाठी महत्त्वाच्या टिप्स",
+      en: "How to ensure a strong start for the onion crop? Key tips for a good yield per acre."
     },
     category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
-    date: "2026-08-10",
     readTime: "5 min read",
-    youtubeUrl: "https://www.youtube.com/embed/5jVj-wppI5E?si=G42TSQT88dcqB_kU",
-    image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400",
+    youtubeUrl: "https://youtu.be/J3c0Z_Lz9f8?si=3vXq3X3X3X3X3X3X",
+    image: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&q=80&w=600",
     excerpt: {
-      mr: "पिकांवर बुरशीजन्य रोग आल्यास पानांवर डाग पडणे, पाने पिवळी पडणे किंवा वाळणे अशी लक्षणे दिसतात. या लेखात आपण बुरशीजन्य रोगांचे वेळेवर निदान कसे करावे हे पाहू.",
-      en: "Fungal diseases present symptoms like spots on leaves, yellowing, or drying of plants. Learn how to identify these diseases early to protect your yields."
+      mr: "कांदा पिकाची सुरुवातीची योग्य वाढ आणि नियोजन एकरी उच्च उत्पादनासाठी अत्यंत महत्त्वाचे आहे. जाणून घ्या जमीन तयारी, रोप लागवड व खत नियोजन.",
+      en: "Proper initial management of onion crop is crucial for achieving high yield per acre."
     },
     content: {
-      mr: `पिकांवरील बुरशीजन्य रोग हे पिकाच्या नुकसानीचे सर्वात मोठे कारण ठरतात. जर वेळेवर नियंत्रण केले नाही, तर पूर्ण पीक उद्ध्वस्त होऊ शकते.
+      mr: `कांदा हे महाराष्ट्रातील एक प्रमुख नगदी पीक आहे. कमी दिवसांत आणि योग्य नियोजनासह घेतल्यास हे पीक शेतकऱ्यांना चांगले आर्थिक उत्पन्न मिळवून देऊ शकते. मात्र अनेकदा सुरुवातीच्या काळात योग्य काळजी न घेतल्याने झाडांची वाढ खुंटणे, पात पिवळी पडणे किंवा मुळांचा विकास न होणे अशा समस्या निर्माण होतात.
 
-१. पानांवरील लक्षणे:
-पानांवर काळे, तपकिरी किंवा पिवळे ठिपके (Spots) पडतात. पानांच्या खालच्या बाजूला बुरशीचा पांढरा किंवा करडा थर दिसतो (उदा. तांबेरा किंवा भुरी रोग).
+कांदा पिकाची सुरुवात मजबूत करण्यासाठी आणि एकरी उत्पादन वाढवण्यासाठी खालील महत्त्वाच्या टिप्स लक्षात ठेवा:
 
-२. खोडावरील लक्षणे:
-खोड काळे पडणे, सडणे किंवा खोडावर जखमा तयार होणे.
+## १. जमीन आणि वाफ्यांची योग्य तयारी
+कांदा पिकासाठी हलकी ते मध्यम आणि उत्तम पाण्याचा निचरा होणारी जमीन निवडावी.
+* जमीन २-३ वेळा नांगरून भुसभुशीत करावी.
+* शेतात शेवटच्या कुळवणीवेळी चांगले कुजलेले शेणखत किंवा सेंद्रिय खत टाकावे.
+* पाणी साचणार नाही अशा प्रकारे सपाट वाफे किंवा गादीवाफे तयार करावेत.
 
-३. नियंत्रणाचे उपाय:
-- शेत स्वच्छ ठेवावे आणि पिकांची फेरपालट करावी.
-- रोगाची सुरुवातीची लक्षणे दिसताच 'BACTRIKILLER' सारख्या सिस्टीमिक बुरशीनाशकाची फवारणी करावी.
-- अतिरिक्त पाणी देणे टाळावे कारण दमट वातावरण बुरशीच्या वाढीला पोषक असते.`,
-      en: `Fungal diseases in crops are a major cause of crop damage. If not controlled on time, they can lead to complete yield loss.
+## २. रोपांची निवड आणि पुनर्रोपण
+* सशक्त, निरोगी आणि ४५ ते ५० दिवसांची तयार झालेली रोपेच पुनर्रोपणासाठी निवडावीत.
+* लागवडीपूर्वी रोपांची मुळे जैविक बुरशीनाशक किंवा जिवाणू संवर्धनाच्या द्रावणात बुडवून लावावीत.
+* लागवड योग्य अंतरावर (१० x १० सेमी किंवा १५ x १० सेमी) करावी जेणेकरून कंद फुगवणीला जागा मिळेल.
 
-1. Symptoms on Leaves:
-Black, brown, or yellow spots appear on the leaves. A white or grey powdery growth can be seen on the underside of the leaves (e.g. rust or powdery mildew).
+## ३. सुरुवातीचे खत व्यवस्थापन
+कांदा पिकाच्या सुरुवातीच्या ३० दिवसांत मुळांचा विकास आणि पांतीची वाढ होणे आवश्यक असते.
+* लागवडीच्या वेळी किंवा १ आठवड्याच्या आत नत्र, स्फुरद आणि पालाश (NPK) चा सुरुवातीचा डोस द्यावा.
+* पांढऱ्या मुळ्यांची संख्या वाढवण्यासाठी 'HUMIC 98%' किंवा 'BIO FULVIC' सारख्या ऑरगॅनिक घटक किंवा 'Microdefence Slurry Kit' चा वापर करावा.
+* गंधक (Sulphur) चा वापर कांदा पिकासाठी अतिशय महत्त्वाचा ठरतो. यामुळे कांद्याचा तिखटपणा, रंग आणि साठवणूक क्षमता वाढते.
 
-2. Symptoms on Stems:
-Browning, rotting, or cankers on the main stem.
+## ४. पाणी व्यवस्थापन
+* पुनर्रोपण केल्यानंतर लगेच हलके पाणी द्यावे.
+* सुरवातीच्या टप्प्यात जमिनीच्या प्रकारानुसार ५ ते ७ दिवसांच्या अंतराने पाणी द्यावे.
+* जास्त पाणी दिल्यास मुळे सडण्याची शक्यता असते, त्यामुळे गरजेनुसारच पाणी नियोजन करावे.
 
-3. Control Measures:
-- Maintain field hygiene and follow crop rotation.
-- At the very first sign of disease, spray a systemic fungicide like 'BACTRIKILLER'.
-- Avoid over-watering, as high humidity promotes fungal spores propagation.`
+## ५. कीड व रोग नियंत्रण (सुरुवातीचा काळ)
+* कांदा पिकावर सुरुवातीला थ्रिप्स (फुलकिडे) आणि बुरशीजन्य करपा रोगाचा प्रादुर्भाव होतो.
+* थ्रिप्समुळे पाने पिवळी पडतात आणि पात आकसते. यासाठी निळ्या व पिवळ्या चिकट सापळ्यांचा वापर करावा.
+* रोगाचे वेळेवर नियंत्रण करण्यासाठी जैविक कीटकनाशक किंवा 'BACTRIKILLER' चा वापर करावा.
+
+## निष्कर्ष
+कांदा पिकाच्या सुरुवातीच्या पहिल्या ३० ते ४० दिवसांतील योग्य निगा आणि पोषण हेच काढणीच्या वेळी मिळणाऱ्या उत्पादनाचा पाया असतो. योग्य खत, पाणी आणि रोग नियंत्रणाचे नियोजन केल्यास शेतकरी बांधव एकरी उत्तम आणि गुणवत्तापूर्ण उत्पादन मिळवू शकतात.`,
+      en: `Onion is one of the key cash crops in Maharashtra. With proper management and planning, farmers can achieve excellent yield and income.
+
+Key tips for ensuring a strong start:
+1. Land preparation & soil aeration.
+2. Healthy 45-50 day old seedlings for transplanting.
+3. Early fertilizer management using NPK, Sulphur, and Organic Carbon / Slurry Kit for root development.
+4. Irrigation & disease control against Thrips and Karpa.`
     }
   },
   {
-    id: "pest-management",
+    id: "dragon-fruit",
     title: {
-      mr: "पावसाळी हंगामातील रसशोषक किडींचे योग्य व्यवस्थापन",
-      en: "Effective Management of Sucking Pests in Rainy Season"
+      mr: "ड्रॅगन फ्रूट शेतीत मोठा बदल: Microdefence Slurry Kit चा शेतकरी महिलेचा अनुभव",
+      en: "Dragon Fruit Farming: Microdefence Slurry Kit Experience"
     },
-    category: { mr: "कीड व्यवस्थापन", en: "Pest Management" },
-    date: "2026-08-05",
-    readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=400",
+    category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
+    readTime: "5 min read",
+    image: "https://images.unsplash.com/photo-1527847263472-aa5338d178b8?auto=format&fit=crop&q=80&w=600",
     excerpt: {
-      mr: "पावसाळ्यात दमट वातावरणामुळे मावा, तुडतुडे, आणि फुलकिडे (Thrips) यांचा प्रादुर्भाव वाढतो. जाणून घ्या पिकांना कीडमुक्त ठेवण्याचे नैसर्गिक आणि रासायनिक मार्ग.",
-      en: "Humidity during monsoons leads to a spike in aphids, jassids, and thrips. Learn natural and scientific ways to keep your fields pest-free."
+      mr: "ड्रॅगन फ्रूट बागेत Microdefence Slurry Kit चा वापर करून अभूतपूर्व बदल मिळवल्याचा शेतकरी महिलेचा प्रत्यक्ष अनुभव.",
+      en: "Farmer experience with Microdefence Slurry Kit in Dragon Fruit orchard."
     },
     content: {
-      mr: `पावसाळी हंगामात हवेतील ओलसरपणामुळे रसशोषक किडींचे प्रमाण वेगाने वाढते. या किडी पानांतील रस शोषून घेतात, ज्यामुळे झाडे निस्तेज होतात.
+      mr: `ड्रॅगन फ्रूट हे महाराष्ट्रातील शेतकऱ्यांसाठी एक महत्त्वाचे आणि वाढती मागणी असलेले पीक बनत आहे. पारंपरिक पिकांच्या तुलनेत चांगले व्यवस्थापन, योग्य पोषण आणि रोग-किडींचे नियंत्रण केल्यास ड्रॅगन फ्रूट शेतीतून चांगले उत्पादन मिळवता येऊ शकते.
 
-१. प्रमुख किडी:
-मावा (Aphids), तुडतुडे (Jassids), फुलकिडे (Thrips) आणि पांढरी माशी (Whitefly).
+मात्र शेती करताना पिकांची वाढ, मातीची गुणवत्ता आणि झाडांचे आरोग्य याकडे विशेष लक्ष देणे आवश्यक असते. यासाठी आधुनिक शेती तंत्रज्ञान आणि नवीन कृषी निविष्ठांचा वापर शेतकऱ्यांसाठी उपयुक्त ठरू शकतो.
 
-२. प्रतिबंधात्मक उपाय:
-- शेताच्या कडेला पिवळे व निळे चिकट सापळे (Sticky Traps) लावावेत.
-- सुरुवातीच्या टप्प्यात 'NEEM SHAKTI' सारख्या सेंद्रिय कीटकनाशकाची फवारणी करावी, ज्यामुळे मित्रकिडी सुरक्षित राहतात.
-- सिलिकॉन आधारित 'SRPF' चे वापरामुळे पानांची बाह्य त्वचा कडक होते, ज्यामुळे किडींना रस शोषण्यास अडथळा येतो.`,
-      en: `During the monsoon season, humidity creates a breeding ground for sucking pests. These pests suck the sap of leaves, causing plants to lose vigor.
+## Microdefence Slurry Kit म्हणजे काय?
+ड्रॅगन फ्रूट शेतीमध्ये झाडांची चांगली वाढ आणि उत्पादन टिकवून ठेवण्यासाठी योग्य व्यवस्थापन महत्त्वाचे आहे. याच पार्श्वभूमीवर Microdefence Slurry Kit सारख्या उत्पादनांचा वापर शेतकऱ्यांकडून केला जात आहे.
 
-1. Major Pests:
-Aphids, Jassids, Thrips, and Whiteflies.
+## शेतकरी महिलेचा अनुभव
+या व्हिडिओमध्ये ड्रॅगन फ्रूट शेती करणाऱ्या शेतकरी महिलेचा Microdefence Slurry Kit वापरानंतरचा अनुभव दाखवण्यात आला आहे. शेतीमध्ये कोणतेही नवीन उत्पादन वापरण्यापूर्वी त्याचा प्रत्यक्ष शेतातील अनुभव समजून घेणे महत्त्वाचे असते.
 
-2. Preventive Practices:
-- Install yellow and blue sticky traps at the borders of the field.
-- Spray organic insecticides like 'NEEM SHAKTI' in the early stages to protect natural predators.
-- Use silicon-based supplements like 'SRPF' to strengthen leaf cuticle, preventing insect feeding.`
-    }
-  },
-  {
-    id: "fertilizer-management",
-    title: {
-      mr: "पिकांमधील मुख्य आणि सूक्ष्म अन्नद्रव्यांचे संतुलन कसे राखावे?",
-      en: "How to Balance Primary and Micronutrients in Crops?"
-    },
-    category: { mr: "खत व्यवस्थापन", en: "Fertilizer Management" },
-    date: "2026-07-28",
-    readTime: "6 min read",
-    image: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400",
-    excerpt: {
-      mr: "केवळ नत्र, स्फुरद आणि पालाश देऊन पिकांचे पोषण पूर्ण होत नाही. चांगल्या उत्पादनासाठी सूक्ष्म अन्नद्रव्यांचे (मायक्रोन्युट्रिएंट्स) काय महत्त्व आहे, सविस्तर वाचा.",
-      en: "NPK fertilizers alone are not enough for complete crop nutrition. Read why micronutrients play a critical role in unlocking record yields."
-    },
-    content: {
-      mr: `पिकांच्या संतुलित वाढीसाठी १७ आवश्यक अन्नद्रव्यांची गरज असते. केवळ NPK (नत्र, स्फुरद, पालाश) टाकल्याने पिकांची गुणवत्ता पूर्ण सुधारत नाही.
-
-१. सूक्ष्म अन्नद्रव्यांची भूमिका (Micronutrients):
-लोह, जस्त, बोरॉन, मॅंगनीज ही अन्नद्रव्ये जरी कमी प्रमाणात लागली, तरी पिकाच्या वाढीसाठी आणि चयापचय क्रियेसाठी ती अतिशय महत्त्वाची असतात.
-
-२. कमतरतेची लक्षणे:
-पाने पिवळी पडणे, नवीन फुटणाऱ्या कळ्या वाळणे, फुलांची गळती होणे ही सूक्ष्म अन्नद्रव्यांच्या कमतरतेची लक्षणे आहेत.
-
-३. उपाय:
-- माती परीक्षण करूनच खतांची मात्रा ठरवावी.
-- पिकाच्या शाकीय वाढीच्या काळात 'MYCRODIFENCE' ची फवारणी करावी जे सर्व मायक्रो-न्यूट्रिएंट्सचे संतुलित कॉम्बिनेशन आहे.`,
-      en: `Crops require 17 essential nutrient elements for balanced development. Using only NPK fertilizers leaves the plant deficient in micronutrients.
-
-1. Role of Micronutrients:
-Elements like Zinc, Iron, Boron, and Manganese, though required in traces, are vital for enzyme activation and chlorophyll formation.
-
-2. Deficiency Symptoms:
-Yellowing of leaves, dry vegetative buds, and heavy flower drop indicate a lack of micronutrients in the soil or plant.
-
-3. Remediation:
-- Carry out soil tests before specifying fertilizer dosage.
-- Apply a balanced chelated combination like 'MYCRODIFENCE' during vegetative phases to supply all elements at once.`
+## ड्रॅगन फ्रूट शेतीमध्ये योग्य व्यवस्थापन का महत्त्वाचे आहे?
+* मातीची योग्य तपासणी
+* संतुलित खत व्यवस्थापन
+* योग्य पाणी व्यवस्थापन
+* वेलींची योग्य छाटणी व आधार व्यवस्था
+* रोग व किडींचे निरीक्षण`,
+      en: `Dragon fruit is emerging as a high-value fruit crop. Proper nutrition management using Microdefence Slurry Kit helps maintain soil health, fruit weight, and crop vigor.`
     }
   }
 ];
@@ -123,10 +97,10 @@ export const getLocalBlogs = () => {
   const data = localStorage.getItem('prachi_blogs');
   if (!data) return defaultBlogs;
   try {
-    return JSON.parse(data);
-  } catch (e) {
-    return defaultBlogs;
-  }
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  } catch (e) {}
+  return defaultBlogs;
 };
 
 export const getBlogs = async () => {
@@ -135,13 +109,13 @@ export const getBlogs = async () => {
     const contentType = res.headers.get('content-type') || '';
     if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
-      if (Array.isArray(data)) {
+      if (Array.isArray(data) && data.length > 0) {
         saveBlogs(data);
         return data;
       }
     }
   } catch (err) {
-    console.warn("Backend offline. Falling back to localStorage for blogs.");
+    console.warn("Backend offline. Falling back to default blogs.");
   }
   return getLocalBlogs();
 };
@@ -160,7 +134,7 @@ const getAuthHeaders = () => {
 export const addBlog = async (blog) => {
   let res;
   try {
-    res = await fetch(apiUrl('/api/blogs'), {
+    res = await fetch(adminApiUrl('/api/blogs'), {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -185,7 +159,8 @@ export const addBlog = async (blog) => {
 export const deleteBlog = async (id) => {
   let res;
   try {
-    res = await fetch(apiUrl(`/api/blogs/${id}`), {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/blogs/${cleanId}`), {
       method: 'DELETE',
       headers: {
         ...getAuthHeaders()

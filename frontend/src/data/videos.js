@@ -1,95 +1,26 @@
-import { apiUrl } from '../config';
+import { apiUrl, adminApiUrl } from '../config';
+
+export const extractEmbedId = (url) => {
+  if (!url) return '1gLO6UqqpwM';
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  return match ? match[1] : '1gLO6UqqpwM';
+};
 
 const defaultVideos = [
   {
-    id: "agrisulf-sulphur-benefits",
+    id: "kanda",
     title: {
-      mr: "AGRISULF सल्फर २०% चे फायदे व पिकांवरील वापर - संपूर्ण माहिती",
-      en: "AGRISULF Sulphur 20% Benefits and Application Guide for Crops"
+      mr: "कांदा (Kanda) पीक मार्गदर्शन व व्यवस्थापन",
+      en: "Onion (Kanda) Crop Guidance & Management"
     },
-    crop: { mr: "सोयाबीन, कांदा व सर्व पिके", en: "Soybean, Onion & All Crops" },
-    category: { mr: "उत्पादन माहिती", en: "Product Info" },
-    duration: "08:15",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "ScMzIvxBSi4",
-    thumbnail: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=600",
-    views: "12.4K",
-    uploaded: "1 month ago"
-  },
-  {
-    id: "bio-fulvic-roots-growth",
-    title: {
-      mr: "BIO FULVIC ८०% - पांढऱ्या मुळीचा वेगवान विकास आणि जमिनीची सुपीकता",
-      en: "BIO FULVIC 80% - Fast Feeder Root Growth & Soil Fertility"
-    },
-    crop: { mr: "सर्व पिके (All Crops)", en: "All Crops" },
+    crop: { mr: "कांदा (Kanda)", en: "Onion (Kanda)" },
     category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
-    duration: "06:40",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "5qap5aO4i9A",
-    thumbnail: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=600",
-    views: "18.2K",
-    uploaded: "2 months ago"
-  },
-  {
-    id: "microdefence-slurry-kit",
-    title: {
-      mr: "MICRODEFENCE SLURRY KIT - सर्व अन्नद्रव्यांचा संपूर्ण डोस आणि पिकांचा जोम",
-      en: "MICRODEFENCE SLURRY KIT - Complete Micronutrient Formulation"
-    },
-    crop: { mr: "ऊस, आले, हळद, भाजीपाला", en: "Sugarcane, Ginger, Turmeric" },
-    category: { mr: "खत व्यवस्थापन", en: "Fertilizer Management" },
-    duration: "11:20",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "L_LUpnjgPso",
-    thumbnail: "https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&q=80&w=600",
-    views: "24.5K",
-    uploaded: "3 weeks ago"
-  },
-  {
-    id: "sugarcane-high-yield",
-    title: {
-      mr: "ऊस पिकाचे भरघोस उत्पादन - एकरी १०० टन ध्येय नियोजन व खत व्यवस्थापन",
-      en: "Sugarcane High Yield - 100 Tons Per Acre Fertilizer & Growth Planning"
-    },
-    crop: { mr: "ऊस (Sugarcane)", en: "Sugarcane" },
-    category: { mr: "शेतकरी मार्गदर्शन", en: "Farmer Guidance" },
-    duration: "14:10",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "9bZkp7q19f0",
-    thumbnail: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600",
-    views: "35.1K",
-    uploaded: "1 month ago"
-  },
-  {
-    id: "humoil-98-soil-health",
-    title: {
-      mr: "HUMOIL ९८ - जमिनीचा पोत सुधारून खतांची कार्यक्षमता दुप्पट करा",
-      en: "HUMOIL 98 - Improve Soil Aeration and Double Fertilizer Uptake"
-    },
-    crop: { mr: "कापूस, सोयाबीन, भाजीपाला", en: "Cotton, Soybean, Vegetables" },
-    category: { mr: "उत्पादन माहिती", en: "Product Info" },
-    duration: "07:35",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "fJ9rUzIMcDQ",
-    thumbnail: "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=600",
-    views: "9.8K",
-    uploaded: "2 weeks ago"
-  },
-  {
-    id: "tomato-magic-gold-disease",
-    title: {
-      mr: "टोमॅटो पिकातील करपा व फुलगळ नियंत्रण - मॅजिक गोल्ड मार्गदर्शक",
-      en: "Tomato Crop Disease & Flower Drop Control - Magic Gold Guide"
-    },
-    crop: { mr: "टोमॅटो (Tomato)", en: "Tomato" },
-    category: { mr: "प्राची ॲग्रो उत्पादने", en: "Prachi Agro Products" },
-    duration: "09:05",
-    youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
-    embedId: "ScMzIvxBSi4",
-    thumbnail: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=600",
-    views: "15.6K",
-    uploaded: "3 months ago"
+    duration: "05:00",
+    youtubeUrl: "https://youtu.be/1gLO6UqqpwM?si=80jWj5TjjzOtdJ1Z",
+    embedId: "1gLO6UqqpwM",
+    thumbnail: "https://i.ytimg.com/vi/1gLO6UqqpwM/hqdefault.jpg",
+    views: "15.4K",
+    uploaded: "Recent"
   }
 ];
 
@@ -103,6 +34,16 @@ export const videoCategories = [
   { id: "prachi-products", title: { mr: "प्राची ॲग्रो उत्पादने", en: "Prachi Agro Products" } }
 ];
 
+export const getLocalVideos = () => {
+  const data = localStorage.getItem('prachi_videos');
+  if (!data) return defaultVideos;
+  try {
+    const parsed = JSON.parse(data);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  } catch (e) {}
+  return defaultVideos;
+};
+
 export const getVideos = async () => {
   try {
     const res = await fetch(apiUrl('/api/videos'));
@@ -110,34 +51,20 @@ export const getVideos = async () => {
     if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
       const rawList = Array.isArray(data) ? data : (Array.isArray(data?.videos) ? data.videos : []);
-      const formatted = rawList.map(v => ({
-        ...v,
-        embedId: v.embedId || v.id || v.videoId || extractEmbedId(v.youtubeUrl),
-        youtubeUrl: v.youtubeUrl || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/@prachiagroindustries03')
-      }));
-      saveVideos(formatted);
-      return formatted;
+      if (rawList.length > 0) {
+        const formatted = rawList.map(v => ({
+          ...v,
+          embedId: v.embedId || v.id || v.videoId || extractEmbedId(v.youtubeUrl),
+          youtubeUrl: v.youtubeUrl || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/@prachiagroindustries03')
+        }));
+        saveVideos(formatted);
+        return formatted;
+      }
     }
   } catch (err) {
-    console.warn("Backend offline. Falling back to cached YouTube videos.");
+    console.warn("Backend offline. Falling back to default videos.");
   }
-  const data = localStorage.getItem('prachi_videos');
-  if (!data) {
-    localStorage.setItem('prachi_videos', JSON.stringify(defaultVideos));
-    return defaultVideos;
-  }
-  try {
-    let parsed = JSON.parse(data);
-    if (Array.isArray(parsed)) {
-      return parsed.map(v => ({
-        ...v,
-        embedId: v.embedId || extractEmbedId(v.youtubeUrl)
-      }));
-    }
-    return defaultVideos;
-  } catch {
-    return defaultVideos;
-  }
+  return getLocalVideos();
 };
 
 export const saveVideos = async (array) => {
@@ -152,24 +79,15 @@ const getAuthHeaders = () => {
 };
 
 export const addVideo = async (video) => {
-  const embedId = video.embedId || extractEmbedId(video.youtubeUrl);
-  const formattedVideo = {
-    ...video,
-    embedId: embedId,
-    thumbnail: video.thumbnail && !video.thumbnail.includes('photo-1592982537447') 
-      ? video.thumbnail 
-      : (embedId ? `https://i.ytimg.com/vi/${embedId}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=600')
-  };
-
   let res;
   try {
-    res = await fetch(apiUrl('/api/videos'), {
+    res = await fetch(adminApiUrl('/api/videos'), {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
         ...getAuthHeaders()
       },
-      body: JSON.stringify(formattedVideo)
+      body: JSON.stringify(video)
     });
   } catch (err) {
     console.error('[Video API Error - Add Video]:', err);
@@ -188,7 +106,8 @@ export const addVideo = async (video) => {
 export const deleteVideo = async (id) => {
   let res;
   try {
-    res = await fetch(apiUrl(`/api/videos/${id}`), {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/videos/${cleanId}`), {
       method: 'DELETE',
       headers: {
         ...getAuthHeaders()
@@ -207,20 +126,3 @@ export const deleteVideo = async (id) => {
 
   return await getVideos();
 };
-
-export function extractEmbedId(url) {
-  if (!url) return '';
-  const str = String(url).trim();
-  const matchSrc = str.match(/src=["']([^"']+)["']/i);
-  const targetUrl = matchSrc ? matchSrc[1] : str;
-
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/i;
-  const match = targetUrl.match(regExp);
-  if (match && match[2] && match[2].length === 11) {
-    return match[2];
-  }
-  if (targetUrl.length === 11) {
-    return targetUrl;
-  }
-  return '';
-}
