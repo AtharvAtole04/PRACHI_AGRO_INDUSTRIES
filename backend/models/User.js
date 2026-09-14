@@ -99,6 +99,14 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  emailOtpHash: {
+    type: String,
+    default: ''
+  },
+  emailOtpExpiresAt: {
+    type: Date,
+    default: null
+  },
   lockUntil: {
     type: Date,
     default: null

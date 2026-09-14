@@ -99,13 +99,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Admin 2FA Step 2: Verify TOTP Code or Recovery Code
+  // Admin 2FA Step 2: Verify TOTP Code or Email OTP
   const adminVerify2FA = async (preMfaToken, otpCode, recoveryCode) => {
     try {
-      const res = await fetch(apiUrl('/api/auth/admin/verify-2fa'), {
+      const res = await fetch(apiUrl('/api/auth/admin/verify-email-otp'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preMfaToken, otpCode, recoveryCode })
+        body: JSON.stringify({ preMfaToken, otpCode, otp: otpCode, recoveryCode })
       });
 
       const data = await res.json().catch(() => ({}));
@@ -114,11 +114,31 @@ export const AuthProvider = ({ children }) => {
         setToken(data.token);
         return { success: true, user: data.user, token: data.token, message: data.message };
       } else {
-        return { success: false, error: data.error || 'अवैध ६-अंकी कोड किंवा रिकव्हरी कोड! (Invalid 2FA code)' };
+        return { success: false, error: data.error || 'अवैध ६-अंकी पडताळणी कोड! (Invalid OTP code)' };
       }
     } catch (err) {
-      console.error('Error during Admin 2FA Verification:', err);
+      console.error('Error during Admin OTP Verification:', err);
       return { success: false, error: 'सर्व्हरशी संपर्क होऊ शकला नाही. (Unable to connect to backend server)' };
+    }
+  };
+
+  // Admin Resend Email OTP
+  const adminResendEmailOTP = async (preMfaToken) => {
+    try {
+      const res = await fetch(apiUrl('/api/auth/admin/resend-email-otp'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preMfaToken })
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, error: data.error || 'OTP पुन्हा पाठवण्यात अपयश आले.' };
+      }
+    } catch (err) {
+      return { success: false, error: 'सर्व्हरशी संपर्क होऊ शकला नाही.' };
     }
   };
 
@@ -264,6 +284,7 @@ export const AuthProvider = ({ children }) => {
         login,
         adminLoginStep1,
         adminVerify2FA,
+        adminResendEmailOTP,
         register,
         logout,
         updateUser,

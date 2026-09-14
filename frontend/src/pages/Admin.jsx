@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag, PlayCircle, Info, QrCode, KeyRound, Copy, Check, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag, PlayCircle, Info, QrCode, KeyRound, Copy, Check, ArrowLeft, RefreshCw, Mail } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../data/products';
@@ -14,22 +14,21 @@ import SEOHead from '../components/SEOHead';
 
 const Admin = () => {
   const { t, language } = useLanguage();
-  const { user, isAdmin, login, adminLoginStep1, adminVerify2FA, logout } = useAuth();
+  const { user, isAdmin, login, adminLoginStep1, adminVerify2FA, adminResendEmailOTP, logout } = useAuth();
   const navigate = useNavigate();
 
   // Authentication & 2FA states
   const [isAuthenticated, setIsAuthenticated] = useState(isAdmin);
-  const [authStep, setAuthStep] = useState('step1'); // 'step1' | 'step2' | 'setup'
+  const [authStep, setAuthStep] = useState('step1'); // 'step1' | 'step2'
   const [loginEmail, setLoginEmail] = useState('prachiagroindustris9696@gmail.com');
   const [loginPassword, setLoginPassword] = useState('');
   const [otpCode, setOtpCode] = useState('');
-  const [recoveryInput, setRecoveryInput] = useState('');
-  const [useRecovery, setUseRecovery] = useState(false);
   const [preMfaToken, setPreMfaToken] = useState('');
-  const [mfaSetupPayload, setMfaSetupPayload] = useState(null);
   const [isSubmittingAuth, setIsSubmittingAuth] = useState(false);
-  const [copiedRecovery, setCopiedRecovery] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [resendMessage, setResendMessage] = useState('');
+  const [resendCountdown, setResendCountdown] = useState(0);
+  const [isResending, setIsResending] = useState(false);
 
   // Active Admin Tab (default to 'products' for immediate access)
   const [activeTab, setActiveTab] = useState('products');
@@ -211,10 +210,20 @@ const Admin = () => {
     setUsersList(localUsers);
   };
 
-  // Step 1 Submit (Email + Password)
+  // Countdown timer for Resend OTP
+  useEffect(() => {
+    let timer;
+    if (resendCountdown > 0) {
+      timer = setInterval(() => setResendCountdown(prev => prev - 1), 1000);
+    }
+    return () => clearInterval(timer);
+  }, [resendCountdown]);
+
+  // Step 1 Submit (Email + Password) -> Triggers OTP Email
   const handleStep1Submit = async (e) => {
     e.preventDefault();
     setLoginError('');
+    setResendMessage('');
     if (!loginEmail || !loginPassword) {
       setLoginError(language === 'mr' ? 'कृपया ईमेल आणि पासवर्ड प्रविष्ट करा.' : 'Please enter email and password.');
       return;
@@ -226,57 +235,52 @@ const Admin = () => {
 
     if (result.success) {
       setPreMfaToken(result.preMfaToken);
-      if (result.mfaSetupRequired) {
-        setMfaSetupPayload({
-          qrCodeUrl: result.qrCodeUrl,
-          secret: result.secret,
-          recoveryCodes: result.recoveryCodes
-        });
-        setAuthStep('setup');
-      } else {
-        setAuthStep('step2');
-      }
+      setAuthStep('step2');
+      setResendCountdown(60); // 60s cooldown before resend
     } else {
       setLoginError(result.error || 'चुकीचा ईमेल किंवा पासवर्ड! (Invalid credentials)');
     }
   };
 
-  // Step 2 Submit (6-digit TOTP code or Recovery Code)
+  // Step 2 Submit (6-digit Email OTP)
   const handleStep2Submit = async (e) => {
     e.preventDefault();
     setLoginError('');
+    setResendMessage('');
 
-    if (!useRecovery && (!otpCode || otpCode.trim().length !== 6)) {
-      setLoginError(language === 'mr' ? 'कृपया ६-अंकी प्रमाणिकरण कोड टाका.' : 'Please enter valid 6-digit TOTP code.');
-      return;
-    }
-
-    if (useRecovery && !recoveryInput.trim()) {
-      setLoginError(language === 'mr' ? 'कृपया बॅकअप रिकव्हरी कोड प्रविष्ट करा.' : 'Please enter a recovery code.');
+    if (!otpCode || otpCode.trim().length !== 6) {
+      setLoginError(language === 'mr' ? 'कृपया ईमेलवर प्राप्त झालेला ६-अंकी कोड प्रविष्ट करा.' : 'Please enter the 6-digit verification code sent to your email.');
       return;
     }
 
     setIsSubmittingAuth(true);
-    const result = await adminVerify2FA(
-      preMfaToken, 
-      useRecovery ? '' : otpCode.trim(), 
-      useRecovery ? recoveryInput.trim() : ''
-    );
+    const result = await adminVerify2FA(preMfaToken, otpCode.trim());
     setIsSubmittingAuth(false);
 
     if (result.success) {
       setIsAuthenticated(true);
       setLoginError('');
     } else {
-      setLoginError(result.error || 'अवैध ऑथेंटिकेटर कोड. (Invalid 2FA code)');
+      setLoginError(result.error || 'अवैध पडताळणी कोड. (Invalid verification code)');
     }
   };
 
-  const handleCopyRecoveryCodes = () => {
-    if (mfaSetupPayload?.recoveryCodes) {
-      navigator.clipboard.writeText(mfaSetupPayload.recoveryCodes.join('\n'));
-      setCopiedRecovery(true);
-      setTimeout(() => setCopiedRecovery(false), 3000);
+  // Resend OTP
+  const handleResendOTP = async () => {
+    if (resendCountdown > 0 || isResending) return;
+    setIsResending(true);
+    setLoginError('');
+    setResendMessage('');
+
+    const result = await adminResendEmailOTP(preMfaToken);
+    setIsResending(false);
+
+    if (result.success) {
+      setResendMessage(language === 'mr' ? 'नवीन OTP तुमच्या ईमेलवर पाठवला आहे.' : `A new verification code has been sent to ${loginEmail}.`);
+      setResendCountdown(60);
+      setTimeout(() => setResendMessage(''), 5000);
+    } else {
+      setLoginError(result.error || 'OTP पुन्हा पाठवण्यात अपयश आले.');
     }
   };
 
@@ -286,9 +290,7 @@ const Admin = () => {
     setAuthStep('step1');
     setLoginPassword('');
     setOtpCode('');
-    setRecoveryInput('');
     setPreMfaToken('');
-    setMfaSetupPayload(null);
   };
 
   // CMS Content Update
@@ -732,161 +734,55 @@ const Admin = () => {
             </>
           )}
 
-          {/* STEP 2: SETUP FIRST-TIME MFA ENROLLMENT */}
-          {authStep === 'setup' && mfaSetupPayload && (
+          {/* STEP 2: EMAIL OTP VERIFICATION */}
+          {authStep === 'step2' && (
             <>
-              <div className="w-14 h-14 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center mx-auto shadow-inner border border-purple-100 mt-1">
-                <QrCode size={28} />
+              <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-brand-green-dark flex items-center justify-center mx-auto shadow-inner border border-emerald-100 mt-1">
+                <Mail size={28} />
               </div>
 
               <div>
-                <h1 className="text-xl font-black text-slate-800 tracking-tight">2FA ऑथेंटिकेशन सेटअप</h1>
-                <p className="text-xs text-purple-700 font-bold mt-0.5">
-                  पहिल्यांदा लॉगिन: Authenticator ॲप जोडा
+                <h1 className="text-xl font-black text-slate-800 tracking-tight">ईमेल OTP पडताळणी</h1>
+                <p className="text-xs text-slate-500 font-bold mt-1">
+                  ६-अंकी कोड खालील ईमेलवर पाठवला आहे:
+                </p>
+                <p className="text-xs font-black text-brand-green-dark bg-emerald-50/70 border border-emerald-200/60 rounded-lg py-1 px-2 mt-1.5 inline-block font-mono">
+                  {loginEmail}
                 </p>
               </div>
 
               {loginError && (
-                <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs font-bold text-left">
+                <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs font-bold text-left animate-shake">
                   ⚠️ {loginError}
                 </div>
               )}
 
-              <div className="flex flex-col gap-4 text-left">
-                {/* 1. QR Code */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center">
-                  <p className="text-xs font-bold text-slate-700 mb-2">
-                    १. Google / Microsoft Authenticator ॲपमध्ये खालील क्यूआर कोड स्कॅन करा:
-                  </p>
-                  {mfaSetupPayload.qrCodeUrl && (
-                    <img 
-                      src={mfaSetupPayload.qrCodeUrl} 
-                      alt="2FA QR Code"
-                      className="w-44 h-44 mx-auto border-2 border-brand-green-dark p-2 rounded-2xl bg-white shadow-sm"
-                    />
-                  )}
-                  <p className="text-[10px] text-slate-400 font-mono mt-2 select-all">
-                    Key: {mfaSetupPayload.secret}
-                  </p>
-                </div>
-
-                {/* 2. Recovery Codes */}
-                <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-black text-amber-900 uppercase tracking-wide">
-                      २. बॅकअप रिकव्हरी कोड्स (Save these codes safely!)
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleCopyRecoveryCodes}
-                      className="text-[11px] font-extrabold text-amber-800 bg-amber-200/80 hover:bg-amber-300 px-2 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors"
-                    >
-                      {copiedRecovery ? <Check size={12} /> : <Copy size={12} />}
-                      <span>{copiedRecovery ? 'Copied!' : 'Copy All'}</span>
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-1.5 font-mono text-[11px] font-bold text-amber-950 text-center">
-                    {mfaSetupPayload.recoveryCodes?.map((code, idx) => (
-                      <div key={idx} className="bg-white/90 border border-amber-200 px-2 py-1 rounded-md shadow-xs">
-                        {code}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 3. Confirm 6-Digit Code */}
-                <form onSubmit={handleStep2Submit} className="flex flex-col gap-3">
-                  <div>
-                    <label className="text-[11px] font-black text-slate-700 uppercase tracking-wide block mb-1">
-                      ३. ॲपमध्ये दिसणारा ६-अंकी कोड प्रविष्ट करा:
-                    </label>
-                    <input
-                      type="text"
-                      maxLength={6}
-                      required
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                      placeholder="0 0 0 0 0 0"
-                      className="w-full text-center tracking-[0.4em] font-black text-lg border border-slate-300 rounded-xl p-3 text-slate-900 focus:ring-2 focus:ring-brand-green-dark bg-white"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmittingAuth || otpCode.length !== 6}
-                    className="w-full bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold py-3.5 px-4 rounded-xl cursor-pointer shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    {isSubmittingAuth ? (
-                      <>
-                        <RefreshCw size={16} className="animate-spin" />
-                        <span>सक्रिय करत आहे...</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle size={18} />
-                        <span>२-फॅक्टर सक्रिय करा व लॉगिन करा (Activate 2FA & Login)</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              </div>
-            </>
-          )}
-
-          {/* STEP 2: ESTABLISHED 2FA VERIFICATION */}
-          {authStep === 'step2' && (
-            <>
-              <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mx-auto shadow-inner border border-amber-100 mt-1">
-                <KeyRound size={28} />
-              </div>
-
-              <div>
-                <h1 className="text-xl font-black text-slate-800 tracking-tight">Two-Factor Authentication</h1>
-                <p className="text-xs text-slate-500 font-bold mt-0.5">
-                  {useRecovery
-                    ? 'बॅकअप रिकव्हरी कोड प्रविष्ट करा (Enter Recovery Code)'
-                    : 'तुमच्या Authenticator ॲपमधील ६-अंकी कोड प्रविष्ट करा'}
-                </p>
-              </div>
-
-              {loginError && (
-                <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs font-bold text-left">
-                  ⚠️ {loginError}
+              {resendMessage && (
+                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs font-bold text-left">
+                  ✅ {resendMessage}
                 </div>
               )}
 
               <form onSubmit={handleStep2Submit} className="flex flex-col gap-4">
-                {!useRecovery ? (
-                  <div>
-                    <input
-                      type="text"
-                      maxLength={6}
-                      autoFocus
-                      required
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                      placeholder="• • • • • •"
-                      className="w-full text-center tracking-[0.5em] font-black text-2xl border-2 border-brand-green-dark rounded-2xl p-3.5 text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-100 bg-emerald-50/20"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <input
-                      type="text"
-                      autoFocus
-                      required
-                      value={recoveryInput}
-                      onChange={(e) => setRecoveryInput(e.target.value.toUpperCase())}
-                      placeholder="XXXX-XXXX"
-                      className="w-full text-center tracking-widest font-mono font-black text-lg border-2 border-amber-500 rounded-2xl p-3 text-slate-900 focus:outline-none bg-amber-50/20 uppercase"
-                    />
-                  </div>
-                )}
+                <div>
+                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-wide block mb-1.5 text-center">
+                    ६-अंकी पडताळणी कोड प्रविष्ट करा (Enter 6-Digit OTP)
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={6}
+                    autoFocus
+                    required
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                    placeholder="• • • • • •"
+                    className="w-full text-center tracking-[0.5em] font-black text-2xl border-2 border-brand-green-dark rounded-2xl p-3.5 text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-100 bg-emerald-50/20"
+                  />
+                </div>
 
                 <button
                   type="submit"
-                  disabled={isSubmittingAuth || (!useRecovery && otpCode.length !== 6) || (useRecovery && !recoveryInput.trim())}
+                  disabled={isSubmittingAuth || otpCode.length !== 6}
                   className="w-full bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold py-3.5 px-4 rounded-xl cursor-pointer shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {isSubmittingAuth ? (
@@ -897,15 +793,15 @@ const Admin = () => {
                   ) : (
                     <>
                       <ShieldCheck size={18} />
-                      <span>पडताळणी करा (Verify 2FA)</span>
+                      <span>पडताळणी करा व लॉगिन करा (Verify OTP & Login)</span>
                     </>
                   )}
                 </button>
 
-                <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-100">
                   <button
                     type="button"
-                    onClick={() => { setAuthStep('step1'); setLoginError(''); }}
+                    onClick={() => { setAuthStep('step1'); setLoginError(''); setOtpCode(''); }}
                     className="text-slate-500 hover:text-slate-800 font-bold flex items-center gap-1 cursor-pointer"
                   >
                     <ArrowLeft size={14} />
@@ -914,10 +810,17 @@ const Admin = () => {
 
                   <button
                     type="button"
-                    onClick={() => { setUseRecovery(!useRecovery); setLoginError(''); }}
-                    className="text-brand-magenta hover:underline font-bold cursor-pointer"
+                    onClick={handleResendOTP}
+                    disabled={resendCountdown > 0 || isResending}
+                    className="text-brand-magenta hover:underline font-extrabold cursor-pointer disabled:opacity-50 disabled:no-underline"
                   >
-                    {useRecovery ? '६-अंकी ॲप कोड वापरा (Use 6-digit TOTP)' : 'माझ्याकडे ॲप उपलब्ध नाही (Use Recovery Code)'}
+                    {isResending ? (
+                      'पाठवत आहे...'
+                    ) : resendCountdown > 0 ? (
+                      `पुन्हा OTP पाठवा (${resendCountdown}s)`
+                    ) : (
+                      'OTP पुन्हा पाठवा (Resend Code)'
+                    )}
                   </button>
                 </div>
               </form>

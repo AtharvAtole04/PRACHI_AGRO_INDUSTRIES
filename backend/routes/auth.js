@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { authenticator } from 'otplib';
 import QRCode from 'qrcode';
 import User from '../models/User.js';
+import { sendOtpEmail } from '../utils/sendEmail.js';
 import { JWT_SECRET, PRE_MFA_SECRET, verifyAdminToken, checkAccountLock } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -97,42 +98,30 @@ router.post('/admin/login-step1', async (req, res) => {
     // Password is valid! Reset failed login attempts
     user.failedLoginAttempts = 0;
 
-    // Generate short-lived pre-MFA Token (5 min validity)
+    // Generate 6-digit numeric OTP
+    const rawOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedOtp = await bcrypt.hash(rawOtp, 10);
+
+    user.emailOtpHash = hashedOtp;
+    user.emailOtpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // Valid for 10 mins
+    await user.save();
+
+    // Generate short-lived pre-MFA Token (10 min validity)
     const preMfaToken = jwt.sign(
       { userId: user._id, email: user.email, step: 'pre-mfa' },
       PRE_MFA_SECRET,
-      { expiresIn: '5m' }
+      { expiresIn: '10m' }
     );
 
-    // If MFA is not yet enabled, generate QR setup payload
-    if (!user.mfaEnabled) {
-      const secret = authenticator.generateSecret();
-      const otpauth = authenticator.keyuri(user.email, 'Prachi Agro Industries', secret);
-      const qrCodeUrl = await QRCode.toDataURL(otpauth);
-      const { plainCodes, hashedCodes } = await generateRecoveryCodes();
-
-      user.mfaTempSecret = secret;
-      user.recoveryCodeHashes = hashedCodes;
-      await user.save();
-
-      return res.json({
-        success: true,
-        mfaSetupRequired: true,
-        preMfaToken,
-        qrCodeUrl,
-        secret,
-        recoveryCodes: plainCodes,
-        message: 'First-time 2FA Setup required. Scan the QR code using Google Authenticator or Microsoft Authenticator.'
-      });
-    }
-
-    await user.save();
+    // Trigger email sending
+    await sendOtpEmail(user.email, rawOtp);
 
     return res.json({
       success: true,
       mfaRequired: true,
       preMfaToken,
-      message: 'Password verified. Enter 6-digit code from your authenticator app.'
+      email: user.email,
+      message: `Verification code sent to ${user.email}. Please check your inbox.`
     });
 
   } catch (err) {
@@ -141,19 +130,25 @@ router.post('/admin/login-step1', async (req, res) => {
   }
 });
 
-// Step 2: Verify 6-digit TOTP Code or Recovery Code
-router.post('/admin/verify-2fa', async (req, res) => {
+// Step 2: Verify 6-digit Email OTP Code
+const handleOtpVerification = async (req, res) => {
   try {
-    const { preMfaToken, otpCode, recoveryCode } = req.body;
+    const { preMfaToken, otpCode, otp } = req.body;
+    const codeToVerify = (otpCode || otp || '').trim();
+
     if (!preMfaToken) {
       return res.status(401).json({ error: 'Missing verification session. Please start login again.' });
+    }
+
+    if (!codeToVerify) {
+      return res.status(400).json({ error: 'Please enter the 6-digit OTP code sent to your email.' });
     }
 
     let decoded;
     try {
       decoded = jwt.verify(preMfaToken, PRE_MFA_SECRET);
     } catch (err) {
-      return res.status(401).json({ error: 'Verification session expired. Please start login again.' });
+      return res.status(401).json({ error: 'Verification session expired. Please request a new OTP.' });
     }
 
     const user = await User.findById(decoded.userId);
@@ -167,52 +162,21 @@ router.post('/admin/verify-2fa', async (req, res) => {
       return res.status(429).json({ error: lockState.message });
     }
 
-    let authenticated = false;
-    let usedRecoveryCode = false;
-
-    // A. Verify TOTP 6-digit code
-    if (otpCode && otpCode.trim().length === 6) {
-      const cleanOtp = otpCode.trim();
-      const secretToVerify = user.mfaEnabled ? user.mfaSecret : user.mfaTempSecret;
-
-      if (!secretToVerify) {
-        return res.status(400).json({ error: 'No 2FA secret found for verification.' });
-      }
-
-      authenticator.options = { window: 1 }; // Allow 30s clock skew tolerance
-      authenticated = authenticator.verify({ token: cleanOtp, secret: secretToVerify });
-
-      if (authenticated && !user.mfaEnabled) {
-        user.mfaSecret = user.mfaTempSecret;
-        user.mfaEnabled = true;
-        user.mfaTempSecret = '';
-      }
+    // Check OTP expiration
+    if (!user.emailOtpExpiresAt || Date.now() > new Date(user.emailOtpExpiresAt).getTime()) {
+      return res.status(400).json({ error: 'OTP code has expired. Please click Resend OTP.' });
     }
 
-    // B. Verify Recovery Code if TOTP failed or omitted
-    if (!authenticated && recoveryCode && recoveryCode.trim()) {
-      const cleanRecovery = recoveryCode.trim().toUpperCase();
-      let matchedIndex = -1;
+    // Verify OTP against hashed OTP
+    let authenticated = false;
+    if (user.emailOtpHash) {
+      authenticated = await bcrypt.compare(codeToVerify, user.emailOtpHash);
+    }
 
-      for (let i = 0; i < (user.recoveryCodeHashes || []).length; i++) {
-        const matches = await bcrypt.compare(cleanRecovery, user.recoveryCodeHashes[i]);
-        if (matches) {
-          matchedIndex = i;
-          break;
-        }
-      }
-
-      if (matchedIndex !== -1) {
-        authenticated = true;
-        usedRecoveryCode = true;
-        // Invalidate and remove the used recovery code hash immediately
-        user.recoveryCodeHashes.splice(matchedIndex, 1);
-        if (!user.mfaEnabled && user.mfaTempSecret) {
-          user.mfaSecret = user.mfaTempSecret;
-          user.mfaEnabled = true;
-          user.mfaTempSecret = '';
-        }
-      }
+    // TOTP or Recovery Code fallback
+    if (!authenticated && user.mfaSecret) {
+      authenticator.options = { window: 1 };
+      authenticated = authenticator.verify({ token: codeToVerify, secret: user.mfaSecret });
     }
 
     if (!authenticated) {
@@ -221,13 +185,16 @@ router.post('/admin/verify-2fa', async (req, res) => {
         user.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 minute lock
       }
       await user.save();
-      return res.status(401).json({ error: 'Invalid 6-digit authenticator code or recovery code.' });
+      return res.status(401).json({ error: 'Invalid 6-digit verification code. Please check your email and try again.' });
     }
 
-    // Success! Reset security counters and save
+    // Success! Clear OTP hash & reset security counters
+    user.emailOtpHash = '';
+    user.emailOtpExpiresAt = null;
     user.failedLoginAttempts = 0;
     user.failedOtpAttempts = 0;
     user.lockUntil = null;
+    user.mfaEnabled = true;
     await user.save();
 
     // Issue Full Admin Session Token (24 hours)
@@ -255,14 +222,64 @@ router.post('/admin/verify-2fa', async (req, res) => {
 
     return res.json({
       success: true,
-      message: usedRecoveryCode ? 'Recovery code verified successfully.' : '2FA verification successful.',
+      message: 'Email OTP verification successful.',
       token: sessionToken,
       user: userProfile
     });
 
   } catch (err) {
-    console.error('Error in verify-2fa:', err);
-    res.status(500).json({ error: 'Internal server error during 2FA verification.' });
+    console.error('Error verifying OTP:', err);
+    res.status(500).json({ error: 'Internal server error during verification.' });
+  }
+};
+
+router.post('/admin/verify-2fa', handleOtpVerification);
+router.post('/admin/verify-email-otp', handleOtpVerification);
+
+// Resend Email OTP
+router.post('/admin/resend-email-otp', async (req, res) => {
+  try {
+    const { preMfaToken } = req.body;
+    if (!preMfaToken) {
+      return res.status(401).json({ error: 'Missing verification session.' });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(preMfaToken, PRE_MFA_SECRET);
+    } catch (err) {
+      return res.status(401).json({ error: 'Session expired. Please start login again.' });
+    }
+
+    const user = await User.findById(decoded.userId);
+    if (!user || user.role !== 'admin') {
+      return res.status(403).json({ error: 'Unauthorized.' });
+    }
+
+    // Check Lockout
+    const lockState = checkAccountLock(user);
+    if (lockState.isLocked) {
+      return res.status(429).json({ error: lockState.message });
+    }
+
+    // Generate fresh 6-digit OTP
+    const rawOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedOtp = await bcrypt.hash(rawOtp, 10);
+
+    user.emailOtpHash = hashedOtp;
+    user.emailOtpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    // Trigger email send
+    await sendOtpEmail(user.email, rawOtp);
+
+    return res.json({
+      success: true,
+      message: `A new verification code has been sent to ${user.email}.`
+    });
+  } catch (err) {
+    console.error('Error resending OTP:', err);
+    res.status(500).json({ error: 'Failed to resend OTP.' });
   }
 });
 
