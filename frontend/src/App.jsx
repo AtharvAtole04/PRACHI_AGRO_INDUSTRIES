@@ -29,6 +29,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import CustomerDashboard from './pages/CustomerDashboard';
 import DealerDashboard from './pages/DealerDashboard';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <AuthProvider>
           <CartProvider>
             <BrowserRouter>
+              <ScrollToTop />
               <MainLayout>
                 <ErrorBoundary>
                   <Routes>
