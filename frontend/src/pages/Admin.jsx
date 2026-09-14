@@ -1633,6 +1633,369 @@ const Admin = () => {
               </div>
             </div>
 
+            {/* 5. JOIN NETWORK & DEALERSHIP PAGE CMS */}
+            <div className="bg-emerald-50/50 border border-emerald-200 rounded-2xl p-5 flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                  <Store size={16} className="text-brand-green-dark" />
+                  <span>५. नेटवर्क व डीलरशिप पृष्ठ सामग्री (Join Network & Dealership Page CMS)</span>
+                </span>
+              </div>
+
+              {/* Banner Badge & Headline */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">बॅनर बॅज (मराठी)</label>
+                  <input
+                    type="text"
+                    value={siteContent.joinNetwork?.bannerBadge?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      joinNetwork: {
+                        ...defaultSiteContent.joinNetwork,
+                        ...siteContent.joinNetwork,
+                        bannerBadge: { ...(siteContent.joinNetwork?.bannerBadge || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-bold"
+                    placeholder="डीलरशिप व वितरण व्यवस्था"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Banner Badge (English)</label>
+                  <input
+                    type="text"
+                    value={siteContent.joinNetwork?.bannerBadge?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      joinNetwork: {
+                        ...defaultSiteContent.joinNetwork,
+                        ...siteContent.joinNetwork,
+                        bannerBadge: { ...(siteContent.joinNetwork?.bannerBadge || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-bold"
+                    placeholder="Dealership & Distribution Network"
+                  />
+                </div>
+              </div>
+
+              {/* Banner Headline */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">मुख्य हेडिंग (मराठी)</label>
+                  <input
+                    type="text"
+                    value={siteContent.joinNetwork?.bannerHeadline?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      joinNetwork: {
+                        ...defaultSiteContent.joinNetwork,
+                        ...siteContent.joinNetwork,
+                        bannerHeadline: { ...(siteContent.joinNetwork?.bannerHeadline || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-black"
+                    placeholder="आमच्या नेटवर्कमध्ये सहभागी व्हा"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Main Headline (English)</label>
+                  <input
+                    type="text"
+                    value={siteContent.joinNetwork?.bannerHeadline?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      joinNetwork: {
+                        ...defaultSiteContent.joinNetwork,
+                        ...siteContent.joinNetwork,
+                        bannerHeadline: { ...(siteContent.joinNetwork?.bannerHeadline || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-black"
+                    placeholder="Join Our Growth Network"
+                  />
+                </div>
+              </div>
+
+              {/* Banner Subtitle */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">सबटायटल (मराठी)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.joinNetwork?.bannerSubtitle?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      joinNetwork: {
+                        ...defaultSiteContent.joinNetwork,
+                        ...siteContent.joinNetwork,
+                        bannerSubtitle: { ...(siteContent.joinNetwork?.bannerSubtitle || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                    placeholder="कृषी सेवा केंद्र, डीलरशिप, वितरण व्यवस्था..."
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Banner Subtitle (English)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.joinNetwork?.bannerSubtitle?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      joinNetwork: {
+                        ...defaultSiteContent.joinNetwork,
+                        ...siteContent.joinNetwork,
+                        bannerSubtitle: { ...(siteContent.joinNetwork?.bannerSubtitle || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                    placeholder="Partner with Prachi Agro Industries..."
+                  />
+                </div>
+              </div>
+
+              {/* 4 Benefit Badges */}
+              <div className="border-t border-emerald-200/60 pt-3">
+                <label className="text-xs font-black text-emerald-900 uppercase tracking-wide block mb-2">
+                  ४ फायदे / वैशिष्ट्य बॅजेस (4 Benefits Badges)
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">बॅज १ (MR / EN)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit1?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit1: { ...(siteContent.joinNetwork?.benefit1 || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white mb-1"
+                      placeholder="अधिकृत डीलरशिप"
+                    />
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit1?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit1: { ...(siteContent.joinNetwork?.benefit1 || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white"
+                      placeholder="Authorized Dealership"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">बॅज २ (MR / EN)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit2?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit2: { ...(siteContent.joinNetwork?.benefit2 || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white mb-1"
+                      placeholder="आकर्षक मार्जिन"
+                    />
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit2?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit2: { ...(siteContent.joinNetwork?.benefit2 || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white"
+                      placeholder="Attractive Margins"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">बॅज ३ (MR / EN)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit3?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit3: { ...(siteContent.joinNetwork?.benefit3 || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white mb-1"
+                      placeholder="दर्जेदार उत्पादने"
+                    />
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit3?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit3: { ...(siteContent.joinNetwork?.benefit3 || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white"
+                      placeholder="Premium Quality"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">बॅज ४ (MR / EN)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit4?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit4: { ...(siteContent.joinNetwork?.benefit4 || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white mb-1"
+                      placeholder="पूर्ण विक्री सहाय्य"
+                    />
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.benefit4?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          benefit4: { ...(siteContent.joinNetwork?.benefit4 || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-1.5 text-xs bg-white"
+                      placeholder="Sales Support"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Network Regions & Districts List */}
+              <div className="border-t border-emerald-200/60 pt-3">
+                <label className="text-xs font-black text-emerald-900 uppercase tracking-wide block mb-2">
+                  वितरण क्षेत्र व जिल्हे (Regions & Distribution Zones List)
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">जिल्ह्यांची यादी (मराठी - स्वल्पविरामाने वेगळे करा)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.regionsList?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          regionsList: { ...(siteContent.joinNetwork?.regionsList || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-medium"
+                      placeholder="पुणे, नाशिक, छ. संभाजीनगर, सोलापूर, कोल्हापूर, नागपूर"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">Districts List (English - Comma separated)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.regionsList?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          regionsList: { ...(siteContent.joinNetwork?.regionsList || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-medium"
+                      placeholder="Pune, Nashik, Chh. Sambhajinagar, Solapur, Kolhapur, Nagpur"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Direct Contact Numbers & Email */}
+              <div className="border-t border-emerald-200/60 pt-3">
+                <label className="text-xs font-black text-emerald-900 uppercase tracking-wide block mb-2">
+                  थेट संपर्क माहिती (Direct Contact Phone, Email & WhatsApp)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">कॉल नंबर (Phone)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.directPhone || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          directPhone: e.target.value
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-bold"
+                      placeholder="9021605160"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">WhatsApp नंबर</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.directWhatsapp || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          directWhatsapp: e.target.value
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-bold"
+                      placeholder="9021605160"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">अधिकृत ईमेल (Email)</label>
+                    <input
+                      type="email"
+                      value={siteContent.joinNetwork?.directEmail || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          directEmail: e.target.value
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-bold"
+                      placeholder="info@prachiagroindustries.in"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Save Button */}
             <button
               type="submit"

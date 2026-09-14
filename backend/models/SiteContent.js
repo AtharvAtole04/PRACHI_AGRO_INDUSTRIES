@@ -61,6 +61,11 @@ const siteContentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
     default: {}
   },
+  // Join Network & Dealership Page CMS
+  joinNetwork: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
+  },
   updatedAt: {
     type: Date,
     default: Date.now

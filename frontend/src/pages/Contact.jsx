@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Mail, MessageCircle, Send, CheckCircle2, MapPin, Handshake, Users, Store, Building2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { getSiteContent, defaultSiteContent } from '../data/siteContent';
 import SEOHead from '../components/SEOHead';
 
 const Contact = () => {
   const { t, language } = useLanguage();
   
+  // Site Content CMS state
+  const [siteContent, setSiteContent] = useState(() => {
+    const saved = localStorage.getItem('prachi_site_content');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return defaultSiteContent;
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    getSiteContent().then(data => {
+      if (isMounted && data) {
+        setSiteContent(data);
+      }
+    });
+    return () => { isMounted = false; };
+  }, []);
+
+  const net = siteContent?.joinNetwork || defaultSiteContent.joinNetwork;
+  const lang = language === 'mr' ? 'mr' : 'en';
+
   // Form states
   const [name, setName] = useState('');
   const [businessName, setBusinessName] = useState('');
@@ -37,9 +60,16 @@ const Contact = () => {
   };
 
   const handleWhatsAppContact = () => {
+    const phoneNum = net.directWhatsapp || '9021605160';
     const text = encodeURIComponent("नमस्कार Prachi Agro Industries, मला आपल्या डीलरशिप / नेटवर्कमध्ये सहभागी होण्याविषयी माहिती हवी आहे.");
-    window.open(`https://wa.me/9021605160?text=${text}`, '_blank');
+    window.open(`https://wa.me/${phoneNum}?text=${text}`, '_blank');
   };
+
+  // Parse regions list string into items
+  const regionsArray = (net.regionsList?.[lang] || net.regionsList?.mr || 'पुणे, नाशिक, छ. संभाजीनगर, सोलापूर, कोल्हापूर, नागपूर')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
 
   return (
     <div className="flex flex-col gap-10 text-left max-w-5xl mx-auto">
@@ -53,34 +83,34 @@ const Contact = () => {
         <div className="absolute top-0 right-0 w-80 h-80 bg-brand-gold/10 rounded-full blur-3xl pointer-events-none" />
         
         <span className="bg-brand-gold text-brand-green-dark font-extrabold text-[10px] sm:text-xs uppercase tracking-widest px-4 py-1 rounded-full inline-block shadow-md">
-          {language === 'mr' ? 'डीलरशिप व वितरण व्यवस्था' : 'Dealership & Distribution Network'}
+          {net.bannerBadge?.[lang] || (language === 'mr' ? 'डीलरशिप व वितरण व्यवस्था' : 'Dealership & Distribution Network')}
         </span>
         <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white mt-4">
-          {language === 'mr' ? 'आमच्या नेटवर्कमध्ये सहभागी व्हा' : 'Join Our Growth Network'}
+          {net.bannerHeadline?.[lang] || (language === 'mr' ? 'आमच्या नेटवर्कमध्ये सहभागी व्हा' : 'Join Our Growth Network')}
         </h1>
         <p className="text-emerald-100 text-xs sm:text-base mt-2.5 max-w-2xl mx-auto font-medium leading-relaxed">
-          {language === 'mr' 
+          {net.bannerSubtitle?.[lang] || (language === 'mr' 
             ? 'कृषी सेवा केंद्र, डीलरशिप, वितरण व्यवस्था आणि तज्ज्ञ कृषी सल्ल्यासाठी आजच प्राची अॅग्रो कुटुंबाशी जोडा.' 
-            : 'Partner with Prachi Agro Industries for Authorized Dealership, Bulk Supply, and Agronomic Guidance.'}
+            : 'Partner with Prachi Agro Industries for Authorized Dealership, Bulk Supply, and Agronomic Guidance.')}
         </p>
 
         {/* Benefits Badges */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-white/10 text-center">
           <div className="bg-white/10 rounded-xl p-2.5 backdrop-blur-sm">
             <Store className="mx-auto mb-1 text-brand-gold" size={20} />
-            <p className="text-[11px] font-bold">अधिकृत डीलरशिप</p>
+            <p className="text-[11px] font-bold">{net.benefit1?.[lang] || 'अधिकृत डीलरशिप'}</p>
           </div>
           <div className="bg-white/10 rounded-xl p-2.5 backdrop-blur-sm">
             <Handshake className="mx-auto mb-1 text-brand-gold" size={20} />
-            <p className="text-[11px] font-bold">आकर्षक मार्जिन</p>
+            <p className="text-[11px] font-bold">{net.benefit2?.[lang] || 'आकर्षक मार्जिन'}</p>
           </div>
           <div className="bg-white/10 rounded-xl p-2.5 backdrop-blur-sm">
             <Building2 className="mx-auto mb-1 text-brand-gold" size={20} />
-            <p className="text-[11px] font-bold">दर्जेदार उत्पादने</p>
+            <p className="text-[11px] font-bold">{net.benefit3?.[lang] || 'दर्जेदार उत्पादने'}</p>
           </div>
           <div className="bg-white/10 rounded-xl p-2.5 backdrop-blur-sm">
             <Users className="mx-auto mb-1 text-brand-gold" size={20} />
-            <p className="text-[11px] font-bold">पूर्ण विक्री सहाय्य</p>
+            <p className="text-[11px] font-bold">{net.benefit4?.[lang] || 'पूर्ण विक्री सहाय्य'}</p>
           </div>
         </div>
       </div>
@@ -90,14 +120,14 @@ const Contact = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-brand-green-dark tracking-tight">
-              {language === 'mr' ? 'आमचे डीलर व वितरण नेटवर्क' : 'Our Dealer & Distribution Network'}
+              {net.mapTitle?.[lang] || (language === 'mr' ? 'आमचे डीलर व वितरण नेटवर्क' : 'Our Dealer & Distribution Network')}
             </h2>
             <p className="text-xs text-slate-500 font-semibold mt-0.5">
-              {language === 'mr' ? 'तुमच्या जवळचे अधिकृत कृषी केंद्र शोधा' : 'Find authorized agri retail centers near you'}
+              {net.mapSubtitle?.[lang] || (language === 'mr' ? 'तुमच्या जवळचे अधिकृत कृषी केंद्र शोधा' : 'Find authorized agri retail centers near you')}
             </p>
           </div>
           <span className="bg-emerald-50 text-brand-green-dark text-xs font-bold px-3 py-1 rounded-full border border-emerald-100 self-start sm:self-auto">
-            ६+ प्रमुख जिल्हे
+            {net.regionTag?.[lang] || '६+ प्रमुख जिल्हे'}
           </span>
         </div>
         
@@ -116,20 +146,13 @@ const Contact = () => {
 
         {/* Dealers / Distribution Regions Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {[
-            { city: 'पुणे (Pune)' },
-            { city: 'नाशिक (Nashik)' },
-            { city: 'छ. संभाजीनगर (Aurangabad)' },
-            { city: 'सोलापूर (Solapur)' },
-            { city: 'कोल्हापूर (Kolhapur)' },
-            { city: 'नागपूर (Nagpur)' }
-          ].map((dealer, idx) => (
+          {regionsArray.map((regionName, idx) => (
             <div key={idx} className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-emerald-200 transition-all">
               <div className="bg-white p-2.5 rounded-lg shadow-sm text-brand-magenta flex-shrink-0">
                 <MapPin size={18} />
               </div>
               <div className="min-w-0">
-                <h4 className="font-bold text-slate-800 text-sm truncate">{dealer.city}</h4>
+                <h4 className="font-bold text-slate-800 text-sm truncate">{regionName}</h4>
                 <p className="text-xs text-slate-500 font-medium">
                   {language === 'mr' ? 'अधिकृत वितरण क्षेत्र' : 'Authorized Distribution Zone'}
                 </p>
@@ -151,7 +174,7 @@ const Contact = () => {
 
             {/* Direct Phone */}
             <a 
-              href="tel:9021605160" 
+              href={`tel:${net.directPhone || '9021605160'}`} 
               className="flex items-center gap-4 p-3.5 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-100/50 group transition-all"
             >
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-brand-green-dark flex items-center justify-center flex-shrink-0 group-hover:bg-brand-green-dark group-hover:text-white transition-all">
@@ -161,7 +184,7 @@ const Contact = () => {
                 <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wide">
                   {language === 'mr' ? 'थेट कॉल करा' : 'Call Us'}
                 </span>
-                <span className="text-sm sm:text-base font-extrabold text-slate-800">9021605160</span>
+                <span className="text-sm sm:text-base font-extrabold text-slate-800">{net.directPhone || '9021605160'}</span>
               </div>
             </a>
 
@@ -177,13 +200,13 @@ const Contact = () => {
                 <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wide">
                   {language === 'mr' ? 'WhatsApp वर बोला' : 'WhatsApp Us'}
                 </span>
-                <span className="text-sm sm:text-base font-extrabold text-slate-800">9021605160</span>
+                <span className="text-sm sm:text-base font-extrabold text-slate-800">{net.directWhatsapp || '9021605160'}</span>
               </div>
             </button>
 
             {/* Email */}
             <a 
-              href="mailto:info@prachiagroindustries.in" 
+              href={`mailto:${net.directEmail || 'info@prachiagroindustries.in'}`} 
               className="flex items-center gap-4 p-3.5 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-100/50 group transition-all"
             >
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-brand-green-dark flex items-center justify-center flex-shrink-0 group-hover:bg-brand-green-dark group-hover:text-white transition-all">
@@ -193,7 +216,7 @@ const Contact = () => {
                 <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wide">
                   {language === 'mr' ? 'अधिकृत ईमेल' : 'Official Email'}
                 </span>
-                <span className="text-sm sm:text-base font-extrabold text-slate-800 truncate block">info@prachiagroindustries.in</span>
+                <span className="text-sm sm:text-base font-extrabold text-slate-800 truncate block">{net.directEmail || 'info@prachiagroindustries.in'}</span>
               </div>
             </a>
 

@@ -71,6 +71,28 @@ const defaultContent = {
       mr: 'पिकांची वाढ आणि रोगांच्या नियंत्रणाविषयी आमच्या कृषी सल्लागारांशी थेट संपर्क साधा. आम्ही आपल्या सेवेत २४/७ आहोत.',
       en: 'Get customized suggestions for crop nutrition and crop protection. Chat with our agronomist experts today.'
     }
+  },
+  joinNetwork: {
+    bannerBadge: { mr: 'डीलरशिप व वितरण व्यवस्था', en: 'Dealership & Distribution Network' },
+    bannerHeadline: { mr: 'आमच्या नेटवर्कमध्ये सहभागी व्हा', en: 'Join Our Growth Network' },
+    bannerSubtitle: {
+      mr: 'कृषी सेवा केंद्र, डीलरशिप, वितरण व्यवस्था आणि तज्ज्ञ कृषी सल्ल्यासाठी आजच प्राची अॅग्रो कुटुंबाशी जोडा.',
+      en: 'Partner with Prachi Agro Industries for Authorized Dealership, Bulk Supply, and Agronomic Guidance.'
+    },
+    benefit1: { mr: 'अधिकृत डीलरशिप', en: 'Authorized Dealership' },
+    benefit2: { mr: 'आकर्षक मार्जिन', en: 'Attractive Margins' },
+    benefit3: { mr: 'दर्जेदार उत्पादने', en: 'Premium Quality' },
+    benefit4: { mr: 'पूर्ण विक्री सहाय्य', en: 'Sales Support' },
+    mapTitle: { mr: 'आमचे डीलर व वितरण नेटवर्क', en: 'Our Dealer & Distribution Network' },
+    mapSubtitle: { mr: 'तुमच्या जवळचे अधिकृत कृषी केंद्र शोधा', en: 'Find authorized agri retail centers near you' },
+    regionTag: { mr: '६+ प्रमुख जिल्हे', en: '6+ Key Districts' },
+    regionsList: {
+      mr: 'पुणे (Pune), नाशिक (Nashik), छ. संभाजीनगर (Aurangabad), सोलापूर (Solapur), कोल्हापूर (Kolhapur), नागपूर (Nagpur)',
+      en: 'Pune, Nashik, Chh. Sambhajinagar, Solapur, Kolhapur, Nagpur'
+    },
+    directPhone: '9021605160',
+    directEmail: 'info@prachiagroindustries.in',
+    directWhatsapp: '9021605160'
   }
 };
 
