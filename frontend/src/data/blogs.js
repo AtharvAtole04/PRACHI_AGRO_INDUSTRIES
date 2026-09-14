@@ -3,6 +3,7 @@ import { apiUrl, adminApiUrl } from '../config';
 const defaultBlogs = [
   {
     id: "how-to-ensure-a-strong-start-for-the-onion-crop?-key-tips-for-a-good-yield-per-acre.",
+    date: "2026-09-13",
     title: {
       mr: "कांदा पिकाची सुरुवात मजबूत कशी करावी? एकरी चांगल्या उत्पादनासाठी महत्त्वाच्या टिप्स",
       en: "How to ensure a strong start for the onion crop? Key tips for a good yield per acre."
@@ -60,6 +61,7 @@ Key tips for ensuring a strong start:
   },
   {
     id: "dragon-fruit",
+    date: "2026-09-13",
     title: {
       mr: "ड्रॅगन फ्रूट शेतीत मोठा बदल: Microdefence Slurry Kit चा शेतकरी महिलेचा अनुभव",
       en: "Dragon Fruit Farming: Microdefence Slurry Kit Experience"
