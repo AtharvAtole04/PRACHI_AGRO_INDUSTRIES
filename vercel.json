@@ -8,6 +8,26 @@
       "destination": "/api/products"
     },
     {
+      "source": "/api/videos",
+      "destination": "/api/videos"
+    },
+    {
+      "source": "/api/blogs",
+      "destination": "/api/blogs"
+    },
+    {
+      "source": "/api/categories",
+      "destination": "/api/categories"
+    },
+    {
+      "source": "/api/crops",
+      "destination": "/api/crops"
+    },
+    {
+      "source": "/api/reviews",
+      "destination": "/api/reviews"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://prachi-agro-industries.onrender.com/api/:path*"
     },
