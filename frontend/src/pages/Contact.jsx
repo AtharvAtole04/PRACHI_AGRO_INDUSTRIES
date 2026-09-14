@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MessageCircle, Send, CheckCircle2, MapPin, Handshake, Users, Store, Building2 } from 'lucide-react';
+import { Phone, Mail, MessageCircle, Send, CheckCircle2, Handshake, Users, Store, Building2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getSiteContent, defaultSiteContent } from '../data/siteContent';
 import SEOHead from '../components/SEOHead';
@@ -72,12 +72,6 @@ const Contact = () => {
     window.open(`https://wa.me/${phoneNum}?text=${text}`, '_blank');
   };
 
-  // Parse regions list string into items
-  const regionsArray = (net.regionsList?.[lang] || net.regionsList?.mr || 'पुणे, नाशिक, छ. संभाजीनगर, सोलापूर, कोल्हापूर, नागपूर')
-    .split(',')
-    .map(s => s.trim())
-    .filter(Boolean);
-
   return (
     <div className="flex flex-col gap-10 text-left max-w-5xl mx-auto">
       <SEOHead 
@@ -122,55 +116,7 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* 2. Dealers Network Map & Centers */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col gap-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-black text-brand-green-dark tracking-tight">
-              {net.mapTitle?.[lang] || (language === 'mr' ? 'आमचे डीलर व वितरण नेटवर्क' : 'Our Dealer & Distribution Network')}
-            </h2>
-            <p className="text-xs text-slate-500 font-semibold mt-0.5">
-              {net.mapSubtitle?.[lang] || (language === 'mr' ? 'तुमच्या जवळचे अधिकृत कृषी केंद्र शोधा' : 'Find authorized agri retail centers near you')}
-            </p>
-          </div>
-          <span className="bg-emerald-50 text-brand-green-dark text-xs font-bold px-3 py-1 rounded-full border border-emerald-100 self-start sm:self-auto">
-            {net.regionTag?.[lang] || '६+ प्रमुख जिल्हे'}
-          </span>
-        </div>
-        
-        {/* Map - Dynamic Visibility based on Admin CMS Setting */}
-        {net.isMapVisible !== false && (
-          <div className="w-full rounded-2xl overflow-hidden border-2 border-slate-100 shadow-sm">
-            <iframe 
-              src={net.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.265588856342!2d73.91454!3d18.52043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMxJzEzLjYiTiA3M8KwNTQnNTIuNCJF!5e0!3m2!1sen!2sin!4v1234567890"} 
-              width="100%" 
-              height="320" 
-              style={{ border: 0 }} 
-              allowFullScreen="" 
-              loading="lazy" 
-              title="Prachi Agro Network Map"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
-        )}
 
-        {/* Dealers / Distribution Regions Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {regionsArray.map((regionName, idx) => (
-            <div key={idx} className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-emerald-200 transition-all">
-              <div className="bg-white p-2.5 rounded-lg shadow-sm text-brand-magenta flex-shrink-0">
-                <MapPin size={18} />
-              </div>
-              <div className="min-w-0">
-                <h4 className="font-bold text-slate-800 text-sm truncate">{regionName}</h4>
-                <p className="text-xs text-slate-500 font-medium">
-                  {language === 'mr' ? 'अधिकृत वितरण क्षेत्र' : 'Authorized Distribution Zone'}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* 3. Grid: Direct Contacts & Dealership Application Form */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
