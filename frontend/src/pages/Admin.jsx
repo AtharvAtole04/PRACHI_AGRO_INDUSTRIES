@@ -45,8 +45,27 @@ const Admin = () => {
   const [reviewsList, setReviewsList] = useState([]);
   const [usersList, setUsersList] = useState([]);
 
-  // CMS Content state
-  const [siteContent, setSiteContent] = useState(defaultSiteContent);
+  // CMS Content state with null-safe default fallback
+  const [siteContent, setSiteContent] = useState(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('prachi_site_content') : null;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...defaultSiteContent,
+            ...parsed,
+            publicAnnouncement: { ...defaultSiteContent.publicAnnouncement, ...(parsed.publicAnnouncement || {}) },
+            farmerNotice: { ...defaultSiteContent.farmerNotice, ...(parsed.farmerNotice || {}) },
+            dealerNotice: { ...defaultSiteContent.dealerNotice, ...(parsed.dealerNotice || {}) },
+            aboutUs: { ...defaultSiteContent.aboutUs, ...(parsed.aboutUs || {}) },
+            joinNetwork: { ...defaultSiteContent.joinNetwork, ...(parsed.joinNetwork || {}) }
+          };
+        }
+      } catch (err) {}
+    }
+    return defaultSiteContent;
+  });
 
   // Form states for Crops
   const [cropForm, setCropForm] = useState({
@@ -138,7 +157,19 @@ const Admin = () => {
     getVideos().then(data => setVideosList(data));
     getBlogs().then(data => setBlogsList(data));
     getReviews().then(data => setReviewsList(data));
-    getSiteContent().then(data => setSiteContent(data));
+    getSiteContent().then(data => {
+      if (data && typeof data === 'object') {
+        setSiteContent(prev => ({
+          ...defaultSiteContent,
+          ...data,
+          publicAnnouncement: { ...defaultSiteContent.publicAnnouncement, ...(data.publicAnnouncement || {}) },
+          farmerNotice: { ...defaultSiteContent.farmerNotice, ...(data.farmerNotice || {}) },
+          dealerNotice: { ...defaultSiteContent.dealerNotice, ...(data.dealerNotice || {}) },
+          aboutUs: { ...defaultSiteContent.aboutUs, ...(data.aboutUs || {}) },
+          joinNetwork: { ...defaultSiteContent.joinNetwork, ...(data.joinNetwork || {}) }
+        }));
+      }
+    });
     loadUsers();
   };
 
@@ -339,9 +370,30 @@ const Admin = () => {
   // CMS Content Update
   const handleSaveCMSContent = async (e) => {
     e.preventDefault();
-    await updateSiteContent(siteContent);
-    setSuccessMsg(language === 'mr' ? 'वेबसाईट कन्टेन्ट व नोटिसेस यशस्वीरित्या अपडेट झाल्या!' : 'CMS Content & Notices updated successfully!');
-    setTimeout(() => setSuccessMsg(''), 4000);
+    try {
+      const updated = await updateSiteContent(siteContent || defaultSiteContent);
+      if (updated) {
+        setSiteContent(updated);
+      }
+      setSuccessMsg(language === 'mr' ? 'वेबसाईट कन्टेन्ट व नोटिसेस यशस्वीरित्या अपडेट झाल्या!' : 'CMS Content & Notices updated successfully!');
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      console.error('[Save CMS Content Error]:', err);
+      alert(language === 'mr' ? 'माहिती जतन करताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.' : 'Failed to save content: ' + (err.message || 'Error occurred'));
+    }
+  };
+
+  const handleResetCMSContent = async () => {
+    if (window.confirm(language === 'mr' ? 'सर्व कन्टेन्ट मूळ सेटिंग्जवर रिसेट करायचे आहे का?' : 'Reset all site content to original defaults?')) {
+      try {
+        const updated = await updateSiteContent(defaultSiteContent);
+        setSiteContent(updated);
+        setSuccessMsg(language === 'mr' ? 'कन्टेन्ट रिसेट झाले!' : 'Content reset to defaults!');
+        setTimeout(() => setSuccessMsg(''), 4000);
+      } catch (err) {
+        alert(err.message || 'Failed to reset content');
+      }
+    }
   };
 
   // User / Dealer Verification & Margins
@@ -2225,14 +2277,24 @@ const Admin = () => {
               </div>
             </div>
 
-            {/* Save Button */}
-            <button
-              type="submit"
-              className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-sm py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all self-start"
-            >
-              <Save size={16} />
-              <span>कन्टेन्ट सेव्ह करा (Save CMS Settings)</span>
-            </button>
+            {/* Save & Reset Buttons */}
+            <div className="flex flex-wrap gap-3 mt-2">
+              <button
+                type="submit"
+                className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-sm py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
+              >
+                <Save size={16} />
+                <span>कन्टेन्ट सेव्ह करा (Save CMS Settings)</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleResetCMSContent}
+                className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-3.5 px-4 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all border border-slate-200"
+              >
+                <RefreshCw size={14} />
+                <span>मूल्य रिसेट करा (Reset Defaults)</span>
+              </button>
+            </div>
 
           </form>
         </div>
