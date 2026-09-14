@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Play, X, Percent, Sparkles, Sprout, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getProducts, getLocalProducts } from '../data/products';
-import { categories } from '../data/categories';
+import { getCategories, getLocalCategories } from '../data/categories';
 import { getReviews } from '../data/reviews';
 import { getVideos } from '../data/videos';
 import { getBlogs, getLocalBlogs } from '../data/blogs';
@@ -75,6 +75,7 @@ const Home = () => {
 
   // Dynamic States initialized from local cache for instant 0ms page rendering
   const [productsList, setProductsList] = useState(() => getLocalProducts());
+  const [categoriesList, setCategoriesList] = useState(() => getLocalCategories());
   const [reviewsList, setReviewsList] = useState([]);
   const [videosList, setVideosList] = useState([]);
   const [blogsList, setBlogsList] = useState(() => getLocalBlogs());
@@ -82,6 +83,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProds = () => getProducts().then(data => setProductsList(data));
     fetchProds();
+    getCategories().then(data => setCategoriesList(data));
     getReviews().then(data => setReviewsList(data));
     getVideos().then(data => setVideosList(data));
     getBlogs().then(data => setBlogsList(data));
@@ -170,7 +172,7 @@ const Home = () => {
 
         {/* 6 Grid items in 2 rows on desktop */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {categories.map((cat) => (
+          {categoriesList.map((cat) => (
             <div 
               key={cat.id}
               onClick={() => navigate(`/products?category=${cat.id}`)}

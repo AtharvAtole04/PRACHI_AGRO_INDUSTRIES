@@ -1,4 +1,50 @@
 import Product from './models/Product.js';
+import Category from './models/Category.js';
+
+const defaultCategories = [
+  {
+    id: "plant-growth",
+    slug: "plant-growth",
+    title: { mr: "कृषी टॉनिक व वाढ संजीवक", en: "Plant Tonics & Growth Promoters" },
+    subtitle: { mr: "फुलधारणा, फळांची फुगवण व जोमदार वाढ", en: "Flowering, Fruit Sizing & Vigorous Growth" },
+    image: "/assets/categories/growth.svg"
+  },
+  {
+    id: "fertilizers",
+    slug: "fertilizers",
+    title: { mr: "दाणेदार खते व माती सुधारक", en: "Granular Fertilizers & Soil Conditioners" },
+    subtitle: { mr: "पांढरी मुळी व जमिनीची सुपीकता वाढवण्यासाठी", en: "Feeder Roots & Soil Fertility" },
+    image: "/assets/categories/fertilizer.svg"
+  },
+  {
+    id: "fungicides",
+    slug: "fungicides",
+    title: { mr: "बुरशीनाशके (Fungicides)", en: "Fungicides" },
+    subtitle: { mr: "करपा, भुरी व रोगांचे १००% नियंत्रण", en: "Control of Blight, Mildew & Fungal Diseases" },
+    image: "/assets/categories/fungicide.svg"
+  },
+  {
+    id: "micronutrients",
+    slug: "micronutrients",
+    title: { mr: "सूक्ष्म अन्नद्रव्ये (Micronutrients)", en: "Micronutrients" },
+    subtitle: { mr: "पिकांचा पिवळेपणा दूर करून संपूर्ण पोषण", en: "Essential Nutrients for Chlorophyll & Health" },
+    image: "/assets/categories/micronutrient.svg"
+  },
+  {
+    id: "silicon-based",
+    slug: "silicon-based",
+    title: { mr: "सिलिकॉन आधारित उत्पादने", en: "Silicon Products" },
+    subtitle: { mr: "पिकांची प्रतिकारशक्ती व बाह्य कवच संरक्षण", en: "To Increase Crop Immunity & Natural Defense" },
+    image: "/assets/categories/silicon.svg"
+  },
+  {
+    id: "insecticides",
+    slug: "insecticides",
+    title: { mr: "कीटकनाशके (Insecticides)", en: "Insecticides" },
+    subtitle: { mr: "रस शोषक कीड व अळ्यांचे नियंत्रण", en: "Effective Pest & Insect Control" },
+    image: "/assets/categories/insecticide.svg"
+  }
+];
 
 const defaultProducts = [
   {
@@ -704,6 +750,13 @@ export async function seedIfEmpty() {
         console.log('🌱 Product collection is empty. Auto-seeding default products into MongoDB...');
         await Product.insertMany(defaultProducts);
         console.log(`✅ Successfully seeded ${defaultProducts.length} default products into MongoDB.`);
+      }
+
+      const categoryCount = await Category.countDocuments();
+      if (categoryCount === 0) {
+        console.log('📂 Category collection is empty. Auto-seeding default categories into MongoDB...');
+        await Category.insertMany(defaultCategories);
+        console.log(`✅ Successfully seeded ${defaultCategories.length} default categories into MongoDB.`);
       }
     }
   } catch (err) {

@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Heart, Sparkles, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { getSiteContent, defaultSiteContent } from '../data/siteContent';
 import SEOHead from '../components/SEOHead';
 import CertificatesSection from '../components/CertificatesSection';
 
 const About = () => {
   const { t, language } = useLanguage();
+  const [siteContent, setSiteContent] = useState(() => {
+    const saved = localStorage.getItem('prachi_site_content');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return defaultSiteContent;
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    getSiteContent().then(data => {
+      if (isMounted && data) {
+        setSiteContent(data);
+      }
+    });
+    return () => { isMounted = false; };
+  }, []);
+
+  const about = siteContent?.aboutUs || defaultSiteContent.aboutUs;
+  const lang = language === 'mr' ? 'mr' : 'en';
 
   return (
     <div className="flex flex-col gap-12 text-left max-w-5xl mx-auto">
@@ -29,38 +50,32 @@ const About = () => {
       <section className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white p-6 sm:p-10 rounded-3xl border border-slate-100 shadow-sm">
         <div className="md:col-span-7 flex flex-col gap-4 text-left">
           <span className="bg-emerald-50 text-brand-green-dark text-xs font-black px-3.5 py-1 rounded-full self-start border border-emerald-200">
-            🌱 १५ वर्षांची साथ… समृद्ध शेतीची नवी वाट!
+            {about.experienceBadge?.[lang] || '🌱 १५ वर्षांची साथ… समृद्ध शेतीची नवी वाट!'}
           </span>
           
           <h2 className="text-xl sm:text-2xl font-black text-brand-green-dark tracking-tight border-l-4 border-brand-magenta pl-3">
-            शेतकऱ्यांच्या प्रगतीचा विश्वासू साथीदार!
+            {about.headline?.[lang] || 'शेतकऱ्यांच्या प्रगतीचा विश्वासू साथीदार!'}
           </h2>
 
           <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-            {language === 'mr' 
-              ? 'गेल्या १५ वर्षांपासून प्राची अॅग्रो इंडस्ट्रीज शेतकऱ्यांच्या गरजा समजून घेत, आधुनिक शेतीसाठी विश्वासार्ह आणि प्रभावी उपाय उपलब्ध करून देण्यासाठी सातत्याने कार्यरत आहे.'
-              : 'For over 15 years, Prachi Agro Industries has been dedicated to understanding farmer needs and providing proven agricultural solutions.'}
+            {about.story1?.[lang]}
           </p>
 
           <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-            {language === 'mr'
-              ? 'शेतकऱ्यांचा विश्वास, गुणवत्तेची बांधिलकी आणि शेतीतील आधुनिक तंत्रज्ञानाचा स्वीकार, या मूल्यांच्या बळावर आम्ही आज अनेक शेतकऱ्यांशी विश्वासाचे नाते निर्माण केले आहे.'
-              : 'Built on farmer trust, uncompromising quality, and modern agricultural science, we have formed long-lasting bonds with thousands of growers.'}
+            {about.story2?.[lang]}
           </p>
 
           {/* Highlights Ribbon */}
           <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-2xl p-3.5 my-1 flex flex-wrap items-center justify-between gap-2 text-xs font-black text-brand-green-dark">
-            <span>✨ १५ वर्षांचा अनुभव</span>
+            <span>{about.badge1?.[lang] || '✨ १५ वर्षांचा अनुभव'}</span>
             <span className="text-emerald-300">•</span>
-            <span>🤝 शेतकऱ्यांचा विश्वास</span>
+            <span>{about.badge2?.[lang] || '🤝 शेतकऱ्यांचा विश्वास'}</span>
             <span className="text-emerald-300">•</span>
-            <span>🏅 गुणवत्तेची बांधिलकी</span>
+            <span>{about.badge3?.[lang] || '🏅 गुणवत्तेची बांधिलकी'}</span>
           </div>
 
           <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-            {language === 'mr'
-              ? 'आजवर मिळालेली शेतकऱ्यांची साथ आमच्यासाठी प्रेरणादायी आहे. भविष्यातही अधिक चांगली उत्पादने, योग्य मार्गदर्शन आणि आधुनिक शेतीचे प्रभावी उपाय शेतकऱ्यांपर्यंत पोहोचवण्यासाठी आम्ही कटिबद्ध आहोत.'
-              : 'The trust and partnership of our farmers inspires us to continually deliver higher-grade tonics, fertilizers, and personalized advisory.'}
+            {about.story3?.[lang]}
           </p>
 
           <p className="font-black text-brand-magenta text-sm sm:text-base mt-1">

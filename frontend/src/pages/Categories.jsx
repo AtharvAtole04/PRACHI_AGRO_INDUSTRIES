@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { categories } from '../data/categories';
+import { getCategories, getLocalCategories } from '../data/categories';
 
 const Categories = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const [categoriesList, setCategoriesList] = useState(() => getLocalCategories());
+
+  useEffect(() => {
+    let isMounted = true;
+    getCategories().then(data => {
+      if (isMounted && Array.isArray(data)) {
+        setCategoriesList(data);
+      }
+    });
+    return () => { isMounted = false; };
+  }, []);
 
   return (
     <div className="flex flex-col gap-8 text-left max-w-5xl mx-auto">
@@ -25,7 +36,7 @@ const Categories = () => {
 
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((cat) => (
+        {categoriesList.map((cat) => (
           <div
             key={cat.id}
             onClick={() => navigate(`/products?category=${cat.id}`)}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag, PlayCircle } from 'lucide-react';
+import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag, PlayCircle, Info } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../data/products';
+import { getCategories, addCategory, updateCategory, deleteCategory } from '../data/categories';
 import { getVideos, addVideo, deleteVideo } from '../data/videos';
 import { getBlogs, addBlog, deleteBlog } from '../data/blogs';
 import { getReviews, addReview, deleteReview } from '../data/reviews';
@@ -28,6 +29,7 @@ const Admin = () => {
 
   // Database lists
   const [productsList, setProductsList] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
   const [videosList, setVideosList] = useState([]);
   const [blogsList, setBlogsList] = useState([]);
   const [reviewsList, setReviewsList] = useState([]);
@@ -35,6 +37,15 @@ const Admin = () => {
 
   // CMS Content state
   const [siteContent, setSiteContent] = useState(defaultSiteContent);
+
+  // Form states for Categories
+  const [categoryForm, setCategoryForm] = useState({
+    id: '',
+    title_mr: '', title_en: '',
+    subtitle_mr: '', subtitle_en: '',
+    image: '/assets/categories/growth.svg'
+  });
+  const [isEditingCategory, setIsEditingCategory] = useState(false);
 
   // Form states for Products
   const [productForm, setProductForm] = useState({
@@ -104,11 +115,71 @@ const Admin = () => {
 
   const loadAllData = () => {
     getProducts().then(data => setProductsList(data));
+    getCategories().then(data => setCategoriesList(data));
     getVideos().then(data => setVideosList(data));
     getBlogs().then(data => setBlogsList(data));
     getReviews().then(data => setReviewsList(data));
     getSiteContent().then(data => setSiteContent(data));
     loadUsers();
+  };
+
+  // Category CRUD Handlers
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    const catData = {
+      title: { mr: categoryForm.title_mr, en: categoryForm.title_en },
+      subtitle: { mr: categoryForm.subtitle_mr, en: categoryForm.subtitle_en },
+      image: categoryForm.image || '/assets/categories/growth.svg'
+    };
+
+    try {
+      if (isEditingCategory && categoryForm.id) {
+        await updateCategory(categoryForm.id, catData);
+        setSuccessMsg(language === 'mr' ? 'श्रेणी अपडेट झाली!' : 'Category updated successfully!');
+      } else {
+        await addCategory(catData);
+        setSuccessMsg(language === 'mr' ? 'नवीन श्रेणी जोडली गेली!' : 'Category added successfully!');
+      }
+      resetCategoryForm();
+      loadAllData();
+    } catch (err) {
+      alert(err.message || 'Failed to save category');
+    }
+    setTimeout(() => setSuccessMsg(''), 4000);
+  };
+
+  const handleEditCategory = (cat) => {
+    setIsEditingCategory(true);
+    setCategoryForm({
+      id: cat.id || cat.slug || cat._id,
+      title_mr: cat.title?.mr || (typeof cat.title === 'string' ? cat.title : ''),
+      title_en: cat.title?.en || (typeof cat.title === 'string' ? cat.title : ''),
+      subtitle_mr: cat.subtitle?.mr || (typeof cat.subtitle === 'string' ? cat.subtitle : ''),
+      subtitle_en: cat.subtitle?.en || (typeof cat.subtitle === 'string' ? cat.subtitle : ''),
+      image: cat.image || '/assets/categories/growth.svg'
+    });
+  };
+
+  const handleDeleteCategory = async (id) => {
+    if (window.confirm(language === 'mr' ? 'ही श्रेणी हटवायची आहे का?' : 'Delete this category?')) {
+      await deleteCategory(id);
+      loadAllData();
+    }
+  };
+
+  const resetCategoryForm = () => {
+    setIsEditingCategory(false);
+    setCategoryForm({ id: '', title_mr: '', title_en: '', subtitle_mr: '', subtitle_en: '', image: '/assets/categories/growth.svg' });
+  };
+
+  const handleCategoryImageFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCategoryForm(prev => ({ ...prev, image: reader.result }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const loadUsers = async () => {
@@ -585,7 +656,7 @@ const Admin = () => {
       )}
 
       {/* Quick Dashboard Stats Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
         <div 
           onClick={() => setActiveTab('products')} 
           className={`p-4 rounded-2xl border transition-all cursor-pointer ${
@@ -597,6 +668,19 @@ const Admin = () => {
             <span className="text-lg">📦</span>
           </div>
           <p className="text-2xl font-black mt-1">{productsList.length}</p>
+        </div>
+
+        <div 
+          onClick={() => setActiveTab('categories')} 
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            activeTab === 'categories' ? 'bg-teal-900 text-white border-teal-800 shadow-md' : 'bg-white border-slate-200/80 hover:bg-slate-50 text-slate-700'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-black uppercase tracking-wider text-teal-300">श्रेण्या (Categories)</span>
+            <span className="text-lg">🏷️</span>
+          </div>
+          <p className="text-2xl font-black mt-1">{categoriesList.length}</p>
         </div>
 
         <div 
@@ -673,7 +757,18 @@ const Admin = () => {
           <span>१. उत्पादने (Products: {productsList.length})</span>
         </button>
 
-        {/* Tab 2: Users & Dealers */}
+        {/* Tab 2: Categories */}
+        <button
+          onClick={() => setActiveTab('categories')}
+          className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
+            activeTab === 'categories' ? 'bg-brand-green-dark text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <Tag size={16} />
+          <span>२. श्रेण्या (Categories: {categoriesList.length})</span>
+        </button>
+
+        {/* Tab 3: Users & Dealers */}
         <button
           onClick={() => setActiveTab('users')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -681,10 +776,10 @@ const Admin = () => {
           }`}
         >
           <UserCheck size={16} />
-          <span>२. डीलर मंजुरी (Dealers: {usersList.length})</span>
+          <span>३. डीलर मंजुरी (Dealers: {usersList.length})</span>
         </button>
 
-        {/* Tab 3: Videos */}
+        {/* Tab 4: Videos */}
         <button
           onClick={() => setActiveTab('videos')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -692,10 +787,10 @@ const Admin = () => {
           }`}
         >
           <Video size={16} />
-          <span>३. व्हिडिऑज (Videos: {videosList.length})</span>
+          <span>४. व्हिडिऑज (Videos: {videosList.length})</span>
         </button>
 
-        {/* Tab 4: Blogs */}
+        {/* Tab 5: Blogs */}
         <button
           onClick={() => setActiveTab('blogs')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -703,10 +798,10 @@ const Admin = () => {
           }`}
         >
           <BookOpen size={16} />
-          <span>४. शेती सल्ला ब्लॉग्स (Blogs: {blogsList.length})</span>
+          <span>५. ब्लॉग्स (Blogs: {blogsList.length})</span>
         </button>
 
-        {/* Tab 5: Reviews */}
+        {/* Tab 6: Reviews */}
         <button
           onClick={() => setActiveTab('reviews')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -714,10 +809,10 @@ const Admin = () => {
           }`}
         >
           <Users size={16} />
-          <span>५. शेतकरी अभिप्राय (Reviews: {reviewsList.length})</span>
+          <span>६. अभिप्राय (Reviews: {reviewsList.length})</span>
         </button>
 
-        {/* Tab 6: CMS Content Settings */}
+        {/* Tab 7: CMS Content Settings */}
         <button
           onClick={() => setActiveTab('content')}
           className={`px-5 py-2.5 text-xs sm:text-sm font-black rounded-xl transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shadow-xs ${
@@ -725,7 +820,7 @@ const Admin = () => {
           }`}
         >
           <Sparkles size={16} />
-          <span>६. साइट नोटीस (Site Content)</span>
+          <span>७. साइट नोटीस व अबाउट (Content CMS)</span>
         </button>
       </div>
 
@@ -886,6 +981,299 @@ const Admin = () => {
                     })}
                     className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-pink-500"
                   />
+                </div>
+              </div>
+            </div>
+
+            {/* Section D: About Us CMS Content */}
+            <div className="bg-purple-50/50 border border-purple-200 rounded-2xl p-5 flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-purple-900 uppercase tracking-wide flex items-center gap-1.5">
+                  <Info size={16} className="text-purple-600" />
+                  <span>४. आमच्याबद्दल पृष्ठ सामग्री (About Us Page Content CMS)</span>
+                </span>
+              </div>
+
+              {/* 1. Experience Badge & Headline */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">अनुभव बॅज (मराठी)</label>
+                  <input
+                    type="text"
+                    value={siteContent.aboutUs?.experienceBadge?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        experienceBadge: { ...(siteContent.aboutUs?.experienceBadge || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500"
+                    placeholder="🌱 १५ वर्षांची साथ… समृद्ध शेतीची नवी वाट!"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Experience Badge (English)</label>
+                  <input
+                    type="text"
+                    value={siteContent.aboutUs?.experienceBadge?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        experienceBadge: { ...(siteContent.aboutUs?.experienceBadge || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500"
+                    placeholder="🌱 15+ Years Supporting Progressive Farmers"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">मुख्य हेडिंग (मराठी)</label>
+                  <input
+                    type="text"
+                    value={siteContent.aboutUs?.headline?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        headline: { ...(siteContent.aboutUs?.headline || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 font-bold"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Main Headline (English)</label>
+                  <input
+                    type="text"
+                    value={siteContent.aboutUs?.headline?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        headline: { ...(siteContent.aboutUs?.headline || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 font-bold"
+                  />
+                </div>
+              </div>
+
+              {/* 2. Story Paragraphs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">कंपनी माहिती भाग १ (मराठी)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.aboutUs?.story1?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        story1: { ...(siteContent.aboutUs?.story1 || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 resize-none"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Company Story Part 1 (English)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.aboutUs?.story1?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        story1: { ...(siteContent.aboutUs?.story1 || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 resize-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">कंपनी माहिती भाग २ (मराठी)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.aboutUs?.story2?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        story2: { ...(siteContent.aboutUs?.story2 || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 resize-none"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Company Story Part 2 (English)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.aboutUs?.story2?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        story2: { ...(siteContent.aboutUs?.story2 || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 resize-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">कंपनी माहिती भाग ३ (मराठी)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.aboutUs?.story3?.mr || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        story3: { ...(siteContent.aboutUs?.story3 || {}), mr: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 resize-none"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-500">Company Story Part 3 (English)</label>
+                  <textarea
+                    rows={2}
+                    value={siteContent.aboutUs?.story3?.en || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      aboutUs: {
+                        ...defaultSiteContent.aboutUs,
+                        ...siteContent.aboutUs,
+                        story3: { ...(siteContent.aboutUs?.story3 || {}), en: e.target.value }
+                      }
+                    })}
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-purple-500 resize-none"
+                  />
+                </div>
+              </div>
+
+              {/* 3. Highlight Badges */}
+              <div className="border-t border-purple-200/60 pt-3">
+                <label className="text-xs font-black text-purple-900 uppercase tracking-wide block mb-2">
+                  वैशिष्ट्य हायलाइट्स (Highlight Badges)
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">हायलाइट १ (MR / EN)</label>
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.badge1?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          badge1: { ...(siteContent.aboutUs?.badge1 || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white mb-1"
+                      placeholder="✨ १५ वर्षांचा अनुभव"
+                    />
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.badge1?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          badge1: { ...(siteContent.aboutUs?.badge1 || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white"
+                      placeholder="✨ 15+ Years Experience"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">हायलाइट २ (MR / EN)</label>
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.badge2?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          badge2: { ...(siteContent.aboutUs?.badge2 || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white mb-1"
+                      placeholder="🤝 शेतकऱ्यांचा विश्वास"
+                    />
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.badge2?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          badge2: { ...(siteContent.aboutUs?.badge2 || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white"
+                      placeholder="🤝 Trusted by Farmers"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">हायलाइट ३ (MR / EN)</label>
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.badge3?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          badge3: { ...(siteContent.aboutUs?.badge3 || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white mb-1"
+                      placeholder="🏅 गुणवत्तेची बांधिलकी"
+                    />
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.badge3?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          badge3: { ...(siteContent.aboutUs?.badge3 || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white"
+                      placeholder="🏅 Quality Assurance"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1091,15 +1479,13 @@ const Admin = () => {
                 <select 
                   value={productForm.category} 
                   onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
-                  className="border border-slate-200 rounded p-2 text-xs focus:ring-1 focus:ring-brand-green-dark bg-white"
+                  className="border border-slate-200 rounded p-2 text-xs focus:ring-1 focus:ring-brand-green-dark bg-white font-semibold"
                 >
-                  <option value="plant-growth">कृषी टॉनिक व वाढ संजीवक (Plant Tonics)</option>
-                  <option value="fertilizers">दाणेदार खते व माती सुधारक (Fertilizers)</option>
-                  <option value="fungicides">बुरशीनाशके (Fungicides)</option>
-                  <option value="micronutrients">सूक्ष्म अन्नद्रव्ये (Micronutrients)</option>
-                  <option value="silicon-based">सिलिकॉन उत्पादने (Silicon)</option>
-                  <option value="bio-products">जैविक उत्पादने (Bio)</option>
-                  <option value="insecticides">कीटकनाशके (Insecticides)</option>
+                  {categoriesList.map(cat => (
+                    <option key={cat.id || cat.slug || cat._id} value={cat.slug || cat.id}>
+                      {cat.title?.[language] || cat.title?.mr || cat.title?.en || cat.id}
+                    </option>
+                  ))}
                   <option value="other">इतर (Other)</option>
                 </select>
               </div>
@@ -1422,6 +1808,155 @@ const Admin = () => {
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* 4. Tab Contents: CATEGORIES                                   */}
+      {/* ============================================================ */}
+      {activeTab === 'categories' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Add / Edit Category Form */}
+          <div className="lg:col-span-5 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center gap-2">
+              <Tag className="text-teal-600" size={18} />
+              <span>{isEditingCategory ? 'श्रेणी सुधारित करा (Edit Category)' : 'नवीन श्रेणी जोडा (Add Category)'}</span>
+            </h2>
+
+            <form onSubmit={handleCategorySubmit} className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Category Title (Marathi)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="उदा. कृषी टॉनिक व वाढ संजीवक"
+                  value={categoryForm.title_mr}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, title_mr: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Category Title (English)</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Plant Tonics & Growth Promoters"
+                  value={categoryForm.title_en}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, title_en: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Subtitle (Marathi)</label>
+                <input
+                  type="text"
+                  placeholder="उदा. फुलधारणा, फळांची फुगवण व जोमदार वाढ"
+                  value={categoryForm.subtitle_mr}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, subtitle_mr: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Subtitle (English)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Flowering, Fruit Sizing & Growth"
+                  value={categoryForm.subtitle_en}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, subtitle_en: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs"
+                />
+              </div>
+
+              {/* Icon Image Section */}
+              <div className="flex flex-col gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <label className="text-[10px] font-bold text-slate-500 uppercase">
+                  श्रेणी आयकॉन फोटो (Category Icon SVG / Image)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCategoryImageFileUpload}
+                  className="block w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-teal-700 file:text-white cursor-pointer border border-slate-200 rounded bg-white p-1"
+                />
+                <input
+                  type="text"
+                  value={categoryForm.image}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, image: e.target.value })}
+                  placeholder="/assets/categories/growth.svg"
+                  className="border border-slate-200 rounded p-2 text-xs bg-white"
+                />
+              </div>
+
+              <div className="flex gap-2 mt-1">
+                <button
+                  type="submit"
+                  className="flex-1 bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-xs py-2.5 rounded-xl cursor-pointer transition-all shadow-md flex items-center justify-center gap-1.5"
+                >
+                  <Tag size={15} />
+                  <span>{isEditingCategory ? 'सुधारणा सेव्ह करा (Update)' : 'श्रेणी जोडा (Save Category)'}</span>
+                </button>
+                {isEditingCategory && (
+                  <button
+                    type="button"
+                    onClick={resetCategoryForm}
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs px-3 rounded-xl font-bold cursor-pointer"
+                  >
+                    रद्द (Cancel)
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+
+          {/* Categories Directory */}
+          <div className="lg:col-span-7 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center justify-between">
+              <span>श्रेणी सूची (Categories Directory: {categoriesList.length})</span>
+            </h2>
+            <div className="flex flex-col gap-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
+              {categoriesList.map((cat) => {
+                const titleText = cat.title?.[language] || cat.title?.mr || cat.title?.en;
+                const subtitleText = cat.subtitle?.[language] || cat.subtitle?.mr || cat.subtitle?.en;
+
+                return (
+                  <div key={cat.id || cat._id} className="flex items-center justify-between p-3 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center gap-3 min-w-0 pr-2">
+                      <div className="w-12 h-12 bg-teal-50 rounded-xl p-2 flex items-center justify-center flex-shrink-0 border border-teal-100">
+                        <img
+                          src={cat.image}
+                          alt={titleText}
+                          className="max-h-full max-w-full object-contain"
+                          onError={(e) => { e.target.src = '/assets/categories/growth.svg'; }}
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="font-black text-slate-800 text-xs truncate">{titleText}</h4>
+                        <p className="text-[10px] text-slate-400 font-bold mt-0.5 truncate max-w-xs">{subtitleText}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <button
+                        onClick={() => handleEditCategory(cat)}
+                        className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-brand-green-dark rounded-lg text-xs font-black flex items-center gap-1 cursor-pointer transition-colors border border-emerald-200/60"
+                      >
+                        <Edit size={13} />
+                        <span>एडिट</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCategory(cat.id || cat._id)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 

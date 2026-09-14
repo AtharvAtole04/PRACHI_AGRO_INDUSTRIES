@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Filter, X, Grid, List, SlidersHorizontal } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getProducts, getLocalProducts } from '../data/products';
-import { categories } from '../data/categories';
+import { getCategories, getLocalCategories } from '../data/categories';
 import ProductCard from '../components/ProductCard';
 import SEOHead from '../components/SEOHead';
 import CropFinder from '../components/CropFinder';
@@ -11,6 +11,7 @@ import ProductComparison from '../components/ProductComparison';
 
 const Products = () => {
   const [productsList, setProductsList] = useState(() => getLocalProducts());
+  const [categoriesList, setCategoriesList] = useState(() => getLocalCategories());
   const [isLoading, setIsLoading] = useState(() => getLocalProducts().length === 0);
   const [isError, setIsError] = useState(false);
 
@@ -34,6 +35,9 @@ const Products = () => {
 
   useEffect(() => {
     fetchProds(getLocalProducts().length === 0);
+    getCategories().then(data => {
+      if (Array.isArray(data)) setCategoriesList(data);
+    });
     const handleUpdate = () => fetchProds(false);
     window.addEventListener('prachi_products_updated', handleUpdate);
     return () => window.removeEventListener('prachi_products_updated', handleUpdate);
@@ -289,7 +293,7 @@ const Products = () => {
               >
                 {language === 'mr' ? 'सर्व श्रेणी (All)' : 'All Categories'}
               </button>
-              {categories.map((cat) => (
+              {categoriesList.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => handleCategorySelect(cat.id)}
@@ -463,7 +467,7 @@ const Products = () => {
                   >
                     सर्व श्रेणी (All)
                   </button>
-                  {categories.map((cat) => (
+                  {categoriesList.map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => {

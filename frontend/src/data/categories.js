@@ -1,3 +1,5 @@
+import { apiUrl } from '../config';
+
 export const categories = [
   {
     id: "plant-growth",
@@ -42,3 +44,101 @@ export const categories = [
     slug: "insecticides"
   }
 ];
+
+export const getLocalCategories = () => {
+  const data = localStorage.getItem('prachi_categories');
+  if (!data) return categories;
+  try {
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : categories;
+  } catch {
+    return categories;
+  }
+};
+
+export const saveCategories = async (array) => {
+  try {
+    localStorage.setItem('prachi_categories', JSON.stringify(array));
+  } catch {}
+};
+
+export const getCategories = async () => {
+  try {
+    const res = await fetch(apiUrl('/api/categories'));
+    const contentType = res.headers.get('content-type') || '';
+    if (res.ok && contentType.includes('application/json')) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        saveCategories(data);
+        return data;
+      }
+    }
+  } catch (err) {
+    console.warn("Backend offline. Falling back to local storage for categories.");
+  }
+  return getLocalCategories();
+};
+
+export const addCategory = async (categoryData) => {
+  let res;
+  try {
+    res = await fetch(apiUrl('/api/categories'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categoryData)
+    });
+  } catch (err) {
+    console.error('[Category API Error - Add Category]:', err);
+    throw new Error('Unable to connect to backend server.');
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to add category (HTTP ${res.status})`);
+  }
+
+  return await getCategories();
+};
+
+export const updateCategory = async (id, categoryData) => {
+  let res;
+  try {
+    res = await fetch(apiUrl(`/api/categories/${id}`), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categoryData)
+    });
+  } catch (err) {
+    console.error('[Category API Error - Update Category]:', err);
+    throw new Error('Unable to connect to backend server.');
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to update category (HTTP ${res.status})`);
+  }
+
+  return await getCategories();
+};
+
+export const deleteCategory = async (id) => {
+  let res;
+  try {
+    res = await fetch(apiUrl(`/api/categories/${id}`), {
+      method: 'DELETE'
+    });
+  } catch (err) {
+    console.error('[Category API Error - Delete Category]:', err);
+    throw new Error('Unable to connect to backend server.');
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || `Failed to delete category (HTTP ${res.status})`);
+  }
+
+  return await getCategories();
+};
