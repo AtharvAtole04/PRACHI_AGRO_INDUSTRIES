@@ -45,24 +45,37 @@ class ErrorBoundary extends React.Component {
               We couldn't load this page right now. An unexpected error occurred while rendering the content.
             </p>
 
-            {process.env.NODE_ENV !== 'production' && this.state.error?.message && (
-              <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-left font-mono text-xs text-rose-600 overflow-x-auto my-2">
-                {this.state.error.message}
+            {this.state.error?.message && (
+              <div className="w-full bg-red-50 border border-red-200 rounded-xl p-3 text-left font-mono text-xs text-rose-600 overflow-x-auto my-1 shadow-inner">
+                <strong>Error details:</strong> {this.state.error.message}
               </div>
             )}
 
             <div className="flex flex-wrap items-center justify-center gap-3 mt-4 w-full">
               <button
                 onClick={this.handleReset}
-                className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-sm px-6 py-3 rounded-xl cursor-pointer transition-all inline-flex items-center justify-center gap-2 shadow-md hover:shadow-lg w-full sm:w-auto"
+                className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-sm px-5 py-3 rounded-xl cursor-pointer transition-all inline-flex items-center justify-center gap-2 shadow-md hover:shadow-lg w-full sm:w-auto"
               >
                 <RefreshCw size={16} />
-                <span>Try Again</span>
+                <span>Try Again (पुन्हा प्रयत्न करा)</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  try {
+                    localStorage.removeItem('prachi_site_content');
+                  } catch (e) {}
+                  window.location.reload();
+                }}
+                className="bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm px-5 py-3 rounded-xl transition-all inline-flex items-center justify-center gap-2 shadow-md hover:shadow-lg w-full sm:w-auto cursor-pointer"
+              >
+                <RefreshCw size={16} />
+                <span>Clear Cache & Repair (कॅशे रीसेट करा)</span>
               </button>
 
               <a
                 href="/"
-                className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm px-6 py-3 rounded-xl transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto"
+                className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm px-5 py-3 rounded-xl transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto"
               >
                 <Home size={16} />
                 <span>Go to Homepage</span>
