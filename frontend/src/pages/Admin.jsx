@@ -20,7 +20,7 @@ const Admin = () => {
   // Authentication & 2FA states
   const [isAuthenticated, setIsAuthenticated] = useState(isAdmin);
   const [authStep, setAuthStep] = useState('step1'); // 'step1' | 'step2' | 'setup'
-  const [loginEmail, setLoginEmail] = useState('info@prachiagroindustries.in');
+  const [loginEmail, setLoginEmail] = useState('prachiagroindustries9696@gmail.com');
   const [loginPassword, setLoginPassword] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [recoveryInput, setRecoveryInput] = useState('');

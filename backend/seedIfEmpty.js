@@ -746,9 +746,9 @@ const defaultProducts = [
 
 export async function seedIfEmpty() {
   try {
-    // 1. Ensure Admin User exists in DB
-    const adminEmail = (process.env.ADMIN_EMAIL || 'info@prachiagroindustries.in').toLowerCase();
-    const adminPass = process.env.ADMIN_PASSWORD || 'admin123';
+    // 1. Ensure Admin User exists in DB with current admin credentials
+    const adminEmail = (process.env.ADMIN_EMAIL || 'prachiagroindustries9696@gmail.com').toLowerCase();
+    const adminPass = process.env.ADMIN_PASSWORD || 'Prarabdha@pppagro';
     let adminUser = await User.findOne({ role: 'admin' });
     
     if (!adminUser) {
@@ -765,6 +765,16 @@ export async function seedIfEmpty() {
       });
       await adminUser.save();
       console.log('✅ Default Admin account seeded successfully:', adminEmail);
+    } else {
+      // Update existing admin email & password if default changed
+      const passMatch = await bcrypt.compare(adminPass, adminUser.password).catch(() => false);
+      if (adminUser.email !== adminEmail || !passMatch) {
+        console.log('🔄 Updating Admin credentials in MongoDB to:', adminEmail);
+        adminUser.email = adminEmail;
+        adminUser.password = await bcrypt.hash(adminPass, 10);
+        await adminUser.save();
+        console.log('✅ Admin credentials updated in MongoDB.');
+      }
     }
 
     if (process.env.AUTO_SEED === 'true') {

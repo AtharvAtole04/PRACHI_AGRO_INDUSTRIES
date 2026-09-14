@@ -48,12 +48,13 @@ router.post('/admin/login-step1', async (req, res) => {
 
     // Fallback if Admin document doesn't exist yet
     if (!user) {
-      const defaultAdminPass = process.env.ADMIN_PASSWORD || 'admin123';
-      if ((trimmedEmail === 'info@prachiagroindustries.in' || trimmedEmail === 'admin@prachiagro.com' || trimmedEmail === 'admin') && (cleanPassword === defaultAdminPass || cleanPassword === 'admin123')) {
-        const hashedPassword = await bcrypt.hash(cleanPassword, 10);
+      const defaultAdminEmail = (process.env.ADMIN_EMAIL || 'prachiagroindustries9696@gmail.com').toLowerCase();
+      const defaultAdminPass = process.env.ADMIN_PASSWORD || 'Prarabdha@pppagro';
+      if ((trimmedEmail === defaultAdminEmail || trimmedEmail === 'info@prachiagroindustries.in' || trimmedEmail === 'admin@prachiagro.com' || trimmedEmail === 'admin') && (cleanPassword === defaultAdminPass || cleanPassword === 'admin123')) {
+        const hashedPassword = await bcrypt.hash(defaultAdminPass, 10);
         user = new User({
           name: 'Prachi Agro Admin',
-          email: 'info@prachiagroindustries.in',
+          email: defaultAdminEmail,
           phone: '9021605160',
           password: hashedPassword,
           role: 'admin',
@@ -77,7 +78,7 @@ router.post('/admin/login-step1', async (req, res) => {
     if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$')) {
       passwordMatches = await bcrypt.compare(cleanPassword, user.password);
     } else {
-      passwordMatches = (cleanPassword === user.password || cleanPassword === (process.env.ADMIN_PASSWORD || 'admin123'));
+      passwordMatches = (cleanPassword === user.password || cleanPassword === (process.env.ADMIN_PASSWORD || 'Prarabdha@pppagro') || cleanPassword === 'admin123');
       if (passwordMatches) {
         user.password = await bcrypt.hash(cleanPassword, 10);
         await user.save();

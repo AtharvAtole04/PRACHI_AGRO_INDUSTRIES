@@ -8,7 +8,7 @@ const DEMO_USERS = {
   admin: {
     id: 'demo-admin',
     name: 'Prachi Agro Admin',
-    email: 'info@prachiagroindustries.in',
+    email: 'prachiagroindustries9696@gmail.com',
     phone: '9021605160',
     role: 'admin',
     isVerifiedDealer: true,
