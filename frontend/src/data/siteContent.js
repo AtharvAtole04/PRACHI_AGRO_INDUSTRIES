@@ -47,6 +47,21 @@ export const defaultSiteContent = {
     badge1: { mr: '✨ १५ वर्षांचा अनुभव', en: '✨ 15+ Years Experience' },
     badge2: { mr: '🤝 शेतकऱ्यांचा विश्वास', en: '🤝 Trusted by Farmers' },
     badge3: { mr: '🏅 गुणवत्तेची बांधिलकी', en: '🏅 Quality Assurance' },
+    value1Title: { mr: 'उत्कृष्ट गुणवत्ता', en: 'Quality Assurance' },
+    value1Desc: {
+      mr: 'आम्ही उत्पादनांच्या गुणवत्तेशी तडजोड करत नाही. प्रत्येक बॅच कडक सुरक्षा आणि गुणवत्तेच्या निकषांमधून जाते.',
+      en: 'We prioritize product safety and efficacy above all. Our formulations go through rigorous quality checks to deliver reliable crop protection.'
+    },
+    value2Title: { mr: 'शेतकऱ्यांचा विश्वास', en: 'Farmer-Centric' },
+    value2Desc: {
+      mr: 'आमचा विकास हा शेतकऱ्यांच्या प्रगतीवर अवलंबून आहे. त्यांच्या गरजा समजून घेऊन आम्ही उत्पादने विकसित करतो.',
+      en: 'We believe our growth is tied directly to the progress of the farmer. Our solutions are designed to address their specific challenges.'
+    },
+    value3Title: { mr: 'नवीन तंत्रज्ञान', en: 'Agronomic Innovation' },
+    value3Desc: {
+      mr: 'आम्ही पिकांच्या शाकीय वाढीसाठी आणि रोग नियंत्रणासाठी आधुनिक तंत्रज्ञानाचा वापर करतो.',
+      en: 'We stay on top of agronomic developments, creating specialized tonics, biotic promoters, and soil health conditioners.'
+    },
     calloutText: {
       mr: 'पिकांची वाढ आणि रोगांच्या नियंत्रणाविषयी आमच्या कृषी सल्लागारांशी थेट संपर्क साधा. आम्ही आपल्या सेवेत २४/७ आहोत.',
       en: 'Get customized suggestions for crop nutrition and crop protection. Chat with our agronomist experts today.'

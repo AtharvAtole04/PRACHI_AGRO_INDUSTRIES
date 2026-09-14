@@ -123,12 +123,12 @@ const About = () => {
               <ShieldCheck size={26} />
             </div>
             <h3 className="font-extrabold text-slate-800 text-base">
-              उत्कृष्ट गुणवत्ता (Quality Assurance)
+              {about.value1Title?.[lang] || (language === 'mr' ? 'उत्कृष्ट गुणवत्ता' : 'Quality Assurance')}
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              {language === 'mr'
+              {about.value1Desc?.[lang] || (language === 'mr'
                 ? 'आम्ही उत्पादनांच्या गुणवत्तेशी तडजोड करत नाही. प्रत्येक बॅच कडक सुरक्षा आणि गुणवत्तेच्या निकषांमधून जाते.'
-                : 'We prioritize product safety and efficacy above all. Our formulations go through rigorous quality checks to deliver reliable crop protection.'}
+                : 'We prioritize product safety and efficacy above all. Our formulations go through rigorous quality checks to deliver reliable crop protection.')}
             </p>
           </div>
 
@@ -138,12 +138,12 @@ const About = () => {
               <Heart size={26} />
             </div>
             <h3 className="font-extrabold text-slate-800 text-base">
-              शेतकऱ्यांचा विश्वास (Farmer-Centric)
+              {about.value2Title?.[lang] || (language === 'mr' ? 'शेतकऱ्यांचा विश्वास' : 'Farmer-Centric')}
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              {language === 'mr'
+              {about.value2Desc?.[lang] || (language === 'mr'
                 ? 'आमचा विकास हा शेतकऱ्यांच्या प्रगतीवर अवलंबून आहे. त्यांच्या गरजा समजून घेऊन आम्ही उत्पादने विकसित करतो.'
-                : 'We believe our growth is tied directly to the progress of the farmer. Our solutions are designed to address their specific challenges.'}
+                : 'We believe our growth is tied directly to the progress of the farmer. Our solutions are designed to address their specific challenges.')}
             </p>
           </div>
 
@@ -153,12 +153,12 @@ const About = () => {
               <Sparkles size={26} />
             </div>
             <h3 className="font-extrabold text-slate-800 text-base">
-              नवीन तंत्रज्ञान (Agronomic Innovation)
+              {about.value3Title?.[lang] || (language === 'mr' ? 'नवीन तंत्रज्ञान' : 'Agronomic Innovation')}
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-              {language === 'mr'
+              {about.value3Desc?.[lang] || (language === 'mr'
                 ? 'आम्ही पिकांच्या शाकीय वाढीसाठी आणि रोग नियंत्रणासाठी आधुनिक तंत्रज्ञानाचा वापर करतो.'
-                : 'We stay on top of agronomic developments, creating specialized tonics, biotic promoters, and soil health conditioners.'}
+                : 'We stay on top of agronomic developments, creating specialized tonics, biotic promoters, and soil health conditioners.')}
             </p>
           </div>
         </div>
@@ -173,9 +173,9 @@ const About = () => {
           अधिक माहिती हवी आहे किंवा तज्ज्ञांशी बोलायचे आहे?
         </h2>
         <p className="text-xs sm:text-sm text-emerald-100 max-w-xl font-bold leading-relaxed">
-          {language === 'mr'
+          {about.calloutText?.[lang] || (language === 'mr'
             ? 'पिकांची वाढ आणि रोगांच्या नियंत्रणाविषयी आमच्या कृषी सल्लागारांशी थेट संपर्क साधा. आम्ही आपल्या सेवेत २४/७ आहोत.'
-            : 'Get customized suggestions for crop nutrition and crop protection. Chat with our agronomist experts today.'}
+            : 'Get customized suggestions for crop nutrition and crop protection. Chat with our agronomist experts today.')}
         </p>
         <a 
           href="https://wa.me/9021605160" 

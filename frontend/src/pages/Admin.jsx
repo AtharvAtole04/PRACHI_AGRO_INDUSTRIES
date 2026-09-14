@@ -1384,105 +1384,249 @@ const Admin = () => {
                 </div>
               </div>
 
-              {/* 3. Highlight Badges */}
+              {/* 4. Core Values CMS */}
               <div className="border-t border-purple-200/60 pt-3">
                 <label className="text-xs font-black text-purple-900 uppercase tracking-wide block mb-2">
-                  वैशिष्ट्य हायलाइट्स (Highlight Badges)
+                  आमची प्रमुख मूल्ये (Our Core Values CMS)
                 </label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                
+                {/* Value 1 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 bg-white/70 p-3 rounded-xl border border-purple-100">
                   <div className="flex flex-col gap-1">
-                    <label className="text-[10px] font-bold text-slate-500">हायलाइट १ (MR / EN)</label>
+                    <label className="text-[11px] font-bold text-slate-500">मूल्य १ शीर्षक व माहिती (मराठी)</label>
                     <input
                       type="text"
-                      value={siteContent.aboutUs?.badge1?.mr || ''}
+                      value={siteContent.aboutUs?.value1Title?.mr || ''}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         aboutUs: {
                           ...defaultSiteContent.aboutUs,
                           ...siteContent.aboutUs,
-                          badge1: { ...(siteContent.aboutUs?.badge1 || {}), mr: e.target.value }
+                          value1Title: { ...(siteContent.aboutUs?.value1Title || {}), mr: e.target.value }
                         }
                       })}
-                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white mb-1"
-                      placeholder="✨ १५ वर्षांचा अनुभव"
+                      className="border border-slate-200 rounded-lg p-2 text-xs font-bold bg-white mb-1"
+                      placeholder="उत्कृष्ट गुणवत्ता"
                     />
-                    <input
-                      type="text"
-                      value={siteContent.aboutUs?.badge1?.en || ''}
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.value1Desc?.mr || ''}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         aboutUs: {
                           ...defaultSiteContent.aboutUs,
                           ...siteContent.aboutUs,
-                          badge1: { ...(siteContent.aboutUs?.badge1 || {}), en: e.target.value }
+                          value1Desc: { ...(siteContent.aboutUs?.value1Desc || {}), mr: e.target.value }
                         }
                       })}
-                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white"
-                      placeholder="✨ 15+ Years Experience"
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="आम्ही उत्पादनांच्या गुणवत्तेशी तडजोड करत नाही..."
                     />
                   </div>
-
                   <div className="flex flex-col gap-1">
-                    <label className="text-[10px] font-bold text-slate-500">हायलाइट २ (MR / EN)</label>
+                    <label className="text-[11px] font-bold text-slate-500">Value 1 Title & Description (English)</label>
                     <input
                       type="text"
-                      value={siteContent.aboutUs?.badge2?.mr || ''}
+                      value={siteContent.aboutUs?.value1Title?.en || ''}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         aboutUs: {
                           ...defaultSiteContent.aboutUs,
                           ...siteContent.aboutUs,
-                          badge2: { ...(siteContent.aboutUs?.badge2 || {}), mr: e.target.value }
+                          value1Title: { ...(siteContent.aboutUs?.value1Title || {}), en: e.target.value }
                         }
                       })}
-                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white mb-1"
-                      placeholder="🤝 शेतकऱ्यांचा विश्वास"
+                      className="border border-slate-200 rounded-lg p-2 text-xs font-bold bg-white mb-1"
+                      placeholder="Quality Assurance"
                     />
-                    <input
-                      type="text"
-                      value={siteContent.aboutUs?.badge2?.en || ''}
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.value1Desc?.en || ''}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         aboutUs: {
                           ...defaultSiteContent.aboutUs,
                           ...siteContent.aboutUs,
-                          badge2: { ...(siteContent.aboutUs?.badge2 || {}), en: e.target.value }
+                          value1Desc: { ...(siteContent.aboutUs?.value1Desc || {}), en: e.target.value }
                         }
                       })}
-                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white"
-                      placeholder="🤝 Trusted by Farmers"
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="We prioritize product safety and efficacy above all..."
                     />
                   </div>
+                </div>
 
+                {/* Value 2 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 bg-white/70 p-3 rounded-xl border border-purple-100">
                   <div className="flex flex-col gap-1">
-                    <label className="text-[10px] font-bold text-slate-500">हायलाइट ३ (MR / EN)</label>
+                    <label className="text-[11px] font-bold text-slate-500">मूल्य २ शीर्षक व माहिती (मराठी)</label>
                     <input
                       type="text"
-                      value={siteContent.aboutUs?.badge3?.mr || ''}
+                      value={siteContent.aboutUs?.value2Title?.mr || ''}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         aboutUs: {
                           ...defaultSiteContent.aboutUs,
                           ...siteContent.aboutUs,
-                          badge3: { ...(siteContent.aboutUs?.badge3 || {}), mr: e.target.value }
+                          value2Title: { ...(siteContent.aboutUs?.value2Title || {}), mr: e.target.value }
                         }
                       })}
-                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white mb-1"
-                      placeholder="🏅 गुणवत्तेची बांधिलकी"
+                      className="border border-slate-200 rounded-lg p-2 text-xs font-bold bg-white mb-1"
+                      placeholder="शेतकऱ्यांचा विश्वास"
                     />
-                    <input
-                      type="text"
-                      value={siteContent.aboutUs?.badge3?.en || ''}
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.value2Desc?.mr || ''}
                       onChange={(e) => setSiteContent({
                         ...siteContent,
                         aboutUs: {
                           ...defaultSiteContent.aboutUs,
                           ...siteContent.aboutUs,
-                          badge3: { ...(siteContent.aboutUs?.badge3 || {}), en: e.target.value }
+                          value2Desc: { ...(siteContent.aboutUs?.value2Desc || {}), mr: e.target.value }
                         }
                       })}
-                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white"
-                      placeholder="🏅 Quality Assurance"
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="आमचा विकास हा शेतकऱ्यांच्या प्रगतीवर अवलंबून आहे..."
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-slate-500">Value 2 Title & Description (English)</label>
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.value2Title?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          value2Title: { ...(siteContent.aboutUs?.value2Title || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs font-bold bg-white mb-1"
+                      placeholder="Farmer-Centric"
+                    />
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.value2Desc?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          value2Desc: { ...(siteContent.aboutUs?.value2Desc || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="We believe our growth is tied directly to the progress of the farmer..."
+                    />
+                  </div>
+                </div>
+
+                {/* Value 3 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 bg-white/70 p-3 rounded-xl border border-purple-100">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-slate-500">मूल्य ३ शीर्षक व माहिती (मराठी)</label>
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.value3Title?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          value3Title: { ...(siteContent.aboutUs?.value3Title || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs font-bold bg-white mb-1"
+                      placeholder="नवीन तंत्रज्ञान"
+                    />
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.value3Desc?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          value3Desc: { ...(siteContent.aboutUs?.value3Desc || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="आम्ही पिकांच्या शाकीय वाढीसाठी..."
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-slate-500">Value 3 Title & Description (English)</label>
+                    <input
+                      type="text"
+                      value={siteContent.aboutUs?.value3Title?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          value3Title: { ...(siteContent.aboutUs?.value3Title || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs font-bold bg-white mb-1"
+                      placeholder="Agronomic Innovation"
+                    />
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.value3Desc?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          value3Desc: { ...(siteContent.aboutUs?.value3Desc || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="We stay on top of agronomic developments..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. Callout Banner Text */}
+              <div className="border-t border-purple-200/60 pt-3">
+                <label className="text-xs font-black text-purple-900 uppercase tracking-wide block mb-2">
+                  खालील सपोर्ट बॅनर मेसेज (Support Banner CTA Text)
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">सपोर्ट मेसेज (मराठी)</label>
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.calloutText?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          calloutText: { ...(siteContent.aboutUs?.calloutText || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="पिकांची वाढ आणि रोगांच्या नियंत्रणाविषयी आमच्या कृषी सल्लागारांशी थेट संपर्क साधा..."
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-500">Support Message (English)</label>
+                    <textarea
+                      rows={2}
+                      value={siteContent.aboutUs?.calloutText?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        aboutUs: {
+                          ...defaultSiteContent.aboutUs,
+                          ...siteContent.aboutUs,
+                          calloutText: { ...(siteContent.aboutUs?.calloutText || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white resize-none"
+                      placeholder="Get customized suggestions for crop nutrition and crop protection..."
                     />
                   </div>
                 </div>

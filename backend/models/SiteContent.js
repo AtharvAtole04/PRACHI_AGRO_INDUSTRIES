@@ -56,6 +56,11 @@ const siteContentSchema = new mongoose.Schema({
     mr: { type: String, default: 'मुळांच्या जोमदार वाढीसाठी दाणेदार खते व पानांच्या विकासासाठी विशेष टॉनिक' },
     en: { type: String, default: 'Granular fertilizers for root development & specialized tonics for vegetative growth' }
   },
+  // About Us Page CMS
+  aboutUs: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
+  },
   updatedAt: {
     type: Date,
     default: Date.now
