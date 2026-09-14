@@ -747,7 +747,7 @@ const defaultProducts = [
 export async function seedIfEmpty() {
   try {
     // 1. Ensure Admin User exists in DB with current admin credentials
-    const adminEmail = (process.env.ADMIN_EMAIL || 'prachiagroindustries9696@gmail.com').toLowerCase();
+    const adminEmail = (process.env.ADMIN_EMAIL || 'prachiagroindustris9696@gmail.com').toLowerCase();
     const adminPass = process.env.ADMIN_PASSWORD || 'Prarabdha@pppagro';
     let adminUser = await User.findOne({ role: 'admin' });
     

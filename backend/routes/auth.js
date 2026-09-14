@@ -48,7 +48,7 @@ router.post('/admin/login-step1', async (req, res) => {
 
     // Fallback if Admin document doesn't exist yet
     if (!user) {
-      const defaultAdminEmail = (process.env.ADMIN_EMAIL || 'prachiagroindustries9696@gmail.com').toLowerCase();
+      const defaultAdminEmail = (process.env.ADMIN_EMAIL || 'prachiagroindustris9696@gmail.com').toLowerCase();
       const defaultAdminPass = process.env.ADMIN_PASSWORD || 'Prarabdha@pppagro';
       if ((trimmedEmail === defaultAdminEmail || trimmedEmail === 'info@prachiagroindustries.in' || trimmedEmail === 'admin@prachiagro.com' || trimmedEmail === 'admin') && (cleanPassword === defaultAdminPass || cleanPassword === 'admin123')) {
         const hashedPassword = await bcrypt.hash(defaultAdminPass, 10);
