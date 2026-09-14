@@ -18,12 +18,19 @@ const Contact = () => {
 
   useEffect(() => {
     let isMounted = true;
-    getSiteContent().then(data => {
-      if (isMounted && data) {
-        setSiteContent(data);
-      }
-    });
-    return () => { isMounted = false; };
+    const fetchContent = () => {
+      getSiteContent().then(data => {
+        if (isMounted && data) {
+          setSiteContent(data);
+        }
+      });
+    };
+    fetchContent();
+    window.addEventListener('prachi_site_content_updated', fetchContent);
+    return () => { 
+      isMounted = false;
+      window.removeEventListener('prachi_site_content_updated', fetchContent);
+    };
   }, []);
 
   const net = siteContent?.joinNetwork || defaultSiteContent.joinNetwork;
@@ -131,18 +138,21 @@ const Contact = () => {
           </span>
         </div>
         
-        {/* Map */}
-        <div className="w-full rounded-2xl overflow-hidden border-2 border-slate-100 shadow-sm">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.265588856342!2d73.91454!3d18.52043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMxJzEzLjYiTiA3M8KwNTQnNTIuNCJF!5e0!3m2!1sen!2sin!4v1234567890" 
-            width="100%" 
-            height="320" 
-            style={{ border: 0 }} 
-            allowFullScreen="" 
-            loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
+        {/* Map - Dynamic Visibility based on Admin CMS Setting */}
+        {net.isMapVisible !== false && (
+          <div className="w-full rounded-2xl overflow-hidden border-2 border-slate-100 shadow-sm">
+            <iframe 
+              src={net.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.265588856342!2d73.91454!3d18.52043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMxJzEzLjYiTiA3M8KwNTQnNTIuNCJF!5e0!3m2!1sen!2sin!4v1234567890"} 
+              width="100%" 
+              height="320" 
+              style={{ border: 0 }} 
+              allowFullScreen="" 
+              loading="lazy" 
+              title="Prachi Agro Network Map"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        )}
 
         {/* Dealers / Distribution Regions Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

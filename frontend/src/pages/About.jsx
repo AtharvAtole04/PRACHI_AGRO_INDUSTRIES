@@ -17,12 +17,19 @@ const About = () => {
 
   useEffect(() => {
     let isMounted = true;
-    getSiteContent().then(data => {
-      if (isMounted && data) {
-        setSiteContent(data);
-      }
-    });
-    return () => { isMounted = false; };
+    const fetchContent = () => {
+      getSiteContent().then(data => {
+        if (isMounted && data) {
+          setSiteContent(data);
+        }
+      });
+    };
+    fetchContent();
+    window.addEventListener('prachi_site_content_updated', fetchContent);
+    return () => { 
+      isMounted = false;
+      window.removeEventListener('prachi_site_content_updated', fetchContent);
+    };
   }, []);
 
   const about = siteContent?.aboutUs || defaultSiteContent.aboutUs;

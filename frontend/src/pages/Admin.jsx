@@ -1992,6 +1992,108 @@ const Admin = () => {
                 </div>
               </div>
 
+              {/* Google Map Management (Visibility Toggle & Custom Embed URL) */}
+              <div className="border-t border-emerald-200/60 pt-3 flex flex-col gap-3 bg-white p-4 rounded-xl border border-emerald-100 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                    <MapPin size={16} className="text-brand-magenta" />
+                    <span>गूगल मॅप दाखवा / लपवा व लिंक (Google Map Display & Link Controls)</span>
+                  </span>
+                  <label className="flex items-center gap-2 text-xs font-black text-slate-700 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={siteContent.joinNetwork?.isMapVisible !== false}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          isMapVisible: e.target.checked
+                        }
+                      })}
+                    />
+                    <span>{siteContent.joinNetwork?.isMapVisible !== false ? '✅ मॅप दृश्यमान आहे (Map Visible)' : '❌ मॅप लपवला आहे (Map Hidden)'}</span>
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-slate-500">मॅप शीर्षक (मराठी)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.mapTitle?.mr || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          mapTitle: { ...(siteContent.joinNetwork?.mapTitle || {}), mr: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-bold"
+                      placeholder="आमचे डीलर व वितरण नेटवर्क"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-slate-500">Map Title (English)</label>
+                    <input
+                      type="text"
+                      value={siteContent.joinNetwork?.mapTitle?.en || ''}
+                      onChange={(e) => setSiteContent({
+                        ...siteContent,
+                        joinNetwork: {
+                          ...defaultSiteContent.joinNetwork,
+                          ...siteContent.joinNetwork,
+                          mapTitle: { ...(siteContent.joinNetwork?.mapTitle || {}), en: e.target.value }
+                        }
+                      })}
+                      className="border border-slate-200 rounded-lg p-2 text-xs bg-white font-bold"
+                      placeholder="Our Dealer & Distribution Network"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-slate-600">
+                    गूगल मॅप एम्बेडेड URL किंवा Link (Google Maps Embed Source URL):
+                  </label>
+                  <input
+                    type="text"
+                    value={siteContent.joinNetwork?.mapEmbedUrl || ''}
+                    onChange={(e) => setSiteContent({
+                      ...siteContent,
+                      joinNetwork: {
+                        ...defaultSiteContent.joinNetwork,
+                        ...siteContent.joinNetwork,
+                        mapEmbedUrl: e.target.value
+                      }
+                    })}
+                    placeholder="https://www.google.com/maps/embed?pb=..."
+                    className="border border-slate-200 rounded-lg p-2.5 text-xs bg-white font-mono text-slate-800 focus:ring-1 focus:ring-brand-green-dark"
+                  />
+                  <p className="text-[10px] text-slate-400 font-bold">
+                    💡 गूगल मॅपवरून "Share &gt; Embed a map" वरून `src` ची लिंक कॉपी करून येथे पेस्ट करा.
+                  </p>
+                </div>
+
+                {/* Live Map Preview inside Admin */}
+                {siteContent.joinNetwork?.isMapVisible !== false && siteContent.joinNetwork?.mapEmbedUrl && (
+                  <div className="mt-2 border rounded-xl overflow-hidden shadow-xs bg-slate-50 p-2">
+                    <p className="text-[10px] font-black text-brand-green-dark uppercase mb-1">मॅप प्रिव्ह्यू (Live Map Preview):</p>
+                    <iframe
+                      src={siteContent.joinNetwork.mapEmbedUrl}
+                      width="100%"
+                      height="180"
+                      style={{ border: 0 }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      title="Admin Map Preview"
+                      className="rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+
               {/* Network Regions & Districts List */}
               <div className="border-t border-emerald-200/60 pt-3">
                 <label className="text-xs font-black text-emerald-900 uppercase tracking-wide block mb-2">

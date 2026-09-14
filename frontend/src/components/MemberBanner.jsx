@@ -11,7 +11,20 @@ const MemberBanner = () => {
   const [content, setContent] = useState(null);
 
   useEffect(() => {
-    getSiteContent().then(data => setContent(data));
+    let isMounted = true;
+    const fetchContent = () => {
+      getSiteContent().then(data => {
+        if (isMounted && data) {
+          setContent(data);
+        }
+      });
+    };
+    fetchContent();
+    window.addEventListener('prachi_site_content_updated', fetchContent);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('prachi_site_content_updated', fetchContent);
+    };
   }, []);
 
   if (!content) return null;

@@ -80,6 +80,8 @@ export const defaultSiteContent = {
     benefit4: { mr: 'पूर्ण विक्री सहाय्य', en: 'Sales Support' },
     mapTitle: { mr: 'आमचे डीलर व वितरण नेटवर्क', en: 'Our Dealer & Distribution Network' },
     mapSubtitle: { mr: 'तुमच्या जवळचे अधिकृत कृषी केंद्र शोधा', en: 'Find authorized agri retail centers near you' },
+    isMapVisible: true,
+    mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.265588856342!2d73.91454!3d18.52043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMxJzEzLjYiTiA3M8KwNTQnNTIuNCJF!5e0!3m2!1sen!2sin!4v1234567890',
     regionTag: { mr: '६+ प्रमुख जिल्हे', en: '6+ Key Districts' },
     regionsList: {
       mr: 'पुणे (Pune), नाशिक (Nashik), छ. संभाजीनगर (Aurangabad), सोलापूर (Solapur), कोल्हापूर (Kolhapur), नागपूर (Nagpur)',
@@ -98,7 +100,7 @@ export const getSiteContent = async () => {
     if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
       if (data && data.publicAnnouncement) {
-        return {
+        const merged = {
           ...defaultSiteContent,
           ...data,
           aboutUs: {
@@ -110,6 +112,8 @@ export const getSiteContent = async () => {
             ...(data.joinNetwork || {})
           }
         };
+        localStorage.setItem('prachi_site_content', JSON.stringify(merged));
+        return merged;
       }
     }
   } catch (err) {
@@ -144,9 +148,9 @@ const getAuthHeaders = () => {
 };
 
 export const updateSiteContent = async (newContent) => {
-  let res;
+  let savedContent = newContent;
   try {
-    res = await fetch(apiUrl('/api/content'), {
+    const res = await fetch(apiUrl('/api/content'), {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',
@@ -154,19 +158,19 @@ export const updateSiteContent = async (newContent) => {
       },
       body: JSON.stringify(newContent)
     });
+
+    const contentType = res.headers.get('content-type') || '';
+    if (res.ok && contentType.includes('application/json')) {
+      const data = await res.json();
+      savedContent = data.content || newContent;
+    }
   } catch (err) {
-    console.error('[SiteContent API Error - Update Content]:', err);
-    throw new Error('Unable to connect to the backend server. Please try again.');
+    console.warn('[SiteContent API Warning - Update Content]: Offline fallback used.', err);
   }
 
-  const contentType = res.headers.get('content-type') || '';
-  if (!res.ok || !contentType.includes('application/json')) {
-    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to update site content (HTTP ${res.status})`);
-  }
-
-  const data = await res.json();
-  const savedContent = data.content || newContent;
   localStorage.setItem('prachi_site_content', JSON.stringify(savedContent));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('prachi_site_content_updated'));
+  }
   return savedContent;
 };
