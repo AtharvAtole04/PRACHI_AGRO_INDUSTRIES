@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag, PlayCircle, Info, QrCode, KeyRound, Copy, Check, ArrowLeft, RefreshCw, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Lock, Plus, Edit, Trash2, LayoutDashboard, PlusCircle, CheckCircle, Video, BookOpen, Users, LogOut, FileText, UserCheck, ShieldCheck, Sparkles, AlertCircle, Save, Store, Tag, PlayCircle, Info, QrCode, KeyRound, Copy, Check, ArrowLeft, RefreshCw, Mail, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../data/products';
