@@ -35,14 +35,14 @@ const Login = () => {
     if (res.success) {
       navigate('/admin', { replace: true });
     } else {
-      setErrorMsg(res.error || (language === 'mr' ? 'चुकीचा अ‍ॅडमिन ईमेल किंवा पासवर्ड! कृपया पुन्हा प्रयत्न करा.' : 'Incorrect admin email or password. Try again.'));
+      setErrorMsg(res.error || (language === 'mr' ? 'चुकीचा ॲडमिन ईमेल किंवा पासवर्ड! कृपया पुन्हा प्रयत्न करा.' : 'Incorrect admin email or password. Try again.'));
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center py-10 px-3 text-left max-w-md mx-auto">
       <SEOHead 
-        title={language === 'mr' ? 'अ‍ॅडमिन लॉगिन - प्राची ॲग्रो' : 'Admin Login - Prachi Agro'} 
+        title={language === 'mr' ? 'ॲडमिन लॉगिन - प्राची ॲग्रो' : 'Admin Login - Prachi Agro'} 
         description="Admin portal login for Prachi Agro Industries website management."
       />
 
@@ -55,10 +55,10 @@ const Login = () => {
             <ShieldCheck size={28} />
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight m-0 text-white">
-            {language === 'mr' ? 'अ‍ॅडमिन पोर्टल लॉगिन' : 'Admin Portal Login'}
+            {language === 'mr' ? 'ॲडमिन पोर्टल लॉगिन' : 'Admin Portal Login'}
           </h1>
           <p className="text-xs text-emerald-200 mt-1 font-medium">
-            {language === 'mr' ? 'वेबसाईट व्यवस्थापनासाठी अ‍ॅडमिन आयडी व पासवर्ड टाका' : 'Enter email and password to access admin dashboard'}
+            {language === 'mr' ? 'वेबसाईट व्यवस्थापनासाठी ॲडमिन आयडी व पासवर्ड टाका' : 'Enter email and password to access admin dashboard'}
           </p>
         </div>
 
@@ -70,7 +70,7 @@ const Login = () => {
             <Sparkles size={16} className="text-brand-gold flex-shrink-0" />
             <span>
               {language === 'mr' 
-                ? 'केवळ अ‍ॅडमिन प्रवेश: ग्राहक व शेतकऱ्यांना खरेदीसाठी लॉगिनची आवश्यकता नाही.' 
+                ? 'केवळ ॲडमिन प्रवेश: ग्राहक व शेतकऱ्यांना खरेदीसाठी लॉगिनची आवश्यकता नाही.' 
                 : 'Admin Access Only: Customers & dealers can browse and order without login.'}
             </span>
           </div>
@@ -89,7 +89,7 @@ const Login = () => {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wide flex items-center gap-1.5">
                 <Mail size={14} className="text-brand-green-dark" />
-                <span>{language === 'mr' ? 'अ‍ॅडमिन ईमेल (Admin Email)' : 'Admin Email'}</span>
+                <span>{language === 'mr' ? 'ॲडमिन ईमेल (Admin Email)' : 'Admin Email'}</span>
               </label>
               <input
                 type="email"
@@ -105,7 +105,7 @@ const Login = () => {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wide flex items-center gap-1.5">
                 <Lock size={14} className="text-brand-green-dark" />
-                <span>{language === 'mr' ? 'अ‍ॅडमिन पासवर्ड (Admin Password)' : 'Admin Password'}</span>
+                <span>{language === 'mr' ? 'ॲडमिन पासवर्ड (Admin Password)' : 'Admin Password'}</span>
               </label>
               <input
                 type="password"
@@ -127,7 +127,7 @@ const Login = () => {
                 <span>प्रक्रिया सुरू आहे...</span>
               ) : (
                 <>
-                  <span>{language === 'mr' ? 'अ‍ॅडमिन लॉगिन करा' : 'Login to Admin'}</span>
+                  <span>{language === 'mr' ? 'ॲडमिन लॉगिन करा' : 'Login to Admin'}</span>
                   <ArrowRight size={16} />
                 </>
               )}

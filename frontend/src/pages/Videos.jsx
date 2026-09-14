@@ -53,7 +53,7 @@ const Videos = () => {
   return (
     <div className="flex flex-col gap-8 text-left max-w-6xl mx-auto py-4">
       <SEOHead 
-        title={language === 'mr' ? 'कृषी सल्ला व्हिडिऑज - प्राची अॅग्रो' : 'Agricultural Guidance Videos - Prachi Agro'} 
+        title={language === 'mr' ? 'कृषी सल्ला व्हिडिऑज - प्राची ॲग्रो' : 'Agricultural Guidance Videos - Prachi Agro'} 
         description="Watch official Prachi Agro farming guidance videos, crop protection tips, and product usage tutorials directly on our website."
       />
 

@@ -83,7 +83,7 @@ const defaultVideos = [
       en: "Tomato Crop Disease & Flower Drop Control - Magic Gold Guide"
     },
     crop: { mr: "टोमॅटो (Tomato)", en: "Tomato" },
-    category: { mr: "प्राची अॅग्रो उत्पादने", en: "Prachi Agro Products" },
+    category: { mr: "प्राची ॲग्रो उत्पादने", en: "Prachi Agro Products" },
     duration: "09:05",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
     embedId: "ScMzIvxBSi4",
@@ -100,7 +100,7 @@ export const videoCategories = [
   { id: "farmer-guidance", title: { mr: "शेतकरी मार्गदर्शन", en: "Farmer Guidance" } },
   { id: "pest-disease", title: { mr: "कीड व रोग व्यवस्थापन", en: "Pest & Disease" } },
   { id: "fertilizer", title: { mr: "खत व्यवस्थापन", en: "Fertilizer Management" } },
-  { id: "prachi-products", title: { mr: "प्राची अॅग्रो उत्पादने", en: "Prachi Agro Products" } }
+  { id: "prachi-products", title: { mr: "प्राची ॲग्रो उत्पादने", en: "Prachi Agro Products" } }
 ];
 
 export const getVideos = async () => {

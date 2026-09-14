@@ -23,7 +23,7 @@ const Reviews = () => {
           शेतकऱ्यांचा आमच्यावर विश्वास
         </h1>
         <p className="text-slate-400 text-xs sm:text-sm mt-1.5 font-semibold">
-          {language === 'mr' ? 'हजारो समाधानी शेतकऱ्यांचे प्राची अॅग्रो उत्पादनांविषयीचे मनोगत' : 'Hear from the farmers who have optimized their fields using our solutions.'}
+          {language === 'mr' ? 'हजारो समाधानी शेतकऱ्यांचे प्राची ॲग्रो उत्पादनांविषयीचे मनोगत' : 'Hear from the farmers who have optimized their fields using our solutions.'}
         </p>
       </div>
 
@@ -62,7 +62,7 @@ const Reviews = () => {
       {/* Write a review Callout */}
       <div className="bg-emerald-50 rounded-3xl p-8 border border-emerald-100/50 text-center flex flex-col items-center gap-4">
         <h3 className="font-extrabold text-brand-green-dark text-lg sm:text-xl">
-          तुम्ही प्राची अॅग्रो उत्पादने वापरली आहेत का?
+          तुम्ही प्राची ॲग्रो उत्पादने वापरली आहेत का?
         </h3>
         <p className="text-xs sm:text-sm text-slate-500 font-bold max-w-lg leading-relaxed">
           {language === 'mr'

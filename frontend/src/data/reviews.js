@@ -9,7 +9,7 @@ const defaultReviews = [
     rating: 5,
     photo: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100",
     review: {
-      mr: "माझ्या द्राक्ष बागेवर मागील वर्षी मोठ्या प्रमाणावर बुरशीचा प्रादुर्भाव झाला होता. मी प्राची अॅग्रोचे 'BACTRIKILLER' वापरले, आणि अगदी २ फवारण्यांमध्ये उत्कृष्ट परिणाम मिळाला. बुरशी पूर्णपणे आटोक्यात आली.",
+      mr: "माझ्या द्राक्ष बागेवर मागील वर्षी मोठ्या प्रमाणावर बुरशीचा प्रादुर्भाव झाला होता. मी प्राची ॲग्रोचे 'BACTRIKILLER' वापरले, आणि अगदी २ फवारण्यांमध्ये उत्कृष्ट परिणाम मिळाला. बुरशी पूर्णपणे आटोक्यात आली.",
       en: "Last year, my grape orchard suffered a heavy fungal outbreak. I sprayed Prachi Agro's 'BACTRIKILLER' and observed amazing results in just two applications. The fungus was completely controlled."
     }
   },
@@ -33,7 +33,7 @@ const defaultReviews = [
     rating: 5,
     photo: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100",
     review: {
-      mr: "कापसाचे पाते गळत असल्यामुळे मी काळजीत होतो. प्राची अॅग्रोचे 'MAGIC GOLD' वनस्पती वाढ प्रवर्तक वापरले. पातेगळ पूर्ण थांबली आणि कापसाची झाडे वेगाने वाढू लागली. या कंपनीची उत्पादने अत्यंत खात्रीशीर आहेत.",
+      mr: "कापसाचे पाते गळत असल्यामुळे मी काळजीत होतो. प्राची ॲग्रोचे 'MAGIC GOLD' वनस्पती वाढ प्रवर्तक वापरले. पातेगळ पूर्ण थांबली आणि कापसाची झाडे वेगाने वाढू लागली. या कंपनीची उत्पादने अत्यंत खात्रीशीर आहेत.",
       en: "I was worried about the severe flower bud drop in my cotton field. I applied Prachi Agro's 'MAGIC GOLD' growth promoter. The drop stopped completely, and the plants grew vigorously. Highly reliable products."
     }
   },

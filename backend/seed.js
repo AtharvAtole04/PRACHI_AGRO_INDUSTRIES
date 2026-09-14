@@ -780,7 +780,7 @@ const defaultVideos = [
       en: "Tomato Crop Disease & Flower Drop Control - Magic Gold Guide"
     },
     crop: { mr: "टोमॅटो (Tomato)", en: "Tomato" },
-    category: { mr: "प्राची अॅग्रो उत्पादने", en: "Prachi Agro Products" },
+    category: { mr: "प्राची ॲग्रो उत्पादने", en: "Prachi Agro Products" },
     duration: "09:05",
     youtubeUrl: "https://www.youtube.com/@prachiagroindustries03",
     embedId: "dQw4w9WgXcQ",
@@ -870,7 +870,7 @@ const defaultReviews = [
     rating: 5,
     photo: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100",
     review: {
-      mr: "माझ्या द्राक्ष बागेवर मागील वर्षी मोठ्या प्रमाणावर बुरशीचा प्रादुर्भाव झाला होता. मी प्राची अॅग्रोचे 'BACTRIKILLER' वापरले, आणि अगदी २ फवारण्यांमध्ये उत्कृष्ट परिणाम मिळाला. बुरशी पूर्णपणे आटोक्यात आली.",
+      mr: "माझ्या द्राक्ष बागेवर मागील वर्षी मोठ्या प्रमाणावर बुरशीचा प्रादुर्भाव झाला होता. मी प्राची ॲग्रोचे 'BACTRIKILLER' वापरले, आणि अगदी २ फवारण्यांमध्ये उत्कृष्ट परिणाम मिळाला. बुरशी पूर्णपणे आटोक्यात आली.",
       en: "Last year, my grape orchard suffered a heavy fungal outbreak. I sprayed Prachi Agro's 'BACTRIKILLER' and observed amazing results in just two applications. The fungus was completely controlled."
     }
   },

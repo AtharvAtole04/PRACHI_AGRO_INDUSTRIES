@@ -86,7 +86,7 @@ const About = () => {
           </p>
 
           <p className="font-black text-brand-magenta text-sm sm:text-base mt-1">
-            प्राची अॅग्रो इंडस्ट्रीज — {t('tagline')}
+            प्राची ॲग्रो इंडस्ट्रीज — {t('tagline')}
           </p>
         </div>
 

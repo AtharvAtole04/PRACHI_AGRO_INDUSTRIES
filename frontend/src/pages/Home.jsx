@@ -366,7 +366,7 @@ const Home = () => {
             </h2>
             <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
             <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-              {language === 'mr' ? 'प्राची अॅग्रो उत्पादने वापरणाऱ्या समाधानी शेतकऱ्यांचे अनुभव (स्वाइप करा)' : 'Verified testimonials from progressive farmers (Slide to view)'}
+              {language === 'mr' ? 'प्राची ॲग्रो उत्पादने वापरणाऱ्या समाधानी शेतकऱ्यांचे अनुभव (स्वाइप करा)' : 'Verified testimonials from progressive farmers (Slide to view)'}
             </p>
           </div>
 

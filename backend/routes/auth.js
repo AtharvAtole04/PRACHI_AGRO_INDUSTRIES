@@ -362,7 +362,7 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: role === 'dealer' ? 'डीलर नोंदणी यशस्वी झाली. अ‍ॅडमिन पडताळणीनंतर पूर्ण ऍक्सेस मिळेल.' : 'नोंदणी यशस्वी झाली.',
+      message: role === 'dealer' ? 'डीलर नोंदणी यशस्वी झाली. ॲडमिन पडताळणीनंतर पूर्ण ऍक्सेस मिळेल.' : 'नोंदणी यशस्वी झाली.',
       user: userProfile,
       token
     });

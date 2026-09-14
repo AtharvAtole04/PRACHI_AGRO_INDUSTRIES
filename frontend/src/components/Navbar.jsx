@@ -92,7 +92,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                     Admin
                   </p>
                   <p className="text-xs font-black text-white truncate leading-tight mt-0.5">
-                    अ‍ॅडमिन पॅनेल
+                    ॲडमिन पॅनेल
                   </p>
                 </div>
               </Link>
@@ -133,7 +133,7 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
               className="flex items-center gap-3.5 px-5 py-3 text-sm font-bold text-amber-300 hover:bg-white/8 border-l-4 border-transparent"
             >
               <ShieldCheck size={18} />
-              <span>अ‍ॅडमिन पॅनेल (Admin)</span>
+              <span>ॲडमिन पॅनेल (Admin)</span>
             </NavLink>
           )}
         </nav>

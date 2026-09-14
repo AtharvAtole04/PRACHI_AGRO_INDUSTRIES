@@ -37,13 +37,13 @@ const MemberBanner = () => {
           <span className="bg-brand-gold text-slate-900 text-[10px] uppercase font-black px-2.5 py-0.5 rounded-full">
             Admin CMS
           </span>
-          <span>👑 आपण अ‍ॅडमिन म्हणून लॉगिन आहात. आपण वेबसाइटवरील कन्टेन्ट आणि डीलर अप्रूव्हल व्यवस्थापित करू शकता.</span>
+          <span>👑 आपण ॲडमिन म्हणून लॉगिन आहात. आपण वेबसाइटवरील कन्टेन्ट आणि डीलर अप्रूव्हल व्यवस्थापित करू शकता.</span>
         </div>
         <Link
           to="/admin"
           className="bg-brand-gold text-slate-900 hover:bg-yellow-400 font-extrabold text-xs px-4 py-1.5 rounded-lg flex items-center gap-1 flex-shrink-0 transition-colors shadow-sm"
         >
-          <span>अ‍ॅडमिन पॅनेल उघडा</span>
+          <span>ॲडमिन पॅनेल उघडा</span>
           <ArrowRight size={14} />
         </Link>
       </div>

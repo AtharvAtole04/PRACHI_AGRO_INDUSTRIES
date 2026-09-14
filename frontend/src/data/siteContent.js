@@ -33,7 +33,7 @@ export const defaultSiteContent = {
     experienceBadge: { mr: '🌱 १५ वर्षांची साथ… समृद्ध शेतीची नवी वाट!', en: '🌱 15+ Years Supporting Progressive Farmers' },
     headline: { mr: 'शेतकऱ्यांच्या प्रगतीचा विश्वासू साथीदार!', en: 'Trusted Partner in Farmer Growth & Progress!' },
     story1: {
-      mr: 'गेल्या १५ वर्षांपासून प्राची अॅग्रो इंडस्ट्रीज शेतकऱ्यांच्या गरजा समजून घेत, आधुनिक शेतीसाठी विश्वासार्ह आणि प्रभावी उपाय उपलब्ध करून देण्यासाठी सातत्याने कार्यरत आहे.',
+      mr: 'गेल्या १५ वर्षांपासून प्राची ॲग्रो इंडस्ट्रीज शेतकऱ्यांच्या गरजा समजून घेत, आधुनिक शेतीसाठी विश्वासार्ह आणि प्रभावी उपाय उपलब्ध करून देण्यासाठी सातत्याने कार्यरत आहे.',
       en: 'For over 15 years, Prachi Agro Industries has been dedicated to understanding farmer needs and providing proven agricultural solutions.'
     },
     story2: {
@@ -71,7 +71,7 @@ export const defaultSiteContent = {
     bannerBadge: { mr: 'डीलरशिप व वितरण व्यवस्था', en: 'Dealership & Distribution Network' },
     bannerHeadline: { mr: 'आमच्या नेटवर्कमध्ये सहभागी व्हा', en: 'Join Our Growth Network' },
     bannerSubtitle: {
-      mr: 'कृषी सेवा केंद्र, डीलरशिप, वितरण व्यवस्था आणि तज्ज्ञ कृषी सल्ल्यासाठी आजच प्राची अॅग्रो कुटुंबाशी जोडा.',
+      mr: 'कृषी सेवा केंद्र, डीलरशिप, वितरण व्यवस्था आणि तज्ज्ञ कृषी सल्ल्यासाठी आजच प्राची ॲग्रो कुटुंबाशी जोडा.',
       en: 'Partner with Prachi Agro Industries for Authorized Dealership, Bulk Supply, and Agronomic Guidance.'
     },
     benefit1: { mr: 'अधिकृत डीलरशिप', en: 'Authorized Dealership' },

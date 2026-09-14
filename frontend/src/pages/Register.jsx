@@ -21,7 +21,7 @@ const Register = () => {
         </h1>
         <p className="text-xs text-slate-500 font-medium leading-relaxed">
           {language === 'mr' 
-            ? 'प्राची ॲग्रो इंडस्ट्रीज वेबसाईटवर सर्व ग्राहक व शेतकरी बांधव थेट उत्पादने पाहू शकतात व ऑर्डर करू शकतात. केवळ अ‍ॅडमिन लॉगिन उपलब्ध आहे.' 
+            ? 'प्राची ॲग्रो इंडस्ट्रीज वेबसाईटवर सर्व ग्राहक व शेतकरी बांधव थेट उत्पादने पाहू शकतात व ऑर्डर करू शकतात. केवळ ॲडमिन लॉगिन उपलब्ध आहे.' 
             : 'All customers and farmers can directly browse products and place inquiries without registering. Login is reserved exclusively for Admin.'}
         </p>
 
@@ -38,7 +38,7 @@ const Register = () => {
             className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5"
           >
             <ShieldCheck size={14} />
-            <span>{language === 'mr' ? 'अ‍ॅडमिन लॉगिन (Admin Login)' : 'Admin Login'}</span>
+            <span>{language === 'mr' ? 'ॲडमिन लॉगिन (Admin Login)' : 'Admin Login'}</span>
           </Link>
         </div>
       </div>

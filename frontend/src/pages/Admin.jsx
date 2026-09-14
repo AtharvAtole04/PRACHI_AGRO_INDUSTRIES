@@ -774,7 +774,7 @@ const Admin = () => {
               <div>
                 <h1 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">Admin Gate</h1>
                 <p className="text-xs text-slate-400 font-bold mt-1 uppercase tracking-wider">
-                  प्राची अॅग्रो एडमिन पोर्टल सुरक्षित लॉगिन
+                  प्राची ॲग्रो एडमिन पोर्टल सुरक्षित लॉगिन
                 </p>
               </div>
 
@@ -787,7 +787,7 @@ const Admin = () => {
               <form onSubmit={handleStep1Submit} className="flex flex-col gap-4 text-left">
                 <div>
                   <label className="text-[11px] font-black text-slate-500 uppercase tracking-wide block mb-1">
-                    अ‍ॅडमिन ईमेल (Email)
+                    ॲडमिन ईमेल (Email)
                   </label>
                   <input 
                     type="email"
@@ -3222,7 +3222,7 @@ const Admin = () => {
                     <option value="शेतकरी मार्गदर्शन">शेतकरी मार्गदर्शन (Farmer Guidance)</option>
                     <option value="कीड व रोग व्यवस्थापन">कीड व रोग व्यवस्थापन (Pest & Disease)</option>
                     <option value="खत व्यवस्थापन">खत व्यवस्थापन (Fertilizer)</option>
-                    <option value="प्राची अॅग्रो उत्पादने">प्राची अॅग्रो उत्पादने (Prachi Products)</option>
+                    <option value="प्राची ॲग्रो उत्पादने">प्राची ॲग्रो उत्पादने (Prachi Products)</option>
                   </select>
                 </div>
                 <div className="flex flex-col gap-1">

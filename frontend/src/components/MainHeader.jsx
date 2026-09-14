@@ -83,7 +83,7 @@ const MainHeader = ({ onCartClick }) => {
                         Admin
                       </p>
                       <p className="text-xs font-black text-slate-800 truncate max-w-[110px] mt-0.5 leading-none">
-                        अ‍ॅडमिन पॅनेल
+                        ॲडमिन पॅनेल
                       </p>
                     </div>
                   </Link>

@@ -81,7 +81,7 @@ const Contact = () => {
   return (
     <div className="flex flex-col gap-10 text-left max-w-5xl mx-auto">
       <SEOHead 
-        title={language === 'mr' ? 'आमच्या नेटवर्कमध्ये सहभागी व्हा - प्राची अॅग्रो' : 'Join Our Network - Prachi Agro Industries'} 
+        title={language === 'mr' ? 'आमच्या नेटवर्कमध्ये सहभागी व्हा - प्राची ॲग्रो' : 'Join Our Network - Prachi Agro Industries'} 
         description="Join Prachi Agro dealership and distribution network. Connect with our agricultural expert team."
       />
       
@@ -97,7 +97,7 @@ const Contact = () => {
         </h1>
         <p className="text-emerald-100 text-xs sm:text-base mt-2.5 max-w-2xl mx-auto font-medium leading-relaxed">
           {net.bannerSubtitle?.[lang] || (language === 'mr' 
-            ? 'कृषी सेवा केंद्र, डीलरशिप, वितरण व्यवस्था आणि तज्ज्ञ कृषी सल्ल्यासाठी आजच प्राची अॅग्रो कुटुंबाशी जोडा.' 
+            ? 'कृषी सेवा केंद्र, डीलरशिप, वितरण व्यवस्था आणि तज्ज्ञ कृषी सल्ल्यासाठी आजच प्राची ॲग्रो कुटुंबाशी जोडा.' 
             : 'Partner with Prachi Agro Industries for Authorized Dealership, Bulk Supply, and Agronomic Guidance.')}
         </p>
 

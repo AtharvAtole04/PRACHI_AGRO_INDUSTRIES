@@ -315,7 +315,7 @@ export const AuthProvider = ({ children }) => {
     return {
       success: true,
       message: userData.role === 'dealer'
-        ? 'डीलर नोंदणी यशस्वी झाली. अ‍ॅडमिन पडताळणीनंतर पूर्ण ऍक्सेस मिळेल.'
+        ? 'डीलर नोंदणी यशस्वी झाली. ॲडमिन पडताळणीनंतर पूर्ण ऍक्सेस मिळेल.'
         : 'शेतकरी नोंदणी यशस्वी झाली!',
       user: safeUser
     };
