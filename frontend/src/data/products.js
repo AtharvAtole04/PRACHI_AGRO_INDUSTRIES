@@ -794,6 +794,11 @@ export const getProducts = async () => {
   }));
 };
 
+const getAuthHeaders = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 export const addProduct = async (product) => {
   const cleanId = (product.name || 'product')
     .toLowerCase()
@@ -813,7 +818,11 @@ export const addProduct = async (product) => {
   try {
     res = await fetch(apiUrl('/api/products'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Cache-Control': 'no-cache',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(newProduct)
     });
   } catch (err) {
@@ -824,7 +833,7 @@ export const addProduct = async (product) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errorData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errorData.message || `Failed to save product in database (HTTP ${res.status})`);
+    throw new Error(errorData.message || errorData.error || `Failed to save product in database (HTTP ${res.status})`);
   }
 
   const updatedProds = await getProducts();
@@ -842,7 +851,11 @@ export const updateProduct = async (id, updatedProduct) => {
   try {
     res = await fetch(apiUrl(`/api/products/${id}`), {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Cache-Control': 'no-cache',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(updatePayload)
     });
   } catch (err) {
@@ -853,7 +866,7 @@ export const updateProduct = async (id, updatedProduct) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errorData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errorData.message || `Failed to update product in database (HTTP ${res.status})`);
+    throw new Error(errorData.message || errorData.error || `Failed to update product in database (HTTP ${res.status})`);
   }
 
   const updatedProds = await getProducts();
@@ -868,7 +881,10 @@ export const deleteProduct = async (id) => {
   try {
     res = await fetch(apiUrl(`/api/products/${id}`), {
       method: 'DELETE',
-      headers: { 'Cache-Control': 'no-cache' }
+      headers: { 
+        'Cache-Control': 'no-cache',
+        ...getAuthHeaders()
+      }
     });
   } catch (err) {
     console.error('[Product API Error - Delete Product]:', err);
@@ -878,7 +894,7 @@ export const deleteProduct = async (id) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errorData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errorData.message || `Failed to delete product from database (HTTP ${res.status})`);
+    throw new Error(errorData.message || errorData.error || `Failed to delete product from database (HTTP ${res.status})`);
   }
 
   const updatedProds = await getProducts();

@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Product from '../models/Product.js';
+import { verifyAdminToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ const getQueryForId = (idParam) => {
     : { id: idParam };
 };
 
-// GET all products
+// GET all products (Public)
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
@@ -28,7 +29,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single product by ID slug or Mongo _id
+// GET single product by ID slug or Mongo _id (Public)
 router.get('/:id', async (req, res) => {
   try {
     const product = await Product.findOne(getQueryForId(req.params.id));
@@ -49,8 +50,8 @@ const normalizeLocalizedFields = (data) => {
   return data;
 };
 
-// POST create product
-router.post('/', async (req, res) => {
+// POST create product (Admin Protected)
+router.post('/', verifyAdminToken, async (req, res) => {
   try {
     const productData = normalizeLocalizedFields({ ...req.body });
     delete productData._id;
@@ -81,8 +82,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update product
-router.put('/:id', async (req, res) => {
+// PUT update product (Admin Protected)
+router.put('/:id', verifyAdminToken, async (req, res) => {
   try {
     const updateData = normalizeLocalizedFields({ ...req.body });
     delete updateData._id; // Remove immutable _id field before update
@@ -99,8 +100,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE product
-router.delete('/:id', async (req, res) => {
+// DELETE product (Admin Protected)
+router.delete('/:id', verifyAdminToken, async (req, res) => {
   try {
     const deletedProduct = await Product.findOneAndDelete(getQueryForId(req.params.id));
     if (!deletedProduct) return res.status(404).json({ message: 'Product not found' });

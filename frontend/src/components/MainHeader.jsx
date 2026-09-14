@@ -68,8 +68,8 @@ const MainHeader = ({ onCartClick }) => {
             {/* Right Actions */}
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-auto lg:ml-0">
 
-              {/* Admin Account / Admin Login Button */}
-              {isAuthenticated && isAdmin ? (
+              {/* Admin Account shortcut (Visible only when logged in as admin) */}
+              {isAuthenticated && isAdmin && (
                 <div className="flex items-center gap-2">
                   <Link
                     to="/admin"
@@ -89,7 +89,7 @@ const MainHeader = ({ onCartClick }) => {
                   </Link>
 
                   <button
-                    onClick={() => { logout(); navigate('/login'); }}
+                    onClick={() => { logout(); navigate('/admin'); }}
                     className="p-2 text-slate-400 hover:text-brand-magenta hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                     title="Logout"
                     aria-label="Logout"
@@ -97,14 +97,6 @@ const MainHeader = ({ onCartClick }) => {
                     <LogOut size={16} />
                   </button>
                 </div>
-              ) : (
-                <Link
-                  to="/login"
-                  className="flex items-center gap-1.5 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-brand-green-dark px-3 py-2 rounded-xl text-xs font-extrabold transition-all border border-slate-200/60 cursor-pointer"
-                >
-                  <Lock size={14} className="text-brand-green-dark" />
-                  <span>{language === 'mr' ? 'अ‍ॅडमिन लॉगिन' : 'Admin Login'}</span>
-                </Link>
               )}
 
               {/* Cart — always visible */}

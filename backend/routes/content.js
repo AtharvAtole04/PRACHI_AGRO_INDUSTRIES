@@ -1,5 +1,6 @@
 import express from 'express';
 import SiteContent from '../models/SiteContent.js';
+import { verifyAdminToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -50,7 +51,7 @@ router.get('/', async (req, res) => {
 });
 
 // UPDATE CMS content (Admin only)
-router.put('/', async (req, res) => {
+router.put('/', verifyAdminToken, async (req, res) => {
   try {
     const updateData = {
       ...req.body,

@@ -146,6 +146,11 @@ export const saveVideos = async (array) => {
   } catch (err) {}
 };
 
+const getAuthHeaders = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 export const addVideo = async (video) => {
   const embedId = video.embedId || extractEmbedId(video.youtubeUrl);
   const formattedVideo = {
@@ -160,7 +165,10 @@ export const addVideo = async (video) => {
   try {
     res = await fetch(apiUrl('/api/videos'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(formattedVideo)
     });
   } catch (err) {
@@ -171,7 +179,7 @@ export const addVideo = async (video) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to add video (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to add video (HTTP ${res.status})`);
   }
 
   return await getVideos();
@@ -181,7 +189,10 @@ export const deleteVideo = async (id) => {
   let res;
   try {
     res = await fetch(apiUrl(`/api/videos/${id}`), {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeaders()
+      }
     });
   } catch (err) {
     console.error('[Video API Error - Delete Video]:', err);
@@ -191,7 +202,7 @@ export const deleteVideo = async (id) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to delete video (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to delete video (HTTP ${res.status})`);
   }
 
   return await getVideos();

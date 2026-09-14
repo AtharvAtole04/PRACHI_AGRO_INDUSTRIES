@@ -152,12 +152,20 @@ export const saveBlogs = async (array) => {
   } catch (err) {}
 };
 
+const getAuthHeaders = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 export const addBlog = async (blog) => {
   let res;
   try {
     res = await fetch(apiUrl('/api/blogs'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(blog)
     });
   } catch (err) {
@@ -168,7 +176,7 @@ export const addBlog = async (blog) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to add blog (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to add blog (HTTP ${res.status})`);
   }
 
   return await getBlogs();
@@ -178,7 +186,10 @@ export const deleteBlog = async (id) => {
   let res;
   try {
     res = await fetch(apiUrl(`/api/blogs/${id}`), {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeaders()
+      }
     });
   } catch (err) {
     console.error('[Blog API Error - Delete Blog]:', err);
@@ -188,7 +199,7 @@ export const deleteBlog = async (id) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to delete blog (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to delete blog (HTTP ${res.status})`);
   }
 
   return await getBlogs();

@@ -138,8 +138,6 @@ const Footer = () => {
             <Link to="/privacy" className="hover:underline hover:text-slate-400">गोपनीयता धोरण (Privacy Policy)</Link>
             <span>•</span>
             <Link to="/terms" className="hover:underline hover:text-slate-400">अटी आणि शर्ती (Terms)</Link>
-            <span>•</span>
-            <Link to="/admin" className="hover:underline hover:text-slate-400 font-bold text-slate-600 hover:text-slate-300">Admin Login</Link>
           </div>
         </div>
       </div>

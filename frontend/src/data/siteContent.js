@@ -93,12 +93,20 @@ export const getSiteContent = async () => {
   return defaultSiteContent;
 };
 
+const getAuthHeaders = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 export const updateSiteContent = async (newContent) => {
   let res;
   try {
     res = await fetch(apiUrl('/api/content'), {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(newContent)
     });
   } catch (err) {

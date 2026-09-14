@@ -75,6 +75,34 @@ const userSchema = new mongoose.Schema({
     enum: ['active', 'pending', 'blocked'],
     default: 'active'
   },
+  // MFA & Security Fields
+  mfaEnabled: {
+    type: Boolean,
+    default: false
+  },
+  mfaSecret: {
+    type: String,
+    default: ''
+  },
+  mfaTempSecret: {
+    type: String,
+    default: ''
+  },
+  recoveryCodeHashes: [{
+    type: String
+  }],
+  failedLoginAttempts: {
+    type: Number,
+    default: 0
+  },
+  failedOtpAttempts: {
+    type: Number,
+    default: 0
+  },
+  lockUntil: {
+    type: Date,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now

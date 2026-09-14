@@ -101,11 +101,19 @@ export const addReview = async (review) => {
   return await getReviews();
 };
 
+const getAuthHeaders = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 export const deleteReview = async (id) => {
   let res;
   try {
     res = await fetch(apiUrl(`/api/reviews/${id}`), {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeaders()
+      }
     });
   } catch (err) {
     console.error('[Review API Error - Delete Review]:', err);
@@ -115,7 +123,7 @@ export const deleteReview = async (id) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to delete review (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to delete review (HTTP ${res.status})`);
   }
 
   return await getReviews();

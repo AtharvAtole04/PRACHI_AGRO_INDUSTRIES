@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Category from '../models/Category.js';
+import { verifyAdminToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -31,8 +32,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST create category
-router.post('/', async (req, res) => {
+// POST create category (Admin Protected)
+router.post('/', verifyAdminToken, async (req, res) => {
   try {
     const category = new Category(req.body);
     const newCategory = await category.save();
@@ -42,8 +43,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update category
-router.put('/:id', async (req, res) => {
+// PUT update category (Admin Protected)
+router.put('/:id', verifyAdminToken, async (req, res) => {
   try {
     const updatedCategory = await Category.findOneAndUpdate(
       getQueryForId(req.params.id),
@@ -56,8 +57,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE category
-router.delete('/:id', async (req, res) => {
+// DELETE category (Admin Protected)
+router.delete('/:id', verifyAdminToken, async (req, res) => {
   try {
     const deletedCategory = await Category.findOneAndDelete(getQueryForId(req.params.id));
     if (!deletedCategory) return res.status(404).json({ message: 'Category not found' });

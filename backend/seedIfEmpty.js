@@ -1,5 +1,7 @@
 import Product from './models/Product.js';
 import Category from './models/Category.js';
+import User from './models/User.js';
+import bcrypt from 'bcryptjs';
 
 const defaultCategories = [
   {
@@ -744,6 +746,27 @@ const defaultProducts = [
 
 export async function seedIfEmpty() {
   try {
+    // 1. Ensure Admin User exists in DB
+    const adminEmail = (process.env.ADMIN_EMAIL || 'info@prachiagroindustries.in').toLowerCase();
+    const adminPass = process.env.ADMIN_PASSWORD || 'admin123';
+    let adminUser = await User.findOne({ role: 'admin' });
+    
+    if (!adminUser) {
+      console.log('👑 Admin user not found. Seeding default Admin account...');
+      const hashedPassword = await bcrypt.hash(adminPass, 10);
+      adminUser = new User({
+        name: 'Prachi Agro Admin',
+        email: adminEmail,
+        phone: '9021605160',
+        password: hashedPassword,
+        role: 'admin',
+        isVerifiedDealer: true,
+        status: 'active'
+      });
+      await adminUser.save();
+      console.log('✅ Default Admin account seeded successfully:', adminEmail);
+    }
+
     if (process.env.AUTO_SEED === 'true') {
       const productCount = await Product.countDocuments();
       if (productCount === 0) {

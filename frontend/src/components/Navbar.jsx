@@ -79,9 +79,9 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* User Account / Login Bar in Mobile Drawer */}
-        <div className="p-3 mx-4 mt-3 bg-black/20 rounded-2xl border border-white/10">
-          {isAuthenticated && isAdmin ? (
+        {/* User Account / Admin Bar in Mobile Drawer */}
+        {isAuthenticated && isAdmin && (
+          <div className="p-3 mx-4 mt-3 bg-black/20 rounded-2xl border border-white/10">
             <div className="flex items-center justify-between">
               <Link to="/admin" className="flex items-center gap-2.5 min-w-0 pr-2">
                 <div className="w-8 h-8 rounded-full bg-brand-gold text-slate-950 font-bold flex items-center justify-center flex-shrink-0 text-sm">
@@ -104,16 +104,8 @@ export const MobileDrawer = ({ isOpen, onClose }) => {
                 <LogOut size={16} />
               </button>
             </div>
-          ) : (
-            <Link
-              to="/login"
-              className="flex items-center justify-center gap-2 bg-brand-gold text-brand-green-dark font-extrabold text-xs py-2 px-3 rounded-xl shadow-sm"
-            >
-              <Lock size={14} />
-              <span>{language === 'mr' ? 'अ‍ॅडमिन लॉगिन' : 'Admin Login'}</span>
-            </Link>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Nav Links */}
         <nav className="flex-1 overflow-y-auto py-3">

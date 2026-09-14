@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Blog from '../models/Blog.js';
+import { verifyAdminToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ const getQueryForId = (idParam) => {
     : { id: idParam };
 };
 
-// GET all blogs
+// GET all blogs (Public)
 router.get('/', async (req, res) => {
   try {
     const blogs = await Blog.find().sort({ createdAt: -1 });
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET single blog by ID slug or Mongo _id
+// GET single blog by ID slug or Mongo _id (Public)
 router.get('/:id', async (req, res) => {
   try {
     const blog = await Blog.findOne(getQueryForId(req.params.id));
@@ -31,8 +32,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST create blog
-router.post('/', async (req, res) => {
+// POST create blog (Admin Protected)
+router.post('/', verifyAdminToken, async (req, res) => {
   const blog = new Blog(req.body);
   try {
     const newBlog = await blog.save();
@@ -42,8 +43,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update blog
-router.put('/:id', async (req, res) => {
+// PUT update blog (Admin Protected)
+router.put('/:id', verifyAdminToken, async (req, res) => {
   try {
     const updatedBlog = await Blog.findOneAndUpdate(
       getQueryForId(req.params.id),
@@ -56,8 +57,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE blog
-router.delete('/:id', async (req, res) => {
+// DELETE blog (Admin Protected)
+router.delete('/:id', verifyAdminToken, async (req, res) => {
   try {
     const deletedBlog = await Blog.findOneAndDelete(getQueryForId(req.params.id));
     if (!deletedBlog) return res.status(404).json({ message: 'Blog not found' });

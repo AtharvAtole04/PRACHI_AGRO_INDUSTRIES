@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import Video from '../models/Video.js';
 import { getChannelVideos, clearVideoCache } from '../services/youtubeService.js';
+import { verifyAdminToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -80,9 +81,9 @@ router.get('/youtube', async (req, res) => {
 
 /**
  * POST /api/videos/sync
- * Force sync YouTube channel videos into database & clear cache
+ * Force sync YouTube channel videos into database & clear cache (Admin Protected)
  */
-router.post('/sync', async (req, res) => {
+router.post('/sync', verifyAdminToken, async (req, res) => {
   clearVideoCache();
   const ytResult = await getChannelVideos({ forceRefresh: true });
   
@@ -129,8 +130,8 @@ async function syncVideosToDb(videos) {
   }
 }
 
-// POST create video manually
-router.post('/', async (req, res) => {
+// POST create video manually (Admin Protected)
+router.post('/', verifyAdminToken, async (req, res) => {
   const video = new Video(req.body);
   try {
     const newVideo = await video.save();
@@ -140,8 +141,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update video
-router.put('/:id', async (req, res) => {
+// PUT update video (Admin Protected)
+router.put('/:id', verifyAdminToken, async (req, res) => {
   try {
     const updatedVideo = await Video.findOneAndUpdate(
       getQueryForId(req.params.id),
@@ -154,8 +155,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE video
-router.delete('/:id', async (req, res) => {
+// DELETE video (Admin Protected)
+router.delete('/:id', verifyAdminToken, async (req, res) => {
   try {
     const deletedVideo = await Video.findOneAndDelete(getQueryForId(req.params.id));
     if (!deletedVideo) return res.status(404).json({ message: 'Video not found' });

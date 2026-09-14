@@ -75,21 +75,57 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Login handler with backend API + local demo fallback
-  const login = async (email, password, preferredRole) => {
+  // Admin 2FA Step 1: Password Check
+  const adminLoginStep1 = async (email, password) => {
     const trimmedEmail = (email || '').trim().toLowerCase();
     const cleanPassword = (password || '').trim();
 
-    // 1. Check if user is logging into standard Demo accounts
-    if (
-      (trimmedEmail === 'info@prachiagroindustries.in' || trimmedEmail === 'admin@prachiagro.com' || trimmedEmail === 'admin') &&
-      (cleanPassword === 'admin123' || cleanPassword === 'admin')
-    ) {
-      const adminUser = DEMO_USERS.admin;
-      setUser(adminUser);
-      setToken('demo-admin-token');
-      return { success: true, user: adminUser };
+    try {
+      const res = await fetch(apiUrl('/api/auth/admin/login-step1'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: trimmedEmail, password: cleanPassword })
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        return data;
+      } else {
+        return { success: false, error: data.error || 'चुकीचा ईमेल किंवा पासवर्ड! (Invalid credentials)' };
+      }
+    } catch (err) {
+      console.error('Error during Admin Login Step 1:', err);
+      return { success: false, error: 'सर्व्हरशी संपर्क होऊ शकला नाही. (Unable to connect to backend server)' };
     }
+  };
+
+  // Admin 2FA Step 2: Verify TOTP Code or Recovery Code
+  const adminVerify2FA = async (preMfaToken, otpCode, recoveryCode) => {
+    try {
+      const res = await fetch(apiUrl('/api/auth/admin/verify-2fa'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preMfaToken, otpCode, recoveryCode })
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && data.user && data.token) {
+        setUser(data.user);
+        setToken(data.token);
+        return { success: true, user: data.user, token: data.token, message: data.message };
+      } else {
+        return { success: false, error: data.error || 'अवैध ६-अंकी कोड किंवा रिकव्हरी कोड! (Invalid 2FA code)' };
+      }
+    } catch (err) {
+      console.error('Error during Admin 2FA Verification:', err);
+      return { success: false, error: 'सर्व्हरशी संपर्क होऊ शकला नाही. (Unable to connect to backend server)' };
+    }
+  };
+
+  // Standard Login handler with backend API + local demo fallback
+  const login = async (email, password, preferredRole) => {
+    const trimmedEmail = (email || '').trim().toLowerCase();
+    const cleanPassword = (password || '').trim();
 
     if (
       (trimmedEmail === 'farmer@prachiagro.com' || trimmedEmail === 'farmer') &&
@@ -111,7 +147,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true, user: dealerUser };
     }
 
-    // 2. Try Backend API
+    // Try Backend API
     try {
       const res = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
@@ -134,7 +170,7 @@ export const AuthProvider = ({ children }) => {
       console.warn('Backend login endpoint unavailable, checking local registered users...');
     }
 
-    // 3. Fallback: check locally registered users in localStorage
+    // Fallback: check locally registered users in localStorage
     const localUsers = JSON.parse(localStorage.getItem('prachi_registered_users') || '[]');
     const matched = localUsers.find(
       u => (u.email?.toLowerCase() === trimmedEmail || u.phone === trimmedEmail) && u.password === cleanPassword
@@ -226,6 +262,8 @@ export const AuthProvider = ({ children }) => {
         isFarmer,
         isDealer,
         login,
+        adminLoginStep1,
+        adminVerify2FA,
         register,
         logout,
         updateUser,

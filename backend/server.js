@@ -79,18 +79,6 @@ app.use('/api/videos', videoRouter);
 app.use('/api/blogs', blogRouter);
 app.use('/api/reviews', reviewRouter);
 
-// Admin Login endpoint
-app.post('/api/admin/login', (req, res) => {
-  const { passcode } = req.body;
-  const expectedPasscode = process.env.ADMIN_PASSCODE || 'admin123';
-  
-  if (passcode === expectedPasscode) {
-    res.json({ success: true, token: 'mock-jwt-token-prachi-agro' });
-  } else {
-    res.status(401).json({ success: false, message: 'Invalid passcode' });
-  }
-});
-
 // Healthcheck endpoint (Render / Uptime monitoring)
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

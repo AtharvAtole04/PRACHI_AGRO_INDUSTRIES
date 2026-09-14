@@ -1,9 +1,10 @@
 import express from 'express';
 import Review from '../models/Review.js';
+import { verifyAdminToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// GET all reviews
+// GET all reviews (Public)
 router.get('/', async (req, res) => {
   try {
     const reviews = await Review.find().sort({ createdAt: -1 });
@@ -24,8 +25,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE review by Mongo _id
-router.delete('/:id', async (req, res) => {
+// DELETE review by Mongo _id (Admin Protected)
+router.delete('/:id', verifyAdminToken, async (req, res) => {
   try {
     const deletedReview = await Review.findByIdAndDelete(req.params.id);
     if (!deletedReview) return res.status(404).json({ message: 'Review not found' });

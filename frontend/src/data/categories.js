@@ -79,12 +79,20 @@ export const getCategories = async () => {
   return getLocalCategories();
 };
 
+const getAuthHeaders = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 export const addCategory = async (categoryData) => {
   let res;
   try {
     res = await fetch(apiUrl('/api/categories'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(categoryData)
     });
   } catch (err) {
@@ -95,7 +103,7 @@ export const addCategory = async (categoryData) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to add category (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to add category (HTTP ${res.status})`);
   }
 
   return await getCategories();
@@ -106,7 +114,10 @@ export const updateCategory = async (id, categoryData) => {
   try {
     res = await fetch(apiUrl(`/api/categories/${id}`), {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(categoryData)
     });
   } catch (err) {
@@ -117,7 +128,7 @@ export const updateCategory = async (id, categoryData) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to update category (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to update category (HTTP ${res.status})`);
   }
 
   return await getCategories();
@@ -127,7 +138,10 @@ export const deleteCategory = async (id) => {
   let res;
   try {
     res = await fetch(apiUrl(`/api/categories/${id}`), {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        ...getAuthHeaders()
+      }
     });
   } catch (err) {
     console.error('[Category API Error - Delete Category]:', err);
@@ -137,7 +151,7 @@ export const deleteCategory = async (id) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to delete category (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to delete category (HTTP ${res.status})`);
   }
 
   return await getCategories();
