@@ -22,6 +22,7 @@ const productSchema = new mongoose.Schema({
   originalPrice: { type: Number },
   packSizes: { type: [packSizeSchema], default: [] },
   image: { type: String, default: '/assets/products/placeholder.svg' },
+  images: { type: [String], default: [] },
   rating: { type: Number, default: 4.8 },
   reviewsCount: { type: Number, default: 12 },
   crops: { type: localizedStringSchema, default: {} },

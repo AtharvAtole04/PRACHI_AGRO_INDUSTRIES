@@ -103,6 +103,15 @@ const ProductDetail = () => {
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 3);
 
+  // Gallery Images List
+  const galleryImages = Array.from(new Set([
+    product?.image,
+    ...(Array.isArray(product?.images) ? product.images : [])
+  ].filter(Boolean)));
+  
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const currentDisplayImage = galleryImages[activeImageIndex] || product?.image || '/assets/products/placeholder.svg';
+
   return (
     <div className="flex flex-col gap-10 text-left">
       {/* Back Link */}
@@ -121,27 +130,38 @@ const ProductDetail = () => {
         
         {/* Left Column: Product Image Gallery */}
         <div className="md:col-span-5 flex flex-col gap-4">
-          <div className="aspect-square bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center p-4 sm:p-8 overflow-hidden group">
+          <div className="aspect-square bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center p-4 sm:p-8 overflow-hidden group relative">
             <img 
-              src={product.image} 
+              src={currentDisplayImage} 
               alt={product.name}
-              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => { e.target.src = 'https://placehold.co/400x400?text=Agri+Product' }}
+              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-all duration-300"
+              onError={(e) => { e.target.src = '/assets/products/placeholder.svg' }}
             />
           </div>
           
-          {/* Thumbnails (Mock application slides) */}
-          <div className="flex gap-3">
-            <div className="w-16 h-16 rounded-lg border-2 border-brand-green-dark p-1 flex items-center justify-center bg-slate-50 cursor-pointer">
-              <img src={product.image} alt="thumbnail 1" className="max-h-full max-w-full object-contain" onError={(e) => { e.target.src = 'https://placehold.co/100x100?text=Agri' }} />
+          {/* Thumbnails Bar (Multi-Image Gallery) */}
+          {galleryImages.length > 1 && (
+            <div className="flex gap-2.5 overflow-x-auto custom-scrollbar pb-1">
+              {galleryImages.map((imgUrl, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImageIndex(idx)}
+                  className={`w-16 h-16 rounded-xl border p-1 flex items-center justify-center bg-slate-50 cursor-pointer transition-all flex-shrink-0 ${
+                    idx === activeImageIndex
+                      ? 'border-2 border-brand-green-dark shadow-md scale-105 bg-white'
+                      : 'border-slate-200 opacity-70 hover:opacity-100 hover:border-slate-300'
+                  }`}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={`thumbnail ${idx + 1}`}
+                    className="max-h-full max-w-full object-contain"
+                    onError={(e) => { e.target.src = '/assets/products/placeholder.svg' }}
+                  />
+                </button>
+              ))}
             </div>
-            <div className="w-16 h-16 rounded-lg border border-slate-200 p-1 flex items-center justify-center bg-slate-50 cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
-              <img src="https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=100" alt="application crop" className="w-full h-full object-cover rounded" />
-            </div>
-            <div className="w-16 h-16 rounded-lg border border-slate-200 p-1 flex items-center justify-center bg-slate-50 cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
-              <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&q=80&w=100" alt="field" className="w-full h-full object-cover rounded" />
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Right Column: Order Panel */}

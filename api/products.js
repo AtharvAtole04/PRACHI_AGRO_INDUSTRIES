@@ -24,7 +24,13 @@ export default async function handler(req, res) {
     await connectDb();
     const db = mongoose.connection.db;
     const products = await db.collection('products').find({}).toArray();
-    return res.status(200).json(products);
+    const normalized = products.map(p => ({
+      ...p,
+      id: p.id || String(p._id),
+      _id: String(p._id),
+      images: Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : [])
+    }));
+    return res.status(200).json(normalized);
   } catch (error) {
     console.error('Vercel MongoDB API Error:', error);
     return res.status(500).json({ error: 'Failed to fetch products from MongoDB', details: error.message });

@@ -100,7 +100,8 @@ const Admin = () => {
     benefit1_mr: '', benefit1_en: '',
     benefit2_mr: '', benefit2_en: '',
     usage_mr: '', usage_en: '',
-    image: '/assets/products/placeholder.svg'
+    image: '/assets/products/placeholder.svg',
+    images: []
   });
   const [isEditingProduct, setIsEditingProduct] = useState(false);
   const [isSubmittingProduct, setIsSubmittingProduct] = useState(false);
@@ -431,13 +432,12 @@ const Admin = () => {
     setTimeout(() => setSuccessMsg(''), 4000);
   };
 
-  const handleImageFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        alert(language === 'mr' ? 'कृपया एक वैध प्रतिमा फाइल निवडा.' : 'Please select a valid image file.');
-        return;
-      }
+  const handleMultipleImageFilesUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    files.forEach(file => {
+      if (!file.type.startsWith('image/')) return;
       const reader = new FileReader();
       reader.onload = (event) => {
         const img = new Image();
@@ -462,12 +462,62 @@ const Admin = () => {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
           const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
-          setProductForm(prev => ({ ...prev, image: compressedBase64 }));
+
+          setProductForm(prev => {
+            const currentImages = prev.images || [];
+            const newImages = [...currentImages, compressedBase64];
+            const primaryImage = (!prev.image || prev.image === '/assets/products/placeholder.svg') ? compressedBase64 : prev.image;
+            return {
+              ...prev,
+              image: primaryImage,
+              images: newImages
+            };
+          });
         };
         img.src = event.target.result;
       };
       reader.readAsDataURL(file);
-    }
+    });
+    e.target.value = '';
+  };
+
+  const handleSetPrimaryImage = (imgUrl) => {
+    setProductForm(prev => ({
+      ...prev,
+      image: imgUrl
+    }));
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setProductForm(prev => {
+      const currentImages = prev.images || [];
+      const updatedImages = currentImages.filter((_, idx) => idx !== indexToRemove);
+      const removedImage = currentImages[indexToRemove];
+      let newPrimary = prev.image;
+      if (prev.image === removedImage) {
+        newPrimary = updatedImages.length > 0 ? updatedImages[0] : '/assets/products/placeholder.svg';
+      }
+      return {
+        ...prev,
+        image: newPrimary,
+        images: updatedImages
+      };
+    });
+  };
+
+  const handleAddImageUrl = (url) => {
+    if (!url || !url.trim()) return;
+    const trimmed = url.trim();
+    setProductForm(prev => {
+      const currentImages = prev.images || [];
+      const newImages = currentImages.includes(trimmed) ? currentImages : [...currentImages, trimmed];
+      const primaryImage = (!prev.image || prev.image === '/assets/products/placeholder.svg') ? trimmed : prev.image;
+      return {
+        ...prev,
+        image: primaryImage,
+        images: newImages
+      };
+    });
   };
 
   const handleBlogImageFileUpload = (e) => {
@@ -545,6 +595,12 @@ const Admin = () => {
     const cropsMr = productForm.crops_mr || productForm.crops_en || 'सोयाबीन, कापूस, टोमॅटो, कांदा, मिरची व इतर पिके.';
     const cropsEn = productForm.crops_en || productForm.crops_mr || 'Soybean, Cotton, Tomato, Onion, Chilli and all crops.';
 
+    const rawImagesList = Array.isArray(productForm.images) && productForm.images.length > 0
+      ? productForm.images
+      : (productForm.image ? [productForm.image] : []);
+    const primaryImg = productForm.image || rawImagesList[0] || '/assets/products/placeholder.svg';
+    const finalImagesList = Array.from(new Set([primaryImg, ...rawImagesList].filter(Boolean)));
+
     const formattedProduct = {
       name: productForm.name.trim(),
       category: productForm.category,
@@ -554,7 +610,8 @@ const Admin = () => {
       basePrice: computedBasePrice,
       originalPrice: computedOriginalPrice,
       packSizes: packSizes.length > 0 ? packSizes : [{ size: "250 ml", price: computedBasePrice, originalPrice: computedOriginalPrice }],
-      image: productForm.image || '/assets/products/placeholder.svg',
+      image: primaryImg,
+      images: finalImagesList,
       isPopular: true,
       isNew: true,
       rating: 4.8,
@@ -602,6 +659,10 @@ const Admin = () => {
         }))
       : [{ size: '', price: '', originalPrice: '' }];
 
+    const loadedImages = Array.isArray(prod.images) && prod.images.length > 0
+      ? prod.images
+      : (prod.image ? [prod.image] : []);
+
     setProductForm({
       id: prod.id || prod._id,
       name: prod.name || '',
@@ -619,7 +680,8 @@ const Admin = () => {
       crops_en: prod.crops?.en || '',
       associatedCrops: Array.isArray(prod.associatedCrops) ? prod.associatedCrops : [],
       usage_mr: prod.usage?.mr || '', usage_en: prod.usage?.en || '',
-      image: prod.image
+      image: prod.image || loadedImages[0] || '/assets/products/placeholder.svg',
+      images: loadedImages
     });
     window.scrollTo({ top: 100, behavior: 'smooth' });
   };
@@ -653,7 +715,8 @@ const Admin = () => {
       benefit1_mr: '', benefit1_en: '',
       benefit2_mr: '', benefit2_en: '',
       usage_mr: '', usage_en: '',
-      image: '/assets/products/placeholder.svg'
+      image: '/assets/products/placeholder.svg',
+      images: []
     });
   };
 
@@ -2708,60 +2771,117 @@ const Admin = () => {
                 <input type="text" value={productForm.benefit2_mr} onChange={(e) => setProductForm({ ...productForm, benefit2_mr: e.target.value })} placeholder="फायदा २: पांढऱ्या मुळांचा विकास" className="border border-slate-200 rounded p-2 text-xs" />
               </div>
 
-              {/* Product Photo Upload & Live Preview */}
-              <div className="flex flex-col gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
-                <label className="text-[11px] font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
-                  <span>🖼️</span>
-                  <span>उत्पादनाचा फोटो (Product Photo)</span>
-                </label>
+              {/* Product Photos Upload & Multi-Image Gallery */}
+              <div className="flex flex-col gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-black text-brand-green-dark uppercase tracking-wide flex items-center gap-1.5">
+                    <span>🖼️</span>
+                    <span>उत्पादनाचे फोटो (Product Photos Gallery)</span>
+                  </label>
+                  <span className="text-[10px] bg-emerald-100 text-brand-green-dark font-extrabold px-2 py-0.5 rounded-full">
+                    {((productForm.images && productForm.images.length > 0) ? productForm.images.length : (productForm.image ? 1 : 0))} फोटो
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-500 font-bold">
+                  तुम्ही एकापेक्षा जास्त फोटो अपलोड करू शकता. मुख्य फोटो निवडा जो मुख्य कार्डवर दिसेल.
+                </p>
 
-                {/* Option 1: File Upload */}
+                {/* Option 1: Multi-File Upload */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-bold text-slate-500">
-                    १. संगणक किंवा मोबाईलवरून फोटो निवडा (Choose File):
+                    १. संगणक किंवा मोबाईलवरून फोटो निवडा (Choose Multiple Files):
                   </label>
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleImageFileUpload}
+                    multiple
+                    onChange={handleMultipleImageFilesUpload}
                     className="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-brand-green-dark file:text-white hover:file:bg-brand-green-light cursor-pointer border border-slate-200 rounded-lg bg-white p-1"
                   />
                 </div>
 
                 <div className="relative flex py-0.5 items-center">
                   <div className="flex-grow border-t border-slate-200"></div>
-                  <span className="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">किंवा (OR)</span>
+                  <span className="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">किंवा URL जोडा (OR ADD URL)</span>
                   <div className="flex-grow border-t border-slate-200"></div>
                 </div>
 
                 {/* Option 2: Image URL Path */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-500">
-                    २. फोटोची वेब URL किंवा पाथ (Image Path / URL):
-                  </label>
+                <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    value={productForm.image}
-                    onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                    placeholder="/assets/products/magic_gold_500.png"
-                    className="border border-slate-200 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-brand-green-dark"
+                    id="adminImageUrlInput"
+                    placeholder="/assets/products/magic_gold_500.png किंवा web image URL"
+                    className="flex-1 border border-slate-200 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-brand-green-dark font-mono"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddImageUrl(e.target.value);
+                        e.target.value = '';
+                      }
+                    }}
                   />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const input = document.getElementById('adminImageUrlInput');
+                      if (input && input.value) {
+                        handleAddImageUrl(input.value);
+                        input.value = '';
+                      }
+                    }}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-3 py-2 rounded-lg cursor-pointer transition-colors shadow-xs"
+                  >
+                    + URL जोडा
+                  </button>
                 </div>
 
-                {/* Live Image Preview */}
-                {productForm.image && (
-                  <div className="flex items-center gap-3 mt-1 p-2 bg-white rounded-xl border border-slate-200 shadow-xs">
-                    <div className="w-14 h-14 rounded-lg bg-slate-50 p-1 flex items-center justify-center border border-slate-200 flex-shrink-0 overflow-hidden">
-                      <img
-                        src={productForm.image}
-                        alt="Product Preview"
-                        className="max-w-full max-h-full object-contain"
-                        onError={(e) => { e.target.src = '/assets/logo.png'; }}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-black text-brand-green-dark uppercase">फोटो प्रिव्ह्यू (Live Preview)</p>
-                      <p className="text-[10px] text-slate-500 truncate max-w-[210px]">{productForm.image}</p>
+                {/* Thumbnails Gallery & Cover Photo Management */}
+                {((productForm.images && productForm.images.length > 0) || (productForm.image && productForm.image !== '/assets/products/placeholder.svg')) && (
+                  <div className="mt-1 flex flex-col gap-2">
+                    <p className="text-[10px] font-black text-slate-600 uppercase">अपलोड केलेले फोटो (Click thumbnail or ⭐ Set Primary):</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {Array.from(new Set([productForm.image, ...(productForm.images || [])].filter(img => img && img !== '/assets/products/placeholder.svg'))).map((imgUrl, idx) => {
+                        const isPrimary = productForm.image === imgUrl;
+                        return (
+                          <div key={idx} className={`relative p-2 rounded-xl border flex flex-col items-center gap-1 bg-white shadow-xs transition-all ${isPrimary ? 'border-amber-400 ring-2 ring-amber-300' : 'border-slate-200 hover:border-slate-300'}`}>
+                            <div className="w-16 h-16 rounded-lg bg-slate-50 flex items-center justify-center overflow-hidden border border-slate-100">
+                              <img src={imgUrl} alt={`Product ${idx+1}`} className="max-w-full max-h-full object-contain" onError={(e) => { e.target.src = '/assets/logo.png'; }} />
+                            </div>
+                            
+                            {isPrimary ? (
+                              <span className="text-[9px] font-black bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                                ⭐ मुख्य (Primary)
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleSetPrimaryImage(imgUrl)}
+                                className="text-[9px] font-bold text-slate-600 hover:text-amber-600 hover:bg-amber-50 px-2 py-0.5 rounded border border-slate-200 cursor-pointer"
+                              >
+                                Set Cover
+                              </button>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const currentImgs = productForm.images || [productForm.image];
+                                const imgIdx = currentImgs.indexOf(imgUrl);
+                                if (imgIdx !== -1) {
+                                  handleRemoveImage(imgIdx);
+                                } else {
+                                  handleSetPrimaryImage('/assets/products/placeholder.svg');
+                                }
+                              }}
+                              className="absolute -top-1.5 -right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 cursor-pointer shadow-xs"
+                              title="Remove photo"
+                            >
+                              <Trash2 size={11} />
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
