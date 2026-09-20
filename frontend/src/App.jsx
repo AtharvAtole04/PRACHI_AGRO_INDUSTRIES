@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 
 // Context Providers
 import { LanguageProvider } from './context/LanguageContext';
@@ -80,6 +81,7 @@ function App() {
           </CartProvider>
         </AuthProvider>
       </LanguageProvider>
+      <Analytics />
     </ErrorBoundary>
   );
 }
