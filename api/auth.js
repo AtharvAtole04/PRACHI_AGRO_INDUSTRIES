@@ -1,8 +1,8 @@
 ﻿import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { connectDb, setCorsHeaders, getRequestBody } from './_lib/db.js';
-import { JWT_SECRET, PRE_MFA_SECRET, verifyAdmin, sendOtpEmail } from './_lib/auth.js';
+import { connectDb, setCorsHeaders, getRequestBody } from '../lib/db.js';
+import { JWT_SECRET, PRE_MFA_SECRET, verifyAdmin, sendOtpEmail } from '../lib/auth.js';
 
 export default async function handler(req, res) {
   setCorsHeaders(res);

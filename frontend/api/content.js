@@ -1,6 +1,6 @@
 ﻿import mongoose from 'mongoose';
-import { connectDb, setCorsHeaders, getRequestBody } from './_lib/db.js';
-import { verifyAdmin } from './_lib/auth.js';
+import { connectDb, setCorsHeaders, getRequestBody } from '../lib/db.js';
+import { verifyAdmin } from '../lib/auth.js';
 
 export default async function handler(req, res) {
   setCorsHeaders(res);
