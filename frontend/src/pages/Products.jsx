@@ -11,10 +11,10 @@ import CropFinder from '../components/CropFinder';
 import ProductComparison from '../components/ProductComparison';
 
 const Products = () => {
-  const [productsList, setProductsList] = useState(() => getLocalProducts());
-  const [categoriesList, setCategoriesList] = useState(() => getLocalCategories());
-  const [cropsList, setCropsList] = useState(() => getLocalCrops());
-  const [isLoading, setIsLoading] = useState(() => getLocalProducts().length === 0);
+  const [productsList, setProductsList] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [cropsList, setCropsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
   const fetchProds = async (showLoading = true) => {
@@ -36,7 +36,7 @@ const Products = () => {
   };
 
   useEffect(() => {
-    fetchProds(getLocalProducts().length === 0);
+    fetchProds(true);
     getCategories().then(data => {
       if (Array.isArray(data)) setCategoriesList(data);
     });

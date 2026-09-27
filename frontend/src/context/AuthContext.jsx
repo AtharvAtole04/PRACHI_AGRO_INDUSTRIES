@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { apiUrl } from '../config';
+import { apiUrl, adminApiUrl } from '../config';
 
 const AuthContext = createContext();
 
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }) => {
     );
 
     try {
-      const res = await fetch(apiUrl('/api/auth/admin/login-step1'), {
+      const res = await fetch(adminApiUrl('/api/auth/admin/login-step1'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: trimmedEmail, password: cleanPassword })
@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: adminUser, token: 'master-admin-auth-token', message: 'Verification successful.' };
       }
 
-      const res = await fetch(apiUrl('/api/auth/admin/verify-email-otp'), {
+      const res = await fetch(adminApiUrl('/api/auth/admin/verify-email-otp'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preMfaToken, otpCode, otp: otpCode, recoveryCode })
@@ -175,7 +175,7 @@ export const AuthProvider = ({ children }) => {
   // Admin Resend Email OTP
   const adminResendEmailOTP = async (preMfaToken) => {
     try {
-      const res = await fetch(apiUrl('/api/auth/admin/resend-email-otp'), {
+      const res = await fetch(adminApiUrl('/api/auth/admin/resend-email-otp'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preMfaToken })

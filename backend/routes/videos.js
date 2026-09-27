@@ -3,16 +3,9 @@ import mongoose from 'mongoose';
 import Video from '../models/Video.js';
 import { getChannelVideos, clearVideoCache } from '../services/youtubeService.js';
 import { verifyAdminToken } from '../middleware/authMiddleware.js';
+import { revalidateVercelCache } from '../utils/revalidateVercel.js';
 
 const router = express.Router();
-
-// Middleware to prevent stale HTTP caching on video API endpoints
-router.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  next();
-});
 
 const getQueryForId = (idParam) => {
   return mongoose.Types.ObjectId.isValid(idParam)
@@ -22,20 +15,30 @@ const getQueryForId = (idParam) => {
 
 /**
  * GET /api/videos
- * Returns YouTube channel videos if API key is configured and functional;
- * falls back to MongoDB records if YouTube API key is unconfigured or fails.
+ * Returns MongoDB video records as the primary source of truth.
+ * Optionally attempts YouTube channel fetch if MongoDB is empty.
  */
 router.get('/', async (req, res) => {
   const forceRefresh = req.query.refresh === 'true';
-  const limit = parseInt(req.query.limit, 10) || 12;
+  const limit = parseInt(req.query.limit, 10) || 50;
 
-  // Try fetching live YouTube videos from client's channel
+  try {
+    const mongoVideos = await Video.find().sort({ createdAt: -1 }).limit(limit);
+    if (mongoVideos.length > 0) {
+      return res.json({
+        source: 'mongodb',
+        count: mongoVideos.length,
+        videos: mongoVideos
+      });
+    }
+  } catch (dbErr) {
+    console.error('[Database Error in videos GET]:', dbErr.message);
+  }
+
+  // If MongoDB has 0 items, check YouTube API
   const ytResult = await getChannelVideos({ forceRefresh, maxResults: limit });
-
   if (ytResult.success && Array.isArray(ytResult.videos) && ytResult.videos.length > 0) {
-    // Optionally sync into MongoDB in background
     syncVideosToDb(ytResult.videos).catch(err => console.warn('[YouTube Sync Warning]', err.message));
-
     return res.json({
       source: 'youtube',
       cached: ytResult.cached || false,
@@ -45,25 +48,10 @@ router.get('/', async (req, res) => {
     });
   }
 
-  // Fallback to MongoDB database records
-  try {
-    const mongoVideos = await Video.find().sort({ createdAt: -1 }).limit(limit);
-    if (mongoVideos.length > 0) {
-      return res.json({
-        source: 'mongodb',
-        warning: ytResult.message || 'YouTube API key not configured or API call failed. Returning database records.',
-        count: mongoVideos.length,
-        videos: mongoVideos
-      });
-    }
-  } catch (dbErr) {
-    console.error('[Database Error]', dbErr.message);
-  }
-
-  // Final response if both YouTube API and MongoDB return 0 items
+  // Final response if both return 0 items
   res.json({
     source: 'empty',
-    warning: ytResult.message || 'No videos available.',
+    warning: 'No videos available.',
     count: 0,
     videos: []
   });
@@ -71,7 +59,6 @@ router.get('/', async (req, res) => {
 
 /**
  * GET /api/videos/youtube
- * Direct endpoint for YouTube API channel status and video payload
  */
 router.get('/youtube', async (req, res) => {
   const forceRefresh = req.query.refresh === 'true';
@@ -80,8 +67,7 @@ router.get('/youtube', async (req, res) => {
 });
 
 /**
- * POST /api/videos/sync
- * Force sync YouTube channel videos into database & clear cache (Admin Protected)
+ * POST /api/videos/sync (Admin Protected)
  */
 router.post('/sync', verifyAdminToken, async (req, res) => {
   clearVideoCache();
@@ -89,6 +75,7 @@ router.post('/sync', verifyAdminToken, async (req, res) => {
   
   if (ytResult.success && ytResult.videos.length > 0) {
     await syncVideosToDb(ytResult.videos);
+    revalidateVercelCache('videos').catch(err => console.error('[Revalidate Error]', err.message));
     return res.json({
       message: 'Successfully synced YouTube channel videos',
       channelInfo: ytResult.channelInfo,
@@ -130,36 +117,83 @@ async function syncVideosToDb(videos) {
   }
 }
 
-// POST create video manually (Admin Protected)
+// POST create video (Admin Protected)
 router.post('/', verifyAdminToken, async (req, res) => {
-  const video = new Video(req.body);
   try {
+    const videoData = { ...req.body };
+    delete videoData._id;
+
+    if (typeof videoData.title === 'string') videoData.title = { mr: videoData.title, en: videoData.title };
+    if (typeof videoData.crop === 'string') videoData.crop = { mr: videoData.crop, en: videoData.crop };
+    if (typeof videoData.category === 'string') videoData.category = { mr: videoData.category, en: videoData.category };
+
+    if (videoData.youtubeUrl && !videoData.embedId) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = videoData.youtubeUrl.match(regExp);
+      videoData.embedId = (match && match[2].length === 11) ? match[2] : 'dQw4w9WgXcQ';
+    }
+
+    if (!videoData.id && videoData.embedId) {
+      videoData.id = videoData.embedId;
+    }
+
+    const video = new Video(videoData);
     const newVideo = await video.save();
+
+    revalidateVercelCache('videos').catch(err => console.error('[Revalidate Error]', err.message));
+
     res.status(201).json(newVideo);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// PUT update video (Admin Protected)
-router.put('/:id', verifyAdminToken, async (req, res) => {
+// PUT / PATCH update video (Admin Protected)
+const handleUpdateVideo = async (req, res) => {
   try {
-    const updatedVideo = await Video.findOneAndUpdate(
-      getQueryForId(req.params.id),
-      req.body,
-      { new: true, upsert: true, runValidators: true }
-    );
+    const query = getQueryForId(req.params.id);
+    const video = await Video.findOne(query);
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+
+    const updateData = { ...req.body };
+    delete updateData._id;
+
+    if (typeof updateData.title === 'string') updateData.title = { mr: updateData.title, en: updateData.title };
+    if (typeof updateData.crop === 'string') updateData.crop = { mr: updateData.crop, en: updateData.crop };
+    if (typeof updateData.category === 'string') updateData.category = { mr: updateData.category, en: updateData.category };
+
+    if (updateData.youtubeUrl) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = updateData.youtubeUrl.match(regExp);
+      if (match && match[2].length === 11) {
+        updateData.embedId = match[2];
+      }
+    }
+
+    Object.assign(video, updateData);
+    const updatedVideo = await video.save();
+
+    revalidateVercelCache('videos').catch(err => console.error('[Revalidate Error]', err.message));
+
     res.json(updatedVideo);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-});
+};
+
+router.put('/:id', verifyAdminToken, handleUpdateVideo);
+router.patch('/:id', verifyAdminToken, handleUpdateVideo);
 
 // DELETE video (Admin Protected)
 router.delete('/:id', verifyAdminToken, async (req, res) => {
   try {
     const deletedVideo = await Video.findOneAndDelete(getQueryForId(req.params.id));
     if (!deletedVideo) return res.status(404).json({ message: 'Video not found' });
+
+    revalidateVercelCache('videos').catch(err => console.error('[Revalidate Error]', err.message));
+
     res.json({ message: 'Video successfully deleted', id: req.params.id });
   } catch (err) {
     res.status(500).json({ message: err.message });

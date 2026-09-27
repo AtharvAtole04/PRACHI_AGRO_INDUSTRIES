@@ -2,7 +2,7 @@ import express from 'express';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { authenticator } from 'otplib';
+import { verifySync } from 'otplib';
 import QRCode from 'qrcode';
 import User from '../models/User.js';
 import { sendOtpEmail } from '../utils/sendEmail.js';
@@ -182,8 +182,8 @@ const handleOtpVerification = async (req, res) => {
 
     // TOTP or Recovery Code fallback
     if (!authenticated && user.mfaSecret) {
-      authenticator.options = { window: 1 };
-      authenticated = authenticator.verify({ token: codeToVerify, secret: user.mfaSecret });
+      const totpRes = verifySync({ token: codeToVerify, secret: user.mfaSecret });
+      authenticated = Boolean(totpRes && (totpRes.valid || totpRes === true));
     }
 
     if (!authenticated) {

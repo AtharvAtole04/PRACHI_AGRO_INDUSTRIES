@@ -5,9 +5,9 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../data/products';
 import { getCategories, addCategory, updateCategory, deleteCategory } from '../data/categories';
-import { getVideos, addVideo, deleteVideo } from '../data/videos';
-import { getBlogs, addBlog, deleteBlog } from '../data/blogs';
-import { getReviews, addReview, deleteReview } from '../data/reviews';
+import { getVideos, addVideo, updateVideo, deleteVideo } from '../data/videos';
+import { getBlogs, addBlog, updateBlog, deleteBlog } from '../data/blogs';
+import { getReviews, addReview, updateReview, deleteReview } from '../data/reviews';
 import { getSiteContent, updateSiteContent, defaultSiteContent } from '../data/siteContent';
 import { getCrops, addCrop, deleteCrop } from '../data/crops';
 import { apiUrl } from '../config';
@@ -109,6 +109,7 @@ const Admin = () => {
 
   // Form states for Videos
   const [videoForm, setVideoForm] = useState({
+    id: '',
     title_mr: '', title_en: '',
     crop_mr: '', crop_en: '',
     category_mr: 'पीक मार्गदर्शन', category_en: 'Crop Guidance',
@@ -116,9 +117,11 @@ const Admin = () => {
     youtubeUrl: '',
     thumbnail: 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400'
   });
+  const [isEditingVideo, setIsEditingVideo] = useState(false);
 
   // Form states for Blogs
   const [blogForm, setBlogForm] = useState({
+    id: '',
     title_mr: '', title_en: '',
     category_mr: 'पीक मार्गदर्शन', category_en: 'Crop Guidance',
     readTime: '5 min read',
@@ -127,15 +130,18 @@ const Admin = () => {
     content_mr: '', content_en: '',
     image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400'
   });
+  const [isEditingBlog, setIsEditingBlog] = useState(false);
 
   // Form states for Reviews
   const [reviewForm, setReviewForm] = useState({
+    id: '',
     name: '',
     location: '',
     crop_mr: '', crop_en: '',
     rating: '5',
     review_mr: '', review_en: ''
   });
+  const [isEditingReview, setIsEditingReview] = useState(false);
 
   // Keep authenticated in sync with AuthContext
   useEffect(() => {
@@ -731,9 +737,51 @@ const Admin = () => {
       youtubeUrl: videoForm.youtubeUrl,
       thumbnail: videoForm.thumbnail
     };
-    await addVideo(newVideo);
-    setSuccessMsg(language === 'mr' ? 'व्हिडिओ जोडला गेला!' : 'Video added successfully!');
+    try {
+      if (isEditingVideo) {
+        await updateVideo(videoForm.id, newVideo);
+        setSuccessMsg(language === 'mr' ? 'व्हिडिओ यशस्वीरित्या सुधारित केला!' : 'Video updated successfully!');
+      } else {
+        await addVideo(newVideo);
+        setSuccessMsg(language === 'mr' ? 'व्हिडिओ जोडला गेला!' : 'Video added successfully!');
+      }
+      resetVideoForm();
+      loadAllData();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      console.error('Video submit error:', err);
+      alert(err.message || 'Failed to save video.');
+    }
+  };
+
+  const handleEditVideo = (v) => {
+    setIsEditingVideo(true);
+    const titleMr = typeof v.title === 'object' ? (v.title.mr || '') : v.title || '';
+    const titleEn = typeof v.title === 'object' ? (v.title.en || '') : v.title || '';
+    const cropMr = typeof v.crop === 'object' ? (v.crop.mr || '') : v.crop || '';
+    const cropEn = typeof v.crop === 'object' ? (v.crop.en || '') : v.crop || '';
+    const categoryMr = typeof v.category === 'object' ? (v.category.mr || '') : v.category || 'पीक मार्गदर्शन';
+    const categoryEn = typeof v.category === 'object' ? (v.category.en || '') : v.category || 'Crop Guidance';
+
     setVideoForm({
+      id: v.id || v._id,
+      title_mr: titleMr,
+      title_en: titleEn,
+      crop_mr: cropMr,
+      crop_en: cropEn,
+      category_mr: categoryMr,
+      category_en: categoryEn,
+      duration: v.duration || '',
+      youtubeUrl: v.youtubeUrl || '',
+      thumbnail: v.thumbnail || 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400'
+    });
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+  };
+
+  const resetVideoForm = () => {
+    setIsEditingVideo(false);
+    setVideoForm({
+      id: '',
       title_mr: '', title_en: '',
       crop_mr: '', crop_en: '',
       category_mr: 'पीक मार्गदर्शन', category_en: 'Crop Guidance',
@@ -741,14 +789,18 @@ const Admin = () => {
       youtubeUrl: '',
       thumbnail: 'https://images.unsplash.com/photo-1592982537447-6f2a6a0c7c18?auto=format&fit=crop&q=80&w=400'
     });
-    loadAllData();
-    setTimeout(() => setSuccessMsg(''), 4000);
   };
 
   const handleDeleteVideo = async (id) => {
+    if (!id) return;
     if (window.confirm(language === 'mr' ? 'व्हिडिओ हटवायचा आहे का?' : 'Delete this video?')) {
-      await deleteVideo(id);
-      loadAllData();
+      try {
+        await deleteVideo(id);
+        loadAllData();
+      } catch (err) {
+        console.error('Video delete error:', err);
+        alert(err.message || 'Failed to delete video.');
+      }
     }
   };
 
@@ -765,9 +817,55 @@ const Admin = () => {
       image: blogForm.image,
       date: new Date().toLocaleDateString('mr-IN', { month: 'short', day: 'numeric', year: 'numeric' })
     };
-    await addBlog(newBlog);
-    setSuccessMsg(language === 'mr' ? 'ब्लॉग जोडला गेला!' : 'Blog post added successfully!');
+    try {
+      if (isEditingBlog) {
+        await updateBlog(blogForm.id, newBlog);
+        setSuccessMsg(language === 'mr' ? 'ब्लॉग यशस्वीरित्या सुधारित केला!' : 'Blog post updated successfully!');
+      } else {
+        await addBlog(newBlog);
+        setSuccessMsg(language === 'mr' ? 'ब्लॉग जोडला गेला!' : 'Blog post added successfully!');
+      }
+      resetBlogForm();
+      loadAllData();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      console.error('Blog submit error:', err);
+      alert(err.message || 'Failed to save blog post.');
+    }
+  };
+
+  const handleEditBlog = (b) => {
+    setIsEditingBlog(true);
+    const titleMr = typeof b.title === 'object' ? (b.title.mr || '') : b.title || '';
+    const titleEn = typeof b.title === 'object' ? (b.title.en || '') : b.title || '';
+    const catMr = typeof b.category === 'object' ? (b.category.mr || '') : b.category || 'पीक मार्गदर्शन';
+    const catEn = typeof b.category === 'object' ? (b.category.en || '') : b.category || 'Crop Guidance';
+    const excerptMr = typeof b.excerpt === 'object' ? (b.excerpt.mr || '') : b.excerpt || '';
+    const excerptEn = typeof b.excerpt === 'object' ? (b.excerpt.en || '') : b.excerpt || '';
+    const contentMr = typeof b.content === 'object' ? (b.content.mr || '') : b.content || '';
+    const contentEn = typeof b.content === 'object' ? (b.content.en || '') : b.content || '';
+
     setBlogForm({
+      id: b.id || b._id,
+      title_mr: titleMr,
+      title_en: titleEn,
+      category_mr: catMr,
+      category_en: catEn,
+      readTime: b.readTime || '5 min read',
+      youtubeUrl: b.youtubeUrl || '',
+      excerpt_mr: excerptMr,
+      excerpt_en: excerptEn,
+      content_mr: contentMr,
+      content_en: contentEn,
+      image: b.image || 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400'
+    });
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+  };
+
+  const resetBlogForm = () => {
+    setIsEditingBlog(false);
+    setBlogForm({
+      id: '',
       title_mr: '', title_en: '',
       category_mr: 'पीक मार्गदर्शन', category_en: 'Crop Guidance',
       readTime: '5 min read',
@@ -776,14 +874,18 @@ const Admin = () => {
       content_mr: '', content_en: '',
       image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=400'
     });
-    loadAllData();
-    setTimeout(() => setSuccessMsg(''), 4000);
   };
 
   const handleDeleteBlog = async (id) => {
+    if (!id) return;
     if (window.confirm(language === 'mr' ? 'ब्लॉग हटवायचा आहे का?' : 'Delete this blog?')) {
-      await deleteBlog(id);
-      loadAllData();
+      try {
+        await deleteBlog(id);
+        loadAllData();
+      } catch (err) {
+        console.error('Blog delete error:', err);
+        alert(err.message || 'Failed to delete blog.');
+      }
     }
   };
 
@@ -793,26 +895,68 @@ const Admin = () => {
     const newReview = {
       name: reviewForm.name,
       location: reviewForm.location,
-      crop: { mr: reviewForm.crop_mr, en: reviewForm.crop_en },
-      rating: Number(reviewForm.rating),
-      review: { mr: reviewForm.review_mr, en: reviewForm.review_en }
+      crop: { mr: reviewForm.crop_mr || reviewForm.crop_en, en: reviewForm.crop_en || reviewForm.crop_mr },
+      rating: Number(reviewForm.rating) || 5,
+      review: { mr: reviewForm.review_mr || reviewForm.review_en, en: reviewForm.review_en || reviewForm.review_mr }
     };
-    await addReview(newReview);
-    setSuccessMsg(language === 'mr' ? 'अभिप्राय जोडला गेला!' : 'Review added successfully!');
+    try {
+      if (isEditingReview) {
+        await updateReview(reviewForm.id, newReview);
+        setSuccessMsg(language === 'mr' ? 'अभिप्राय यशस्वीरित्या सुधारित केला!' : 'Review updated successfully!');
+      } else {
+        await addReview(newReview);
+        setSuccessMsg(language === 'mr' ? 'अभिप्राय जोडला गेला!' : 'Review added successfully!');
+      }
+      resetReviewForm();
+      loadAllData();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      console.error('Review submit error:', err);
+      alert(err.message || 'Failed to save review.');
+    }
+  };
+
+  const handleEditReview = (rev) => {
+    setIsEditingReview(true);
+    const cropMr = typeof rev.crop === 'object' ? (rev.crop.mr || '') : rev.crop || '';
+    const cropEn = typeof rev.crop === 'object' ? (rev.crop.en || '') : rev.crop || '';
+    const reviewMr = typeof rev.review === 'object' ? (rev.review.mr || '') : rev.review || '';
+    const reviewEn = typeof rev.review === 'object' ? (rev.review.en || '') : rev.review || '';
+
     setReviewForm({
+      id: rev.id || rev._id,
+      name: rev.name || '',
+      location: rev.location || '',
+      crop_mr: cropMr,
+      crop_en: cropEn,
+      rating: String(rev.rating || '5'),
+      review_mr: reviewMr,
+      review_en: reviewEn
+    });
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+  };
+
+  const resetReviewForm = () => {
+    setIsEditingReview(false);
+    setReviewForm({
+      id: '',
       name: '', location: '',
       crop_mr: '', crop_en: '',
       rating: '5',
       review_mr: '', review_en: ''
     });
-    loadAllData();
-    setTimeout(() => setSuccessMsg(''), 4000);
   };
 
   const handleDeleteReview = async (id) => {
+    if (!id) return;
     if (window.confirm(language === 'mr' ? 'अभिप्राय हटवायचा आहे का?' : 'Delete this review?')) {
-      await deleteReview(id);
-      loadAllData();
+      try {
+        await deleteReview(id);
+        loadAllData();
+      } catch (err) {
+        console.error('Review delete error:', err);
+        alert(err.message || 'Failed to delete review.');
+      }
     }
   };
 
@@ -3276,9 +3420,20 @@ const Admin = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Add Video Form */}
           <div className="lg:col-span-5 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
-            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center gap-2">
-              <Video className="text-red-600" size={18} />
-              <span>नवीन युट्युब व्हिडिओ जोडा (Add YouTube Video)</span>
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Video className="text-red-600" size={18} />
+                <span>{isEditingVideo ? 'व्हिडिओ सुधारा (Edit YouTube Video)' : 'नवीन युट्युब व्हिडिओ जोडा (Add YouTube Video)'}</span>
+              </span>
+              {isEditingVideo && (
+                <button
+                  type="button"
+                  onClick={resetVideoForm}
+                  className="text-xs text-slate-400 hover:text-slate-600 font-bold px-2.5 py-1 rounded-lg border border-slate-200 cursor-pointer"
+                >
+                  रद्द करा (Cancel)
+                </button>
+              )}
             </h2>
             
             <form onSubmit={handleVideoSubmit} className="flex flex-col gap-3">
@@ -3376,13 +3531,24 @@ const Admin = () => {
                 </p>
               </div>
 
-              <button
-                type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs py-2.5 rounded-xl cursor-pointer transition-all shadow-md flex items-center justify-center gap-1.5 mt-1"
-              >
-                <Video size={15} />
-                <span>व्हिडिओ जोडा (Save Video)</span>
-              </button>
+              <div className="flex gap-2 mt-1">
+                <button
+                  type="submit"
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs py-2.5 rounded-xl cursor-pointer transition-all shadow-md flex items-center justify-center gap-1.5"
+                >
+                  <Video size={15} />
+                  <span>{isEditingVideo ? 'बदल जतन करा (Update Video)' : 'व्हिडिओ जोडा (Save Video)'}</span>
+                </button>
+                {isEditingVideo && (
+                  <button
+                    type="button"
+                    onClick={resetVideoForm}
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-xl cursor-pointer"
+                  >
+                    रद्द करा
+                  </button>
+                )}
+              </div>
             </form>
           </div>
 
@@ -3417,13 +3583,22 @@ const Admin = () => {
                         </p>
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleDeleteVideo(v.id || v._id)}
-                      className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer transition-colors flex-shrink-0"
-                      title="Delete Video"
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <button
+                        onClick={() => handleEditVideo(v)}
+                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer transition-colors"
+                        title="Edit Video"
+                      >
+                        <Edit size={15} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteVideo(v.id || v._id)}
+                        className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
+                        title="Delete Video"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -3440,7 +3615,18 @@ const Admin = () => {
       {activeTab === 'blogs' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-5 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
-            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3">नवीन ब्लॉग जोडा (Add Blog Post)</h2>
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center justify-between">
+              <span>{isEditingBlog ? 'ब्लॉग सुधारा (Edit Blog Post)' : 'नवीन ब्लॉग जोडा (Add Blog Post)'}</span>
+              {isEditingBlog && (
+                <button
+                  type="button"
+                  onClick={resetBlogForm}
+                  className="text-xs text-slate-400 hover:text-slate-600 font-bold px-2.5 py-1 rounded-lg border border-slate-200 cursor-pointer"
+                >
+                  रद्द करा (Cancel)
+                </button>
+              )}
+            </h2>
             <form onSubmit={handleBlogSubmit} className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Blog Title (Marathi)</label>
@@ -3544,7 +3730,20 @@ const Admin = () => {
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Full Content (English)</label>
                 <textarea rows="4" value={blogForm.content_en} onChange={(e) => setBlogForm({...blogForm, content_en: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
               </div>
-              <button type="submit" className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer transition-all shadow-md">ब्लॉग सेव्ह करा (Save Blog Post)</button>
+              <div className="flex gap-2">
+                <button type="submit" className="flex-1 bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer transition-all shadow-md">
+                  {isEditingBlog ? 'बदल जतन करा (Update Blog Post)' : 'ब्लॉग सेव्ह करा (Save Blog Post)'}
+                </button>
+                {isEditingBlog && (
+                  <button
+                    type="button"
+                    onClick={resetBlogForm}
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-lg cursor-pointer"
+                  >
+                    रद्द करा
+                  </button>
+                )}
+              </div>
             </form>
           </div>
 
@@ -3552,14 +3751,23 @@ const Admin = () => {
             <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3">ब्लॉग यादी (Blogs Directory)</h2>
             <div className="flex flex-col gap-3">
               {blogsList.map((b) => (
-                <div key={b.id} className="flex justify-between items-center p-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
+                <div key={b.id || b._id} className="flex justify-between items-center p-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
                   <div className="min-w-0 pr-4">
-                    <h4 className="font-bold text-slate-800 text-xs truncate">{b.title[language]}</h4>
-                    <p className="text-[10px] text-slate-400 font-bold mt-0.5">{b.date} • {b.category[language]}</p>
+                    <h4 className="font-bold text-slate-800 text-xs truncate">{b.title?.[language] || b.title?.mr || b.title?.en || b.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-bold mt-0.5">{b.date} • {b.category?.[language] || b.category?.mr || b.category?.en || 'General'}</p>
                   </div>
-                  <button onClick={() => handleDeleteBlog(b.id)} className="p-2 text-slate-300 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer flex-shrink-0">
-                    <Trash2 size={14} />
-                  </button>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => handleEditBlog(b)}
+                      className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer transition-colors"
+                      title="Edit Blog"
+                    >
+                      <Edit size={14} />
+                    </button>
+                    <button onClick={() => handleDeleteBlog(b.id || b._id)} className="p-2 text-slate-300 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer flex-shrink-0" title="Delete Blog">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -3573,7 +3781,18 @@ const Admin = () => {
       {activeTab === 'reviews' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-5 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
-            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3">शेतकरी अभिप्राय जोडा (Add Farmer Review)</h2>
+            <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3 flex items-center justify-between">
+              <span>{isEditingReview ? 'अभिप्राय सुधारा (Edit Farmer Review)' : 'शेतकरी अभिप्राय जोडा (Add Farmer Review)'}</span>
+              {isEditingReview && (
+                <button
+                  type="button"
+                  onClick={resetReviewForm}
+                  className="text-xs text-slate-400 hover:text-slate-600 font-bold px-2.5 py-1 rounded-lg border border-slate-200 cursor-pointer"
+                >
+                  रद्द करा (Cancel)
+                </button>
+              )}
+            </h2>
             <form onSubmit={handleReviewSubmit} className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
@@ -3585,29 +3804,93 @@ const Admin = () => {
                   <input type="text" required value={reviewForm.location} onChange={(e) => setReviewForm({...reviewForm, location: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
                 </div>
               </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crop (Marathi)</label>
+                  <input type="text" placeholder="उदा. कापूस, सोयाबीन" value={reviewForm.crop_mr} onChange={(e) => setReviewForm({...reviewForm, crop_mr: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Crop (English)</label>
+                  <input type="text" placeholder="e.g. Cotton, Soybean" value={reviewForm.crop_en} onChange={(e) => setReviewForm({...reviewForm, crop_en: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Rating (1 to 5 Stars)</label>
+                <select
+                  value={reviewForm.rating}
+                  onChange={(e) => setReviewForm({ ...reviewForm, rating: e.target.value })}
+                  className="border border-slate-200 rounded p-2 text-xs bg-white"
+                >
+                  <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+                  <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+                  <option value="3">⭐⭐⭐ (3 Stars)</option>
+                  <option value="2">⭐⭐ (2 Stars)</option>
+                  <option value="1">⭐ (1 Star)</option>
+                </select>
+              </div>
+
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold text-slate-400 uppercase">Review (Marathi)</label>
                 <textarea rows="3" required value={reviewForm.review_mr} onChange={(e) => setReviewForm({...reviewForm, review_mr: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
               </div>
-              <button type="submit" className="bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer">अभिप्राय जोडा (Save Review)</button>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Review (English - Optional)</label>
+                <textarea rows="2" value={reviewForm.review_en} onChange={(e) => setReviewForm({...reviewForm, review_en: e.target.value})} className="border border-slate-200 rounded p-2 text-xs" />
+              </div>
+
+              <div className="flex gap-2">
+                <button type="submit" className="flex-1 bg-brand-green-dark hover:bg-brand-green-light text-white font-extrabold text-xs py-2.5 rounded-lg cursor-pointer transition-all shadow-md">
+                  {isEditingReview ? 'बदल जतन करा (Update Review)' : 'अभिप्राय जोडा (Save Review)'}
+                </button>
+                {isEditingReview && (
+                  <button
+                    type="button"
+                    onClick={resetReviewForm}
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 px-4 rounded-lg cursor-pointer"
+                  >
+                    रद्द करा
+                  </button>
+                )}
+              </div>
             </form>
           </div>
 
           <div className="lg:col-span-7 bg-white border border-slate-100 p-6 rounded-3xl shadow-sm flex flex-col gap-4">
             <h2 className="font-extrabold text-slate-800 text-base border-b border-slate-50 pb-3">अभिप्राय सूची (Reviews Directory)</h2>
             <div className="flex flex-col gap-3">
-              {reviewsList.map((rev) => (
-                <div key={rev.id} className="flex justify-between items-center p-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
-                  <div className="min-w-0 pr-4">
-                    <h4 className="font-bold text-slate-800 text-xs">{rev.name} ({rev.location})</h4>
-                    <p className="text-[10px] text-slate-400 font-bold mt-0.5">पिक: {rev.crop[language]} • रेटिंग: {rev.rating}★</p>
-                    <p className="text-[11px] text-slate-500 line-clamp-1 mt-1 font-medium">"{rev.review[language]}"</p>
+              {reviewsList.map((rev) => {
+                const cropName = (rev.crop && (rev.crop[language] || rev.crop.mr || rev.crop.en)) || (typeof rev.crop === 'string' ? rev.crop : 'N/A');
+                const reviewText = (rev.review && (rev.review[language] || rev.review.mr || rev.review.en)) || (typeof rev.review === 'string' ? rev.review : '');
+                const revId = rev.id || rev._id;
+                return (
+                  <div key={revId} className="flex justify-between items-center p-2.5 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
+                    <div className="min-w-0 pr-4">
+                      <h4 className="font-bold text-slate-800 text-xs">{rev.name} ({rev.location})</h4>
+                      <p className="text-[10px] text-slate-400 font-bold mt-0.5">पिक: {cropName} • रेटिंग: {rev.rating}★</p>
+                      <p className="text-[11px] text-slate-500 line-clamp-1 mt-1 font-medium">"{reviewText}"</p>
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <button
+                        onClick={() => handleEditReview(rev)}
+                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer transition-colors"
+                        title="Edit Review"
+                      >
+                        <Edit size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteReview(revId)}
+                        className="p-2 text-slate-300 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer flex-shrink-0"
+                        title="Delete Review"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   </div>
-                  <button onClick={() => handleDeleteReview(rev.id)} className="p-2 text-slate-300 hover:text-brand-magenta hover:bg-red-50 rounded-lg cursor-pointer flex-shrink-0">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

@@ -376,11 +376,17 @@ const Home = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogsList.slice(0, 3).map((blog) => (
-            <BlogCard key={blog.id} blog={blog} />
-          ))}
-        </div>
+        {blogsList.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogsList.slice(0, 3).map((blog) => (
+              <BlogCard key={blog.id} blog={blog} />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center text-slate-400 font-semibold text-sm">
+            {language === 'mr' ? 'नवीन ब्लॉग लवकरच उपलब्ध होतील.' : 'No blog posts available yet.'}
+          </div>
+        )}
       </section>
 
       {/* 10. Farmer Testimonials (Horizontally Slidable Carousel) */}
@@ -392,45 +398,53 @@ const Home = () => {
             </h2>
             <div className="h-1 w-16 bg-brand-magenta mt-2.5 rounded-full" />
             <p className="text-slate-400 text-xs md:text-sm mt-3 font-semibold">
-              {language === 'mr' ? 'प्राची ॲग्रो उत्पादने वापरणाऱ्या समाधानी शेतकऱ्यांचे अनुभव (स्वाइप करा)' : 'Verified testimonials from progressive farmers (Slide to view)'}
+              {language === 'mr' ? 'प्राची ॲग्रो उत्पादने वापरणाऱ्या समाधानी शेतकऱ्यांचे अनुभव' : 'Verified testimonials from progressive farmers'}
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-auto">
-            <button
-              onClick={() => {
-                document.getElementById('home-reviews-carousel')?.scrollBy({ left: -320, behavior: 'smooth' });
-              }}
-              className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-emerald-50 hover:text-brand-green-dark shadow-xs cursor-pointer transition-all"
-              title="मागे सरकवा (Slide Left)"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              onClick={() => {
-                document.getElementById('home-reviews-carousel')?.scrollBy({ left: 320, behavior: 'smooth' });
-              }}
-              className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-emerald-50 hover:text-brand-green-dark shadow-xs cursor-pointer transition-all"
-              title="पुढे सरकवा (Slide Right)"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
+          {reviewsList.length > 0 && (
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              <button
+                onClick={() => {
+                  document.getElementById('home-reviews-carousel')?.scrollBy({ left: -320, behavior: 'smooth' });
+                }}
+                className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-emerald-50 hover:text-brand-green-dark shadow-xs cursor-pointer transition-all"
+                title="मागे सरकवा (Slide Left)"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={() => {
+                  document.getElementById('home-reviews-carousel')?.scrollBy({ left: 320, behavior: 'smooth' });
+                }}
+                className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-emerald-50 hover:text-brand-green-dark shadow-xs cursor-pointer transition-all"
+                title="पुढे सरकवा (Slide Right)"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
         </div>
 
-        <div 
-          id="home-reviews-carousel" 
-          className="flex overflow-x-auto gap-5 pb-4 pt-1 snap-x snap-mandatory scroll-smooth touch-pan-x custom-scrollbar"
-        >
-          {reviewsList.map((review) => (
-            <div 
-              key={review.id || review._id} 
-              className="min-w-[280px] sm:min-w-[340px] md:min-w-[380px] flex-shrink-0 snap-start flex flex-col"
-            >
-              <FarmerReviewCard review={review} />
-            </div>
-          ))}
-        </div>
+        {reviewsList.length > 0 ? (
+          <div 
+            id="home-reviews-carousel" 
+            className="flex overflow-x-auto gap-5 pb-4 pt-1 snap-x snap-mandatory scroll-smooth touch-pan-x custom-scrollbar"
+          >
+            {reviewsList.map((review) => (
+              <div 
+                key={review.id || review._id} 
+                className="min-w-[280px] sm:min-w-[340px] md:min-w-[380px] flex-shrink-0 snap-start flex flex-col"
+              >
+                <FarmerReviewCard review={review} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center text-slate-400 font-semibold text-sm">
+            {language === 'mr' ? 'अजून कोणतीही पुनरावलोकने नोंदवली नाहीत.' : 'No reviews yet.'}
+          </div>
+        )}
       </section>
 
       {/* Video Modal Popup */}

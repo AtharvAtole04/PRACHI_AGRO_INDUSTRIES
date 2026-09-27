@@ -16,6 +16,11 @@ import contentRouter from './routes/content.js';
 import categoryRouter from './routes/categories.js';
 import cropRouter from './routes/crops.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from backend/.env or root .env
+dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config();
 
 const app = express();
@@ -32,20 +37,22 @@ const allowedOrigins = [
   'http://127.0.0.1:3000'
 ];
 
-// Middlewares
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || origin.endsWith('.onrender.com')) {
-      callback(null, true);
+      callback(null, origin || true);
     } else {
-      callback(null, true);
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'X-Requested-With', 'Accept', 'Origin'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'X-Requested-With', 'Accept', 'Origin', 'x-revalidate-secret'],
   credentials: true
-}));
-app.options('*', cors());
+};
+
+// Middlewares
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -95,9 +102,6 @@ app.get('/api/status', (req, res) => {
     timestamp: new Date()
   });
 });
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Serve static assets from the React build folder in production if present
 const possibleBuildPaths = [

@@ -2522,22 +2522,7 @@ export async function seedIfEmpty() {
       }
     }
 
-    if (process.env.AUTO_SEED === 'true') {
-      const productCount = await Product.countDocuments();
-      if (productCount === 0) {
-        console.log('🌱 Product collection is empty. Auto-seeding default products into MongoDB...');
-        await Product.insertMany(defaultProducts);
-        console.log(`✅ Successfully seeded ${defaultProducts.length} default products into MongoDB.`);
-      }
-
-      const categoryCount = await Category.countDocuments();
-      if (categoryCount === 0) {
-        console.log('📂 Category collection is empty. Auto-seeding default categories into MongoDB...');
-        await Category.insertMany(defaultCategories);
-        console.log(`✅ Successfully seeded ${defaultCategories.length} default categories into MongoDB.`);
-      }
-    }
   } catch (err) {
-    console.error('❌ Error during auto-seeding:', err.message);
+    console.error('❌ Error verifying admin account in MongoDB:', err.message);
   }
 }

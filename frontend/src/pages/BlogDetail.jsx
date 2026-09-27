@@ -58,10 +58,9 @@ const findMatchingBlog = (list, targetId) => {
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const [blogsList, setBlogsList] = useState(() => getLocalBlogs());
-  const initialFound = findMatchingBlog(getLocalBlogs(), id);
+  const [blogsList, setBlogsList] = useState([]);
   const [fetchedBlog, setFetchedBlog] = useState(null);
-  const [isLoading, setIsLoading] = useState(!initialFound);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {

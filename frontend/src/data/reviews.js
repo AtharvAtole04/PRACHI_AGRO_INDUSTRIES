@@ -1,90 +1,43 @@
-import { apiUrl } from '../config';
+import { apiUrl, adminApiUrl } from '../config';
 
-const defaultReviews = [
-  {
-    id: 1,
-    name: "रामचंद्र पाटील",
-    location: "नाशिक",
-    crop: { mr: "द्राक्षे", en: "Grapes" },
-    rating: 5,
-    photo: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100",
-    review: {
-      mr: "माझ्या द्राक्ष बागेवर मागील वर्षी मोठ्या प्रमाणावर बुरशीचा प्रादुर्भाव झाला होता. मी प्राची ॲग्रोचे 'BACTRIKILLER' वापरले, आणि अगदी २ फवारण्यांमध्ये उत्कृष्ट परिणाम मिळाला. बुरशी पूर्णपणे आटोक्यात आली.",
-      en: "Last year, my grape orchard suffered a heavy fungal outbreak. I sprayed Prachi Agro's 'BACTRIKILLER' and observed amazing results in just two applications. The fungus was completely controlled."
-    }
-  },
-  {
-    id: 2,
-    name: "संजय देशमुख",
-    location: "सांगली",
-    crop: { mr: "हळद व मिरची", en: "Turmeric & Chilli" },
-    rating: 5,
-    photo: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100",
-    review: {
-      mr: "मिरचीच्या झाडांची पाने बोकडल्यासारखी (आकसलेली) झाली होती. कृषी तज्ज्ञांच्या सल्ल्यानुसार मी 'MYCRODIFENCE' आणि 'FAST RESULT' फवारले. मिरचीची पाने आता सुंदर व हिरवीगार झाली आहेत आणि फुलांची संख्याही वाढली आहे.",
-      en: "My chilli plants had severe leaf curling issues. Following recommendations, I sprayed 'MYCRODIFENCE' and 'FAST RESULT'. The foliage is now lush green and healthy, and the number of flower buds has doubled."
-    }
-  },
-  {
-    id: 3,
-    name: "विठ्ठलराव कदम",
-    location: "यवतमाळ",
-    crop: { mr: "कापूस व सोयाबीन", en: "Cotton & Soybean" },
-    rating: 5,
-    photo: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100",
-    review: {
-      mr: "कापसाचे पाते गळत असल्यामुळे मी काळजीत होतो. प्राची ॲग्रोचे 'MAGIC GOLD' वनस्पती वाढ प्रवर्तक वापरले. पातेगळ पूर्ण थांबली आणि कापसाची झाडे वेगाने वाढू लागली. या कंपनीची उत्पादने अत्यंत खात्रीशीर आहेत.",
-      en: "I was worried about the severe flower bud drop in my cotton field. I applied Prachi Agro's 'MAGIC GOLD' growth promoter. The drop stopped completely, and the plants grew vigorously. Highly reliable products."
-    }
-  },
-  {
-    id: 4,
-    name: "ज्ञानेश्वर शिंदे",
-    location: "सोलापूर",
-    crop: { mr: "डाळिंब व भाजीपाला", en: "Pomegranate & Vegetables" },
-    rating: 4,
-    photo: "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=100",
-    review: {
-      mr: "ठिबक सिंचनाद्वारे 'NUTRI GROW-50' वापरल्यामुळे डाळिंबाची पांढरी मुळी वेगाने वाढली. फळांची गुणवत्ता आणि वजन वाढल्यामुळे बाजारात मला चांगला नफा मिळाला. सर्व शेतकऱ्यांना वापरण्याची शिफारस करतो.",
-      en: "Using 'NUTRI GROW-50' through drip irrigation stimulated rapid feeder root development in pomegranate trees. The improvement in fruit weight and quality got me excellent market returns."
-    }
-  }
-];
-
-export const getReviews = async () => {
+export const getReviews = async (forceFresh = false) => {
   try {
-    const res = await fetch(apiUrl('/api/reviews'));
+    const url = forceFresh ? apiUrl(`/api/reviews?t=${Date.now()}`) : apiUrl('/api/reviews');
+    const res = await fetch(url);
     const contentType = res.headers.get('content-type') || '';
     if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
       if (Array.isArray(data)) {
-        saveReviews(data);
-        return data;
+        return data.map(r => ({
+          ...r,
+          id: r.id || r._id,
+          _id: r._id || r.id
+        }));
       }
     }
   } catch (err) {
-    console.warn("Backend offline. Falling back to localStorage for reviews.");
+    console.warn("API Error fetching reviews:", err.message);
   }
-  const data = localStorage.getItem('prachi_reviews');
-  if (!data) {
-    localStorage.setItem('prachi_reviews', JSON.stringify(defaultReviews));
-    return defaultReviews;
-  }
-  return JSON.parse(data);
+  return [];
 };
 
-export const saveReviews = async (array) => {
-  try {
-    localStorage.setItem('prachi_reviews', JSON.stringify(array));
-  } catch (err) {}
+export const saveReviews = async (array) => {};
+
+const getAuthHeaders = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
 };
 
 export const addReview = async (review) => {
   let res;
   try {
-    res = await fetch(apiUrl('/api/reviews'), {
+    res = await fetch(adminApiUrl('/api/reviews'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(review)
     });
   } catch (err) {
@@ -95,23 +48,47 @@ export const addReview = async (review) => {
   const contentType = res.headers.get('content-type') || '';
   if (!res.ok || !contentType.includes('application/json')) {
     const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
-    throw new Error(errData.message || `Failed to add review (HTTP ${res.status})`);
+    throw new Error(errData.message || errData.error || `Failed to add review (HTTP ${res.status})`);
   }
 
-  return await getReviews();
+  return await getReviews(true);
 };
 
-const getAuthHeaders = () => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
-  return token ? { 'Authorization': `Bearer ${token}` } : {};
+export const updateReview = async (id, review) => {
+  let res;
+  try {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/reviews/${cleanId}`), {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(review)
+    });
+  } catch (err) {
+    console.error('[Review API Error - Update Review]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || errData.error || `Failed to update review (HTTP ${res.status})`);
+  }
+
+  return await getReviews(true);
 };
 
 export const deleteReview = async (id) => {
   let res;
   try {
-    res = await fetch(apiUrl(`/api/reviews/${id}`), {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/reviews/${cleanId}`), {
       method: 'DELETE',
       headers: {
+        'Cache-Control': 'no-cache',
         ...getAuthHeaders()
       }
     });
@@ -126,5 +103,5 @@ export const deleteReview = async (id) => {
     throw new Error(errData.message || errData.error || `Failed to delete review (HTTP ${res.status})`);
   }
 
-  return await getReviews();
+  return await getReviews(true);
 };

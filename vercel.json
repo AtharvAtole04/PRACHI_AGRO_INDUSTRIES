@@ -8,32 +8,32 @@
       "destination": "/api/products?id=:path*"
     },
     {
-      "source": "/api/products",
-      "destination": "/api/products"
+      "source": "/api/videos/:path*",
+      "destination": "/api/videos?id=:path*"
     },
     {
-      "source": "/api/videos",
-      "destination": "/api/videos"
+      "source": "/api/blogs/:path*",
+      "destination": "/api/blogs?id=:path*"
     },
     {
-      "source": "/api/blogs",
-      "destination": "/api/blogs"
+      "source": "/api/reviews/:path*",
+      "destination": "/api/reviews?id=:path*"
     },
     {
-      "source": "/api/categories",
-      "destination": "/api/categories"
+      "source": "/api/categories/:path*",
+      "destination": "/api/categories?id=:path*"
     },
     {
-      "source": "/api/crops",
-      "destination": "/api/crops"
+      "source": "/api/crops/:path*",
+      "destination": "/api/crops?id=:path*"
     },
     {
-      "source": "/api/reviews",
-      "destination": "/api/reviews"
+      "source": "/api/content/:path*",
+      "destination": "/api/content?path=:path*"
     },
     {
-      "source": "/api/:path*",
-      "destination": "https://prachi-agro-industries.onrender.com/api/:path*"
+      "source": "/api/auth/:path*",
+      "destination": "/api/auth?path=:path*"
     },
     {
       "source": "/((?!api/).*)",

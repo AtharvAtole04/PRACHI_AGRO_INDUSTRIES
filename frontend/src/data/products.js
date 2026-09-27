@@ -2450,20 +2450,11 @@ if (typeof window !== 'undefined' && !localStorage.getItem('prachi_v4_synced')) 
 }
 
 export const getLocalProducts = () => {
-  const data = localStorage.getItem('prachi_products');
-  if (!data) {
-    return [];
-  }
-  try {
-    return JSON.parse(data);
-  } catch (e) {
-    return [];
-  }
+  return [];
 };
 
 export const saveProducts = async (array, triggerEvent = false) => {
   try {
-    localStorage.setItem('prachi_products', JSON.stringify(array));
     if (triggerEvent && typeof window !== 'undefined') {
       window.dispatchEvent(new Event('prachi_products_updated'));
     }
@@ -2473,34 +2464,23 @@ export const saveProducts = async (array, triggerEvent = false) => {
 export const getProducts = async (forceFresh = false) => {
   try {
     const url = forceFresh ? apiUrl(`/api/products?t=${Date.now()}`) : apiUrl('/api/products');
-    const res = await fetch(url, {
-      cache: 'no-store',
-      headers: { 'Cache-Control': 'no-cache' }
-    });
+    const res = await fetch(url);
     const contentType = res.headers.get('content-type') || '';
     if (res.ok && contentType.includes('application/json')) {
       const json = await res.json();
       if (Array.isArray(json)) {
-        const normalizedBackend = json.map(p => ({
+        return json.map(p => ({
           ...p,
           id: p.id || p._id,
-          _id: p._id || p.id
+          _id: p._id || p.id,
+          images: Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : [])
         }));
-        saveProducts(normalizedBackend, false);
-        return normalizedBackend;
       }
     }
   } catch (err) {
-    console.warn("Backend API offline. Returning cached local products:", err);
+    console.warn("API Error fetching products:", err.message);
   }
-
-  const localData = getLocalProducts();
-  const fallbackData = (localData && localData.length > 0) ? localData : defaultProducts;
-  return fallbackData.map(p => ({
-    ...p,
-    id: p.id || p._id,
-    _id: p._id || p.id
-  }));
+  return [];
 };
 
 const getAuthHeaders = () => {

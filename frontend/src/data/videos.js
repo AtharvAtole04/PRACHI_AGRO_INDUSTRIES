@@ -6,24 +6,6 @@ export const extractEmbedId = (url) => {
   return match ? match[1] : '1gLO6UqqpwM';
 };
 
-const defaultVideos = [
-  {
-    id: "kanda",
-    title: {
-      mr: "कांदा (Kanda) पीक मार्गदर्शन व व्यवस्थापन",
-      en: "Onion (Kanda) Crop Guidance & Management"
-    },
-    crop: { mr: "कांदा (Kanda)", en: "Onion (Kanda)" },
-    category: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" },
-    duration: "05:00",
-    youtubeUrl: "https://youtu.be/1gLO6UqqpwM?si=80jWj5TjjzOtdJ1Z",
-    embedId: "1gLO6UqqpwM",
-    thumbnail: "https://i.ytimg.com/vi/1gLO6UqqpwM/hqdefault.jpg",
-    views: "15.4K",
-    uploaded: "Recent"
-  }
-];
-
 export const videoCategories = [
   { id: "all", title: { mr: "सर्व व्हिडिओ", en: "All Videos" } },
   { id: "crop-guidance", title: { mr: "पीक मार्गदर्शन", en: "Crop Guidance" } },
@@ -34,44 +16,31 @@ export const videoCategories = [
   { id: "prachi-products", title: { mr: "प्राची ॲग्रो उत्पादने", en: "Prachi Agro Products" } }
 ];
 
-export const getLocalVideos = () => {
-  const data = localStorage.getItem('prachi_videos');
-  if (!data) return defaultVideos;
-  try {
-    const parsed = JSON.parse(data);
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-  } catch (e) {}
-  return defaultVideos;
-};
+export const getLocalVideos = () => [];
 
-export const getVideos = async () => {
+export const getVideos = async (forceFresh = false) => {
   try {
-    const res = await fetch(apiUrl('/api/videos'));
+    const url = forceFresh ? apiUrl(`/api/videos?t=${Date.now()}`) : apiUrl('/api/videos');
+    const res = await fetch(url);
     const contentType = res.headers.get('content-type') || '';
     if (res.ok && contentType.includes('application/json')) {
       const data = await res.json();
       const rawList = Array.isArray(data) ? data : (Array.isArray(data?.videos) ? data.videos : []);
-      if (rawList.length > 0) {
-        const formatted = rawList.map(v => ({
-          ...v,
-          embedId: v.embedId || v.id || v.videoId || extractEmbedId(v.youtubeUrl),
-          youtubeUrl: v.youtubeUrl || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/@prachiagroindustries03')
-        }));
-        saveVideos(formatted);
-        return formatted;
-      }
+      return rawList.map(v => ({
+        ...v,
+        id: v.id || v._id,
+        _id: v._id || v.id,
+        embedId: v.embedId || v.id || v.videoId || extractEmbedId(v.youtubeUrl),
+        youtubeUrl: v.youtubeUrl || (v.id ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/@prachiagroindustries03')
+      }));
     }
   } catch (err) {
-    console.warn("Backend offline. Falling back to default videos.");
+    console.warn("API Error fetching videos:", err.message);
   }
-  return getLocalVideos();
+  return [];
 };
 
-export const saveVideos = async (array) => {
-  try {
-    localStorage.setItem('prachi_videos', JSON.stringify(array));
-  } catch (err) {}
-};
+export const saveVideos = async (array) => {};
 
 const getAuthHeaders = () => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('prachi_auth_token') : null;
@@ -85,6 +54,7 @@ export const addVideo = async (video) => {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
         ...getAuthHeaders()
       },
       body: JSON.stringify(video)
@@ -100,7 +70,34 @@ export const addVideo = async (video) => {
     throw new Error(errData.message || errData.error || `Failed to add video (HTTP ${res.status})`);
   }
 
-  return await getVideos();
+  return await getVideos(true);
+};
+
+export const updateVideo = async (id, video) => {
+  let res;
+  try {
+    const cleanId = encodeURIComponent(id);
+    res = await fetch(adminApiUrl(`/api/videos/${cleanId}`), {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(video)
+    });
+  } catch (err) {
+    console.error('[Video API Error - Update Video]:', err);
+    throw new Error('Unable to connect to the backend server. Please try again.');
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || !contentType.includes('application/json')) {
+    const errData = contentType.includes('application/json') ? await res.json().catch(() => ({})) : {};
+    throw new Error(errData.message || errData.error || `Failed to update video (HTTP ${res.status})`);
+  }
+
+  return await getVideos(true);
 };
 
 export const deleteVideo = async (id) => {
@@ -110,6 +107,7 @@ export const deleteVideo = async (id) => {
     res = await fetch(adminApiUrl(`/api/videos/${cleanId}`), {
       method: 'DELETE',
       headers: {
+        'Cache-Control': 'no-cache',
         ...getAuthHeaders()
       }
     });
@@ -124,5 +122,5 @@ export const deleteVideo = async (id) => {
     throw new Error(errData.message || errData.error || `Failed to delete video (HTTP ${res.status})`);
   }
 
-  return await getVideos();
+  return await getVideos(true);
 };
