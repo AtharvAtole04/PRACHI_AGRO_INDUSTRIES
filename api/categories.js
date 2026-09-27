@@ -1,12 +1,22 @@
-﻿import mongoose from 'mongoose';
-import { connectDb, setCorsHeaders, getRequestBody } from '../lib/db.js';
-import { verifyAdmin } from '../lib/auth.js';
-
-const getQueryForId = (idParam) => {
-  return mongoose.Types.ObjectId.isValid(idParam)
-    ? { $or: [{ id: idParam }, { _id: new mongoose.Types.ObjectId(idParam) }] }
-    : { id: idParam };
+﻿export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
 };
+
+import mongoose from 'mongoose';
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://prachiagroindustris9696_db_user:VeKB6JZ38j5ub5YW@cluster0.tgx61bg.mongodb.net/?appName=Cluster0';
+
+let isConnected = false;
+
+async function connectDb() {
+  if (isConnected && mongoose.connection.readyState === 1) return;
+  await mongoose.connect(MONGODB_URI, { bufferCommands: false });
+  isConnected = true;
+}
 
 const formatCategory = (item) => ({
   ...item,
@@ -15,85 +25,31 @@ const formatCategory = (item) => ({
 });
 
 export default async function handler(req, res) {
-  setCorsHeaders(res);
-  res.setHeader('Cache-Tag', 'categories');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cache-Control, Pragma');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
-  await connectDb();
-  const db = mongoose.connection.db;
-  const collection = db.collection('categories');
+  try {
+    await connectDb();
+    const db = mongoose.connection.db;
+    const collection = db.collection('categories');
 
-  let targetId = req.query ? req.query.id : null;
-  if (!targetId && req.url) {
-    const urlParts = req.url.split('?')[0].split('/');
-    const lastPart = urlParts[urlParts.length - 1];
-    if (lastPart && lastPart !== 'categories') {
-      targetId = decodeURIComponent(lastPart);
-    }
-  }
-
-  if (req.method === 'GET') {
-    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=3600');
-    try {
-      if (targetId) {
-        const cat = await collection.findOne(getQueryForId(targetId));
-        if (!cat) return res.status(404).json({ message: 'Category not found' });
-        return res.status(200).json(formatCategory(cat));
-      }
+    if (req.method === 'GET') {
       const items = await collection.find({}).sort({ name: 1 }).toArray();
       return res.status(200).json(items.map(formatCategory));
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-      return res.status(500).json({ error: 'Failed to fetch categories' });
     }
-  }
 
-  // Mutations
-  const auth = verifyAdmin(req);
-  if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
-
-  const body = await getRequestBody(req);
-
-  if (req.method === 'POST') {
-    try {
-      const slugId = body.id || (body.name?.en || body.name?.mr || 'cat').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      const newCat = { ...body, id: slugId, createdAt: new Date() };
+    if (req.method === 'POST') {
+      const newCat = { ...req.body, createdAt: new Date() };
       const ins = await collection.insertOne(newCat);
       return res.status(201).json(formatCategory({ ...newCat, _id: ins.insertedId }));
-    } catch (err) {
-      return res.status(500).json({ error: 'Failed to create category', details: err.message });
     }
-  }
 
-  if (req.method === 'PUT' || req.method === 'PATCH') {
-    const updateId = targetId || body.id || body._id;
-    try {
-      const updateData = { ...body };
-      delete updateData._id;
-      const updated = await collection.findOneAndUpdate(
-        getQueryForId(updateId),
-        { $set: updateData },
-        { returnDocument: 'after' }
-      );
-      if (!updated) return res.status(404).json({ error: 'Category not found' });
-      return res.status(200).json(formatCategory(updated));
-    } catch (err) {
-      return res.status(500).json({ error: 'Failed to update category', details: err.message });
-    }
+    return res.status(405).json({ error: 'Method not allowed' });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
-
-  if (req.method === 'DELETE') {
-    const deleteId = targetId || body.id || body._id;
-    try {
-      await collection.deleteOne(getQueryForId(deleteId));
-      return res.status(200).json({ success: true, message: 'Category deleted' });
-    } catch (err) {
-      return res.status(500).json({ error: 'Failed to delete category', details: err.message });
-    }
-  }
-
-  return res.status(405).json({ error: 'Method Not Allowed' });
 }
